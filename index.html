@@ -398,21 +398,21 @@
     .size-range { margin: 12px 0 0; color: var(--muted); }
     .size-range[hidden] { display: none; }
     .product-copy h1 { margin: 0; }
-    .sizes { margin-top: 18px; }
-    .sizes[hidden] { display: none; }
-    .sizes p { margin: 0 0 8px; color: var(--muted); font-size: 14px; }
-    .sizes div { display: flex; flex-wrap: wrap; gap: 8px; }
-    .size {
+    .cuts, .sizes { margin-top: 18px; }
+    .cuts[hidden], .sizes[hidden] { display: none; }
+    .cuts p, .sizes p { margin: 0 0 8px; color: var(--muted); font-size: 14px; }
+    .cuts div, .sizes div { display: flex; flex-wrap: wrap; gap: 8px; }
+    .cut, .size {
       min-width: 52px;
       height: 40px;
-      padding: 0 10px;
+      padding: 0 12px;
       border: 1px solid var(--line);
       background: var(--paper);
       text-align: center;
       cursor: pointer;
       font-size: 13px;
     }
-    .size.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .cut.on, .size.on { background: var(--ink); color: #fff; border-color: var(--ink); }
     .product-price { margin: 16px 0 0; font-size: 18px; }
     .buy {
       display: inline-block;
@@ -448,7 +448,7 @@
       .swatch { width: 52px; height: 52px; }
       .brand b { font-size: 16px; }
       .filters button { padding: 8px 12px; }
-      .size { min-width: 48px; height: 40px; }
+      .cut, .size { min-width: 48px; height: 40px; }
       .tone { width: 34px; height: 34px; }
       .buy { width: 100%; text-align: center; }
       .lightbox { padding: 12px; }
@@ -589,6 +589,10 @@
         <div class="product-copy">
           <h1 id="product-title"></h1>
           <div class="product-options">
+            <div class="cuts" id="product-cuts" hidden>
+              <p>Модель</p>
+              <div id="cut-options"></div>
+            </div>
             <div class="colors" id="product-colors" hidden>
               <p id="color-label">Цвет</p>
               <div id="color-options"></div>
@@ -976,104 +980,62 @@
     country: "Беларусь",
     title: "Poputi_store",
     blurb: "",
-    note: "Цены и размеры с Instagram @poputi_store. Есть футболки и лонги.",
+    note: "Цены и размеры с Instagram @poputi_store. Футболка или лонг — переключатель в карточке. Отдельных фото лонгов в ленте нет, поэтому фото общие.",
     items: [
       {
-        name: "Футболка prayer",
-        slug: "prayer-tee",
+        name: "prayer",
+        slug: "prayer",
         gender: "unisex",
         variants: [
-          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "75 BYN", photos: ["img/poputi/prayer-milk-01.jpg"], photo: "img/poputi/prayer-milk-01.jpg" },
-          { tone: "серый", color: "#9a9a9a", size: "S, M, L, XL", price: "65 BYN", photos: ["img/poputi/prayer-grey-01.jpg"], photo: "img/poputi/prayer-grey-01.jpg" }
+          { cut: "футболка", tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "75 BYN", photos: ["img/poputi/prayer-milk-01.jpg"], photo: "img/poputi/prayer-milk-01.jpg" },
+          { cut: "футболка", tone: "серый", color: "#9a9a9a", size: "S, M, L, XL", price: "65 BYN", photos: ["img/poputi/prayer-grey-01.jpg"], photo: "img/poputi/prayer-grey-01.jpg" },
+          { cut: "лонг", tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "95 BYN", photos: ["img/poputi/prayer-milk-01.jpg"], photo: "img/poputi/prayer-milk-01.jpg" },
+          { cut: "лонг", tone: "серый", color: "#9a9a9a", size: "S, M, L, XL", price: "85 BYN", photos: ["img/poputi/prayer-grey-01.jpg"], photo: "img/poputi/prayer-grey-01.jpg" }
         ]
       },
       {
-        name: "Лонг prayer",
-        slug: "prayer-long",
+        name: "«Сори, я в другой системе ценностей»",
+        slug: "sorry",
         gender: "unisex",
         variants: [
-          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "95 BYN", photos: ["img/poputi/prayer-milk-01.jpg"], photo: "img/poputi/prayer-milk-01.jpg" },
-          { tone: "серый", color: "#9a9a9a", size: "S, M, L, XL", price: "85 BYN", photos: ["img/poputi/prayer-grey-01.jpg"], photo: "img/poputi/prayer-grey-01.jpg" }
+          { cut: "футболка", tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "75 BYN", photos: ["img/poputi/sorry-milk-01.jpg", "img/poputi/sorry-milk-02.jpg"], photo: "img/poputi/sorry-milk-01.jpg" },
+          { cut: "лонг", tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "95 BYN", photos: ["img/poputi/sorry-milk-01.jpg", "img/poputi/sorry-milk-02.jpg"], photo: "img/poputi/sorry-milk-01.jpg" }
         ]
       },
       {
-        name: "Футболка «Сори, я в другой системе ценностей»",
-        slug: "sorry-tee",
+        name: "«ЛИЛИИ»",
+        slug: "lilii",
         gender: "unisex",
         variants: [
-          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "75 BYN", photos: ["img/poputi/sorry-milk-01.jpg", "img/poputi/sorry-milk-02.jpg"], photo: "img/poputi/sorry-milk-01.jpg" }
+          { cut: "футболка", tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "75 BYN", photos: ["img/poputi/lilii-milk-01.jpg", "img/poputi/lilii-milk-02.jpg"], photo: "img/poputi/lilii-milk-01.jpg" },
+          { cut: "лонг", tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "95 BYN", photos: ["img/poputi/lilii-milk-01.jpg", "img/poputi/lilii-milk-02.jpg"], photo: "img/poputi/lilii-milk-01.jpg" }
         ]
       },
       {
-        name: "Лонг «Сори, я в другой системе ценностей»",
-        slug: "sorry-long",
+        name: "HOLY SPIRIT",
+        slug: "holy",
         gender: "unisex",
         variants: [
-          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "95 BYN", photos: ["img/poputi/sorry-milk-01.jpg", "img/poputi/sorry-milk-02.jpg"], photo: "img/poputi/sorry-milk-01.jpg" }
+          { cut: "футболка", tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "75 BYN", photos: ["img/poputi/holy-milk-01.jpg", "img/poputi/holy-milk-02.jpg"], photo: "img/poputi/holy-milk-01.jpg" },
+          { cut: "лонг", tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "95 BYN", photos: ["img/poputi/holy-milk-01.jpg", "img/poputi/holy-milk-02.jpg"], photo: "img/poputi/holy-milk-01.jpg" }
         ]
       },
       {
-        name: "Футболка «ЛИЛИИ»",
-        slug: "lilii-tee",
+        name: "PRAY",
+        slug: "pray",
         gender: "unisex",
         variants: [
-          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "75 BYN", photos: ["img/poputi/lilii-milk-01.jpg", "img/poputi/lilii-milk-02.jpg"], photo: "img/poputi/lilii-milk-01.jpg" }
+          { cut: "футболка", tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "75 BYN", photos: ["img/poputi/pray-milk-01.jpg", "img/poputi/pray-milk-02.jpg"], photo: "img/poputi/pray-milk-01.jpg" },
+          { cut: "лонг", tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "95 BYN", photos: ["img/poputi/pray-milk-01.jpg", "img/poputi/pray-milk-02.jpg"], photo: "img/poputi/pray-milk-01.jpg" }
         ]
       },
       {
-        name: "Лонг «ЛИЛИИ»",
-        slug: "lilii-long",
+        name: "«Иисус мой друг»",
+        slug: "jesus-friend",
         gender: "unisex",
         variants: [
-          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "95 BYN", photos: ["img/poputi/lilii-milk-01.jpg", "img/poputi/lilii-milk-02.jpg"], photo: "img/poputi/lilii-milk-01.jpg" }
-        ]
-      },
-      {
-        name: "Футболка HOLY SPIRIT",
-        slug: "holy-tee",
-        gender: "unisex",
-        variants: [
-          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "75 BYN", photos: ["img/poputi/holy-milk-01.jpg", "img/poputi/holy-milk-02.jpg"], photo: "img/poputi/holy-milk-01.jpg" }
-        ]
-      },
-      {
-        name: "Лонг HOLY SPIRIT",
-        slug: "holy-long",
-        gender: "unisex",
-        variants: [
-          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "95 BYN", photos: ["img/poputi/holy-milk-01.jpg", "img/poputi/holy-milk-02.jpg"], photo: "img/poputi/holy-milk-01.jpg" }
-        ]
-      },
-      {
-        name: "Футболка PRAY",
-        slug: "pray-tee",
-        gender: "unisex",
-        variants: [
-          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "75 BYN", photos: ["img/poputi/pray-milk-01.jpg", "img/poputi/pray-milk-02.jpg"], photo: "img/poputi/pray-milk-01.jpg" }
-        ]
-      },
-      {
-        name: "Лонг PRAY",
-        slug: "pray-long",
-        gender: "unisex",
-        variants: [
-          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "95 BYN", photos: ["img/poputi/pray-milk-01.jpg", "img/poputi/pray-milk-02.jpg"], photo: "img/poputi/pray-milk-01.jpg" }
-        ]
-      },
-      {
-        name: "Футболка «Иисус мой друг»",
-        slug: "jesus-friend-tee",
-        gender: "unisex",
-        variants: [
-          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "75 BYN", photos: ["img/poputi/jesus-friend-01.jpg", "img/poputi/jesus-friend-02.jpg"], photo: "img/poputi/jesus-friend-01.jpg" }
-        ]
-      },
-      {
-        name: "Лонг «Иисус мой друг»",
-        slug: "jesus-friend-long",
-        gender: "unisex",
-        variants: [
-          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "95 BYN", photos: ["img/poputi/jesus-friend-01.jpg", "img/poputi/jesus-friend-02.jpg"], photo: "img/poputi/jesus-friend-01.jpg" }
+          { cut: "футболка", tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "75 BYN", photos: ["img/poputi/jesus-friend-01.jpg", "img/poputi/jesus-friend-02.jpg"], photo: "img/poputi/jesus-friend-01.jpg" },
+          { cut: "лонг", tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "95 BYN", photos: ["img/poputi/jesus-friend-01.jpg", "img/poputi/jesus-friend-02.jpg"], photo: "img/poputi/jesus-friend-01.jpg" }
         ]
       }
     ]
@@ -1697,6 +1659,15 @@
       }, animate);
     }
 
+    function itemCuts(item) {
+      return [...new Set(item.variants.map((variant) => variant.cut).filter(Boolean))];
+    }
+
+    function variantsForCut(item, cut) {
+      if (!cut) return item.variants;
+      return item.variants.filter((variant) => variant.cut === cut);
+    }
+
     function fillVariant(data, item, toneIndex) {
       const variant = item.variants[toneIndex] || item.variants[0];
       currentTone = item.variants.indexOf(variant);
@@ -1705,16 +1676,26 @@
       cloth.style.setProperty("--swatch", variant.color);
       currentPhotos = variantPhotos(variant);
       showProductPhoto(0);
+      const cuts = itemCuts(item);
+      const cutsEl = document.getElementById("product-cuts");
+      cutsEl.hidden = cuts.length < 2;
+      document.getElementById("cut-options").innerHTML = cuts.length > 1
+        ? cuts.map((cut) =>
+            `<button type="button" class="cut${cut === variant.cut ? " on" : ""}" data-cut="${cut}">${cut}</button>`
+          ).join("")
+        : "";
+      const colorPool = variantsForCut(item, variant.cut);
       const colors = document.getElementById("product-colors");
-      const many = item.variants.length > 1;
+      const many = colorPool.length > 1;
       colors.hidden = !many;
       document.getElementById("color-label").textContent = variant.tone
         ? `Цвет: ${variant.tone}`
         : "Цвет";
       document.getElementById("color-options").innerHTML = many
-        ? item.variants.map((option, index) =>
-            `<button type="button" class="tone${index === currentTone ? " on" : ""}" data-tone="${index}" style="--tone:${option.color}" aria-label="${option.tone || "Цвет"}"></button>`
-          ).join("")
+        ? colorPool.map((option) => {
+            const index = item.variants.indexOf(option);
+            return `<button type="button" class="tone${index === currentTone ? " on" : ""}" data-tone="${index}" style="--tone:${option.color}" aria-label="${option.tone || "Цвет"}"></button>`;
+          }).join("")
         : "";
       const options = listedSizes(variant.size);
       const range = document.getElementById("size-range");
@@ -1868,6 +1849,15 @@
       brandGenderFilter = "all";
       navigate(currentBrand);
     });
+    document.getElementById("cut-options").addEventListener("click", (event) => {
+      const button = event.target.closest(".cut");
+      if (!button || !currentItem || !currentBrand) return;
+      const cut = button.dataset.cut;
+      const current = currentItem.variants[currentTone] || currentItem.variants[0];
+      const sameTone = currentItem.variants.findIndex((variant) => variant.cut === cut && variant.tone === current.tone);
+      const fallback = currentItem.variants.findIndex((variant) => variant.cut === cut);
+      fillVariant(brands[currentBrand], currentItem, sameTone !== -1 ? sameTone : fallback);
+    });
     document.getElementById("color-options").addEventListener("click", (event) => {
       const button = event.target.closest(".tone");
       if (!button || !currentItem || !currentBrand) return;
@@ -1876,7 +1866,7 @@
     document.getElementById("size-options").addEventListener("click", (event) => {
       const button = event.target.closest(".size");
       if (!button) return;
-      document.querySelectorAll(".size").forEach((item) => item.classList.toggle("on", item === button));
+      document.querySelectorAll("#size-options .size").forEach((item) => item.classList.toggle("on", item === button));
       writeChoice(button.textContent);
     });
 
