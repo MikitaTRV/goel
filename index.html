@@ -511,10 +511,10 @@
           <span><b>fami.ly.by</b></span>
           <span class="go">Смотреть</span>
         </button>
-        <button class="brand wait" data-brand="poputi">
-          <span class="swatch" style="background-color:#c9b59a"></span>
+        <button class="brand" data-brand="poputi">
+          <img class="swatch" src="img/poputi/avatar.jpg" alt="" width="64" height="64">
           <span><b>Poputi_store</b></span>
-          <span class="go">Открыть</span>
+          <span class="go">Смотреть</span>
         </button>
         <button class="brand" data-brand="sola">
           <span class="swatch" style="background-color:#2c2c2c"></span>
@@ -975,10 +975,107 @@
   poputi: {
     country: "Беларусь",
     title: "Poputi_store",
-    blurb: "Христианская одежда",
-    note: "Ассортимент не собран.",
+    blurb: "",
+    note: "Цены и размеры с Instagram @poputi_store. Есть футболки и лонги.",
     items: [
-      ["#c9b59a", "Новая коллекция", "", "", "novaya"]
+      {
+        name: "Футболка prayer",
+        slug: "prayer-tee",
+        gender: "unisex",
+        variants: [
+          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "75 BYN", photos: ["img/poputi/prayer-milk-01.jpg"], photo: "img/poputi/prayer-milk-01.jpg" },
+          { tone: "серый", color: "#9a9a9a", size: "S, M, L, XL", price: "65 BYN", photos: ["img/poputi/prayer-grey-01.jpg"], photo: "img/poputi/prayer-grey-01.jpg" }
+        ]
+      },
+      {
+        name: "Лонг prayer",
+        slug: "prayer-long",
+        gender: "unisex",
+        variants: [
+          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "95 BYN", photos: ["img/poputi/prayer-milk-01.jpg"], photo: "img/poputi/prayer-milk-01.jpg" },
+          { tone: "серый", color: "#9a9a9a", size: "S, M, L, XL", price: "85 BYN", photos: ["img/poputi/prayer-grey-01.jpg"], photo: "img/poputi/prayer-grey-01.jpg" }
+        ]
+      },
+      {
+        name: "Футболка «Сори, я в другой системе ценностей»",
+        slug: "sorry-tee",
+        gender: "unisex",
+        variants: [
+          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "75 BYN", photos: ["img/poputi/sorry-milk-01.jpg", "img/poputi/sorry-milk-02.jpg"], photo: "img/poputi/sorry-milk-01.jpg" }
+        ]
+      },
+      {
+        name: "Лонг «Сори, я в другой системе ценностей»",
+        slug: "sorry-long",
+        gender: "unisex",
+        variants: [
+          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "95 BYN", photos: ["img/poputi/sorry-milk-01.jpg", "img/poputi/sorry-milk-02.jpg"], photo: "img/poputi/sorry-milk-01.jpg" }
+        ]
+      },
+      {
+        name: "Футболка «ЛИЛИИ»",
+        slug: "lilii-tee",
+        gender: "unisex",
+        variants: [
+          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "75 BYN", photos: ["img/poputi/lilii-milk-01.jpg", "img/poputi/lilii-milk-02.jpg"], photo: "img/poputi/lilii-milk-01.jpg" }
+        ]
+      },
+      {
+        name: "Лонг «ЛИЛИИ»",
+        slug: "lilii-long",
+        gender: "unisex",
+        variants: [
+          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "95 BYN", photos: ["img/poputi/lilii-milk-01.jpg", "img/poputi/lilii-milk-02.jpg"], photo: "img/poputi/lilii-milk-01.jpg" }
+        ]
+      },
+      {
+        name: "Футболка HOLY SPIRIT",
+        slug: "holy-tee",
+        gender: "unisex",
+        variants: [
+          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "75 BYN", photos: ["img/poputi/holy-milk-01.jpg", "img/poputi/holy-milk-02.jpg"], photo: "img/poputi/holy-milk-01.jpg" }
+        ]
+      },
+      {
+        name: "Лонг HOLY SPIRIT",
+        slug: "holy-long",
+        gender: "unisex",
+        variants: [
+          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "95 BYN", photos: ["img/poputi/holy-milk-01.jpg", "img/poputi/holy-milk-02.jpg"], photo: "img/poputi/holy-milk-01.jpg" }
+        ]
+      },
+      {
+        name: "Футболка PRAY",
+        slug: "pray-tee",
+        gender: "unisex",
+        variants: [
+          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "75 BYN", photos: ["img/poputi/pray-milk-01.jpg", "img/poputi/pray-milk-02.jpg"], photo: "img/poputi/pray-milk-01.jpg" }
+        ]
+      },
+      {
+        name: "Лонг PRAY",
+        slug: "pray-long",
+        gender: "unisex",
+        variants: [
+          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "95 BYN", photos: ["img/poputi/pray-milk-01.jpg", "img/poputi/pray-milk-02.jpg"], photo: "img/poputi/pray-milk-01.jpg" }
+        ]
+      },
+      {
+        name: "Футболка «Иисус мой друг»",
+        slug: "jesus-friend-tee",
+        gender: "unisex",
+        variants: [
+          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "75 BYN", photos: ["img/poputi/jesus-friend-01.jpg", "img/poputi/jesus-friend-02.jpg"], photo: "img/poputi/jesus-friend-01.jpg" }
+        ]
+      },
+      {
+        name: "Лонг «Иисус мой друг»",
+        slug: "jesus-friend-long",
+        gender: "unisex",
+        variants: [
+          { tone: "молочный", color: "#f3efe8", size: "S, M, L, XL", price: "95 BYN", photos: ["img/poputi/jesus-friend-01.jpg", "img/poputi/jesus-friend-02.jpg"], photo: "img/poputi/jesus-friend-01.jpg" }
+        ]
+      }
     ]
   },
   sola: {
@@ -1470,7 +1567,7 @@
     function listedSizes(size) {
       if (!size) return [];
       const raw = String(size).trim();
-      if (/^oversize$/i.test(raw) || /^оверсайз$/i.test(raw)) return ["Oversize"];
+      if (/^oversize$/i.test(raw) || /^оверсайз$/i.test(raw)) return [];
       const range = raw.split("–");
       if (range.length === 2) {
         const from = sizeScale.indexOf(range[0].trim());
@@ -1484,6 +1581,8 @@
 
     function rangeLabel(size) {
       if (!size) return "";
+      if (/^oversize$/i.test(size.trim())) return "Посадка Oversize";
+      if (/^оверсайз$/i.test(size.trim())) return "Посадка оверсайз";
       return size.includes("–") ? `Размеры ${size}` : `Размер ${size}`;
     }
 
