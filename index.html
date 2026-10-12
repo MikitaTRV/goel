@@ -525,7 +525,7 @@
       <div data-country-group="Россия">
         <h2>Россия</h2>
         <button class="brand" data-brand="art">
-          <span class="swatch" style="background-color:#d9d9d9"></span>
+          <img class="swatch" src="img/art/avatar.jpg" alt="" width="64" height="64">
           <span><b>art.brand.jesus.saves</b></span>
           <span class="go">Смотреть</span>
         </button>
@@ -1212,23 +1212,54 @@
   art: {
     country: "Россия",
     title: "art.brand.jesus.saves",
-    blurb: "Футболки",
-    note: "Показаны не все вещи.",
+    blurb: "",
+    note: "Единый размер Oversize. Classic — унисекс, Women — женская посадка. Цена с канала Telegram.",
     items: [
       {
         name: "Футболка Classic STRENGTH",
-        slug: "strength",
-        gender: "men",
+        slug: "classic-strength",
+        gender: "unisex",
         variants: [
-          { tone: "", color: "#d9d9d9", size: "Oversize", price: "2000 ₽", photo: "" }
+          { tone: "белый", color: "#f7f4ee", size: "Oversize", price: "2000 ₽", photos: ["img/art/classic-strength-white-01.jpg", "img/art/classic-strength-white-02.jpg", "img/art/classic-strength-white-03.jpg", "img/art/classic-strength-white-04.jpg", "img/art/classic-strength-white-05.jpg"], photo: "img/art/classic-strength-white-01.jpg" },
+          { tone: "серый-белый", color: "#3f3f3f", size: "Oversize", price: "2000 ₽", photos: ["img/art/classic-strength-grey-white-01.jpg", "img/art/classic-strength-grey-white-02.jpg"], photo: "img/art/classic-strength-grey-white-01.jpg" },
+          { tone: "серый-жёлтый", color: "#45403a", size: "Oversize", price: "2000 ₽", photos: ["img/art/classic-strength-grey-yellow-01.jpg", "img/art/classic-strength-grey-yellow-02.jpg"], photo: "img/art/classic-strength-grey-yellow-01.jpg" }
+        ]
+      },
+      {
+        name: "Футболка Classic VICTORY",
+        slug: "classic-victory",
+        gender: "unisex",
+        variants: [
+          { tone: "серый-жёлтый", color: "#45403a", size: "Oversize", price: "2000 ₽", photos: ["img/art/classic-victory-grey-yellow-01.jpg", "img/art/classic-victory-grey-yellow-02.jpg"], photo: "img/art/classic-victory-grey-yellow-01.jpg" }
+        ]
+      },
+      {
+        name: "Футболка Classic SKATEBOARD",
+        slug: "classic-skateboard",
+        gender: "unisex",
+        variants: [
+          { tone: "серый-белый", color: "#3f3f3f", size: "Oversize", price: "2000 ₽", photos: ["img/art/classic-skateboard-grey-white-01.jpg", "img/art/classic-skateboard-grey-white-02.jpg"], photo: "img/art/classic-skateboard-grey-white-01.jpg" },
+          { tone: "серый-розовый", color: "#433c40", size: "Oversize", price: "2000 ₽", photos: ["img/art/classic-skateboard-grey-pink-01.jpg", "img/art/classic-skateboard-grey-pink-02.jpg"], photo: "img/art/classic-skateboard-grey-pink-01.jpg" }
+        ]
+      },
+      {
+        name: "Футболка Women STRENGTH",
+        slug: "women-strength",
+        gender: "women",
+        variants: [
+          { tone: "белый-голубой", color: "#f4f1ea", size: "Oversize", price: "2000 ₽", photos: ["img/art/women-strength-white-blue-01.jpg", "img/art/women-strength-white-blue-02.jpg"], photo: "img/art/women-strength-white-blue-01.jpg" },
+          { tone: "чёрный-белый", color: "#1c1c1c", size: "Oversize", price: "2000 ₽", photos: ["img/art/women-strength-black-white-01.jpg", "img/art/women-strength-black-white-02.jpg"], photo: "img/art/women-strength-black-white-01.jpg" },
+          { tone: "белый-песок", color: "#f3efe6", size: "Oversize", price: "2000 ₽", photos: ["img/art/women-strength-white-sand-01.jpg", "img/art/women-strength-white-sand-02.jpg"], photo: "img/art/women-strength-white-sand-01.jpg" }
         ]
       },
       {
         name: "Футболка Women VICTORY",
-        slug: "victory",
+        slug: "women-victory",
         gender: "women",
         variants: [
-          { tone: "", color: "#f7f4ee", size: "Oversize", price: "2000 ₽", photo: "" }
+          { tone: "белый-бордо", color: "#f4f1ea", size: "Oversize", price: "2000 ₽", photos: ["img/art/women-victory-white-bordo-01.jpg", "img/art/women-victory-white-bordo-02.jpg"], photo: "img/art/women-victory-white-bordo-01.jpg" },
+          { tone: "молоко-коричневый", color: "#f0ebe3", size: "Oversize", price: "2000 ₽", photos: ["img/art/women-victory-milk-brown-01.jpg", "img/art/women-victory-milk-brown-02.jpg"], photo: "img/art/women-victory-milk-brown-01.jpg" },
+          { tone: "чёрный-белый", color: "#1c1c1c", size: "Oversize", price: "2000 ₽", photos: ["img/art/women-victory-black-white-01.jpg", "img/art/women-victory-black-white-02.jpg"], photo: "img/art/women-victory-black-white-01.jpg" }
         ]
       },
       {
@@ -1236,7 +1267,7 @@
         slug: "defender",
         gender: "unisex",
         variants: [
-          { tone: "", color: "#fbfbfb", size: "Oversize", price: "2000 ₽", photo: "" }
+          { tone: "белый", color: "#f7f4ee", size: "Oversize", price: "2000 ₽", photos: ["img/art/defender-white-01.jpg", "img/art/defender-white-02.jpg", "img/art/defender-white-03.jpg", "img/art/defender-white-04.jpg"], photo: "img/art/defender-white-01.jpg" }
         ]
       }
     ]
