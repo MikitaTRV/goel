@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "managedVariants": [
+    "by-jesus|темносиний",
+    "bog-est-lubov-men|молочный",
+    "bog-est-lubov-women|розовый",
+    "child-of-god|светлый",
+    "jesus-healed|белый",
+    "jesus-is-lord-women|горчичный",
+    "jesus-lovers-club-men|бежевый",
+    "jesus-lovers-club-men|красный",
+    "jesus-lovers-club-men|синий",
+    "jesus-lovers-club-men|травяной",
+    "jesus-lovers-club-women|небесный",
+    "love-like-jesus|травяной",
+    "name|белый",
+    "name|бордовый",
+    "name|графитовый",
+    "oduvanchik|небесный",
+    "oduvanchik|розовый",
+    "only-jesus|травяной",
+    "only-jesus|черный",
+    "praise-long-men|синий",
+    "praise-long-women|черный",
+    "praise-tee|черный",
+    "saved|бордовый",
+    "shepherd-men|изумруд",
+    "shepherd-women|кофе",
+    "wins|черный"
+  ],
+  "availableSizes": {
+    "by-jesus": { "тёмно-синий": ["S", "2XL"] },
+    "bog-est-lubov-men": { "молочный": ["S", "M", "L", "XL", "2XL"] },
+    "child-of-god": { "светлый": ["S", "M", "L"] },
+    "jesus-healed": { "белый": ["M", "L"] },
+    "jesus-is-lord-women": { "горчичный": ["S", "M", "L", "XL"] },
+    "jesus-lovers-club-men": {
+      "бежевый": ["L", "XL"],
+      "красный": ["S", "M", "L", "XL"],
+      "синий": ["S", "M", "L", "XL"],
+      "травяной": ["M", "L", "XL"]
+    },
+    "jesus-lovers-club-women": { "небесный": ["S", "L"] },
+    "love-like-jesus": { "травяной": ["XS", "S", "M", "L", "XL"] },
+    "name": {
+      "белый": ["S", "M", "L", "XL", "2XL"],
+      "бордовый": ["S", "M", "L", "XL", "2XL"],
+      "графитовый": ["S", "M", "L"]
+    },
+    "oduvanchik": {
+      "небесный": ["S", "M", "L"],
+      "розовый": ["XS", "S", "M", "L"]
+    },
+    "only-jesus": {
+      "травяной": ["L"],
+      "чёрный": ["M", "L", "XL"]
+    },
+    "praise-long-men": { "синий": ["S"] },
+    "praise-long-women": { "чёрный": ["XL", "2XL"] },
+    "praise-tee": { "чёрный": ["2XL"] },
+    "saved": { "бордовый": ["S", "M", "L", "XL", "2XL"] },
+    "shepherd-men": { "изумруд": ["S", "M", "L"] },
+    "shepherd-women": { "кофе": ["S", "M", "L"] },
+    "wins": { "чёрный": ["L", "2XL"] }
+  }
+}
