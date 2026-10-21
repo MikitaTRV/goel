@@ -50,7 +50,7 @@ jobs:
         id: stock-diff
         if: github.event_name == 'schedule'
         run: |
-          if curl -fsSL "https://mikitatrv.github.io/goel-demo/data/godderob-availability.json" -o "$RUNNER_TEMP/published-stock.json" && cmp -s "$RUNNER_TEMP/published-stock.json" "_site/data/godderob-availability.json"; then
+          if curl -fsSL "https://mikitatrv.github.io/goel/data/godderob-availability.json" -o "$RUNNER_TEMP/published-stock.json" && cmp -s "$RUNNER_TEMP/published-stock.json" "_site/data/godderob-availability.json"; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
