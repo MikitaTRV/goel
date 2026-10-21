@@ -1,0 +1,72 @@
+name: Publish GO'EL site and sync availability
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "img/**"
+      - "scripts/**"
+      - "data/**"
+      - ".github/workflows/publish-site.yml"
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Prepare site files
+        env:
+          GODDEROB_STOCK_CSV_URL: ${{ secrets.GODDEROB_STOCK_CSV_URL }}
+        run: |
+          mkdir -p _site/data
+          cp index.html _site/index.html
+          cp -R img _site/img
+          python scripts/sync_godderob_stock.py --output _site/data/godderob-availability.json
+
+      - name: Compare stock with published feed
+        id: stock-diff
+        if: github.event_name == 'schedule'
+        run: |
+          if curl -fsSL "https://mikitatrv.github.io/goel-demo/data/godderob-availability.json" -o "$RUNNER_TEMP/published-stock.json" && cmp -s "$RUNNER_TEMP/published-stock.json" "_site/data/godderob-availability.json"; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configure GitHub Pages
+        if: github.event_name != 'schedule' || steps.stock-diff.outputs.changed == 'true'
+        uses: actions/configure-pages@v5
+
+      - name: Upload site artifact
+        if: github.event_name != 'schedule' || steps.stock-diff.outputs.changed == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy site
+        id: deployment
+        if: github.event_name != 'schedule' || steps.stock-diff.outputs.changed == 'true'
+        uses: actions/deploy-pages@v4
