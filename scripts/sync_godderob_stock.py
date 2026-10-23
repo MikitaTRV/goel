@@ -26,7 +26,7 @@ SHEET_PREFIXES = {
     "барашекизумруд": ("shepherd-men", "изумруд"),
     "onlyjesusчерный": ("only-jesus", "чёрный"),
     "onlyjesusтравяной": ("only-jesus", "травяной"),
-    "childofgodборд": ("child-of-god", "светлый"),
+    "childofgodборд": ("child-of-god", "белый"),
     "lovebut": ("love-like-jesus", "травяной"),
     "jesusislordгорчица": ("jesus-is-lord-women", "горчичный"),
     "богестьлюбовьмолоко": ("bog-est-lubov-men", "молочный"),
