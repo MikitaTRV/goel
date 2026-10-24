@@ -2329,12 +2329,13 @@
       const previous = itemCardPhotoTransitions.get(cloth);
       if (previous) {
         window.clearTimeout(previous.timer);
+        window.clearTimeout(previous.revealTimer);
         if (previous.preload) {
           previous.preload.onload = null;
           previous.preload.onerror = null;
         }
       }
-      const transition = { timer: 0, preload: null, started: false };
+      const transition = { timer: 0, revealTimer: 0, preload: null, started: false };
       itemCardPhotoTransitions.set(cloth, transition);
       const showPhoto = () => {
         if (transition.started || itemCardPhotoTransitions.get(cloth) !== transition) return;
@@ -2349,11 +2350,11 @@
         transition.timer = window.setTimeout(() => {
           if (itemCardPhotoTransitions.get(cloth) !== transition) return;
           image.src = source;
-          window.requestAnimationFrame(() => {
+          transition.revealTimer = window.setTimeout(() => {
             if (itemCardPhotoTransitions.get(cloth) !== transition) return;
             image.classList.remove("is-fading");
             itemCardPhotoTransitions.delete(cloth);
-          });
+          }, 32);
         }, 180);
       };
       const preload = new Image();
