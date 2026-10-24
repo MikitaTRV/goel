@@ -22,6 +22,7 @@ SHEET_PREFIXES = {
     "jesusloversкрасный": ("jesus-lovers-club-men", "красный"),
     "oduvanchikрозовый": ("oduvanchik", "розовый"),
     "oduvanchikнебесный": ("oduvanchik", "небесный"),
+    "oduvanchikсливочный": ("oduvanchik-zip-yellow", "светло-жёлтый"),
     "барашеккофе": ("shepherd-women", "кофе"),
     "барашекизумруд": ("shepherd-men", "изумруд"),
     "onlyjesusчерный": ("only-jesus", "чёрный"),
