@@ -274,6 +274,7 @@
       outline-offset: -1px;
       background-color: var(--swatch, #ebe4da);
       overflow: hidden;
+      touch-action: pan-y;
     }
     .product-copy {
       display: flex;
@@ -408,6 +409,7 @@
       padding: 24px;
       background: rgba(20, 16, 12, 0.88);
       cursor: zoom-out;
+      touch-action: pan-y;
     }
     .lightbox[hidden] { display: none; }
     .lightbox img {
@@ -2332,6 +2334,31 @@
       if (currentPhotos.length < 2) return;
       showProductPhoto(currentPhotoIndex + delta, { animate: true });
     }
+    let suppressProductClickUntil = 0;
+    let suppressLightboxClickUntil = 0;
+    function enablePhotoSwipe(element, ignoreSwipeClick) {
+      let pointerStart = null;
+      element.addEventListener("pointerdown", (event) => {
+        if (event.pointerType === "mouse" || currentPhotos.length < 2) return;
+        if (event.target.closest("button")) return;
+        pointerStart = { id: event.pointerId, x: event.clientX, y: event.clientY };
+      });
+      window.addEventListener("pointerup", (event) => {
+        if (!pointerStart || event.pointerId !== pointerStart.id) return;
+        const deltaX = event.clientX - pointerStart.x;
+        const deltaY = event.clientY - pointerStart.y;
+        pointerStart = null;
+        if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY) * 1.25) return;
+        stepPhoto(deltaX < 0 ? 1 : -1);
+        ignoreSwipeClick();
+      });
+      window.addEventListener("pointercancel", (event) => {
+        if (pointerStart?.id === event.pointerId) pointerStart = null;
+      });
+    }
+    const productCloth = document.getElementById("product-cloth");
+    enablePhotoSwipe(productCloth, () => { suppressProductClickUntil = Date.now() + 500; });
+    enablePhotoSwipe(lightbox, () => { suppressLightboxClickUntil = Date.now() + 500; });
     document.getElementById("gallery-prev").addEventListener("click", (event) => {
       event.stopPropagation();
       stepPhoto(-1);
@@ -2342,6 +2369,10 @@
     });
     document.getElementById("product-cloth").addEventListener("click", (event) => {
       if (event.target.closest(".gallery-nav")) return;
+      if (Date.now() < suppressProductClickUntil) {
+        suppressProductClickUntil = 0;
+        return;
+      }
       openLightbox();
     });
     document.getElementById("product-cloth").addEventListener("keydown", (event) => {
@@ -2372,7 +2403,13 @@
       event.stopPropagation();
       stepPhoto(1);
     });
-    lightbox.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", (event) => {
+      if (Date.now() < suppressLightboxClickUntil) {
+        suppressLightboxClickUntil = 0;
+        return;
+      }
+      closeLightbox();
+    });
     lightboxPhoto.addEventListener("click", (event) => event.stopPropagation());
     document.addEventListener("keydown", (event) => {
       if (lightbox.hidden) return;
