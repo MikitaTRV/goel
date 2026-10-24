@@ -463,9 +463,46 @@
       color: #fff;
       padding: 12px 18px;
       font-size: 15px;
-      cursor: default;
+      cursor: pointer;
     }
     .buy:disabled { opacity: 0.55; cursor: not-allowed; }
+    .order-dialog {
+      width: min(540px, calc(100% - 24px));
+      max-width: none;
+      max-height: min(90dvh, 780px);
+      padding: 0;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      color: var(--ink);
+      box-shadow: 0 18px 60px rgba(28, 24, 20, 0.22);
+    }
+    .order-dialog::backdrop { background: rgba(20, 16, 12, 0.55); }
+    .order-form { display: grid; gap: 14px; padding: 24px; }
+    .order-form-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .order-form h2 { margin: 0; font-size: 24px; }
+    .order-close { flex: none; width: 36px; height: 36px; text-align: center; font-size: 26px; line-height: 1; color: var(--muted); }
+    .order-summary { margin: 0; padding: 12px 14px; background: #f3efe8; font-size: 14px; line-height: 1.55; white-space: pre-line; }
+    .order-form label { display: grid; gap: 5px; font-size: 14px; }
+    .order-form input:not([type="checkbox"]), .order-form textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      padding: 10px 12px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-size: 16px;
+    }
+    .order-form textarea { min-height: 90px; resize: vertical; }
+    .order-form input:focus, .order-form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .order-consent { grid-template-columns: 18px 1fr; align-items: start; gap: 9px !important; color: var(--muted); }
+    .order-consent input { margin: 4px 0 0; accent-color: var(--accent); }
+    .order-submit { width: 100%; margin: 0; text-align: center; }
+    .order-submit:disabled { opacity: 0.55; cursor: not-allowed; }
+    .order-status { min-height: 1.5em; margin: 0; color: var(--muted); font-size: 14px; }
+    .order-status.error { color: #9b302a; }
+    .order-status.success { color: #356b42; }
+    .order-honeypot { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
     @media (max-width: 920px) {
       .items { grid-template-columns: repeat(2, 1fr); gap: 14px; }
     }
@@ -494,6 +531,8 @@
       .cut, .size { min-width: 48px; height: 40px; }
       .tone { width: 34px; height: 34px; }
       .buy { width: 100%; text-align: center; }
+      .order-form { padding: 18px; }
+      .order-form h2 { font-size: 21px; }
       .lightbox { padding: 12px; }
       .lightbox img { max-height: calc(100vh - 24px); }
       .lightbox-nav.prev { left: 8px; }
@@ -563,7 +602,7 @@
         <p class="blurb" id="blurb"></p>
       </div>
       <p class="stock" id="note"></p>
-      <p class="ahead">Вещь выбираете здесь. Оформление заказа на сайте ещё не включено.</p>
+      <p class="ahead">Выберите вещь и вариант — заявку можно будет оставить прямо на сайте.</p>
       <div class="filters" id="brand-filters" hidden></div>
       <div class="items" id="items"></div>
     </section>
@@ -624,7 +663,7 @@
           </div>
           <div class="product-actions">
             <button type="button" class="buy">Заказать</button>
-            <p class="order" id="choice">Оформление заказа ещё не включено.</p>
+            <p class="order" id="choice">Выберите размер, затем нажмите «Заказать».</p>
           </div>
         </div>
       </article>
@@ -638,6 +677,39 @@
     <button type="button" class="lightbox-nav next" id="lightbox-next" hidden aria-label="Следующее фото">›</button>
     <div class="lightbox-count" id="lightbox-count" hidden></div>
   </div>
+  <dialog class="order-dialog" id="order-dialog" aria-labelledby="order-title">
+    <form class="order-form" id="order-form">
+      <div class="order-form-head">
+        <div>
+          <h2 id="order-title">Заявка на заказ</h2>
+          <p class="order-status" id="order-setup-note">Подключаем приём заказов в Telegram.</p>
+        </div>
+        <button class="order-close" type="button" id="order-close" aria-label="Закрыть форму">×</button>
+      </div>
+      <p class="order-summary" id="order-summary"></p>
+      <label>Имя
+        <input name="customerName" autocomplete="name" maxlength="80" required>
+      </label>
+      <label>Телефон
+        <input name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="32" placeholder="+375…" required>
+      </label>
+      <label>Город и адрес или пункт выдачи
+        <textarea name="delivery" autocomplete="street-address" maxlength="500" required></textarea>
+      </label>
+      <label>Комментарий <span>(необязательно)</span>
+        <textarea name="comment" maxlength="500"></textarea>
+      </label>
+      <label class="order-consent">
+        <input name="consent" type="checkbox" required>
+        <span>Согласен(на), что GO’EL использует мои данные, чтобы связаться со мной по поводу этого заказа.</span>
+      </label>
+      <label class="order-honeypot" aria-hidden="true" tabindex="-1">Не заполняйте это поле
+        <input name="website" autocomplete="off" tabindex="-1">
+      </label>
+      <button class="buy order-submit" id="order-submit" type="submit" disabled>Отправить заявку</button>
+      <p class="order-status" id="order-status" role="status" aria-live="polite"></p>
+    </form>
+  </dialog>
   <script>
     const countryName = { belarus: "Беларусь" };
     const countrySlug = { "Беларусь": "belarus" };
@@ -1541,6 +1613,19 @@
     let currentPhotos = [];
     let currentPhotoIndex = 0;
     let brandGenderFilter = "all";
+    const ORDER_API_URL = "https://goel-order-api.o-el.workers.dev/order";
+    const orderDialog = document.getElementById("order-dialog");
+    const orderForm = document.getElementById("order-form");
+    const orderSubmit = document.getElementById("order-submit");
+    const orderStatus = document.getElementById("order-status");
+    const orderSetupNote = document.getElementById("order-setup-note");
+    let pendingOrder = null;
+    let orderStartedAt = 0;
+    const orderApiConfigured = /^https:\/\//.test(ORDER_API_URL) && !ORDER_API_URL.includes("YOUR-");
+    orderSubmit.disabled = !orderApiConfigured;
+    orderSetupNote.textContent = orderApiConfigured
+      ? "После отправки заявка придёт GO’EL в Telegram."
+      : "Приём заявок включится после подключения Telegram-бота.";
     const stage = document.getElementById("stage");
     const menuBtn = document.getElementById("countries-btn");
     const menuList = document.getElementById("country-menu");
@@ -1761,7 +1846,6 @@
     }
 
     const sizeScale = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"];
-    const orderLater = "Оформление заказа на сайте ещё не включено.";
 
     function listedSizes(size) {
       if (!size) return [];
@@ -1787,9 +1871,117 @@
 
     function writeChoice(size) {
       document.getElementById("choice").textContent = size
-        ? `Выбран размер ${size}. ${orderLater}`
-        : `Выберите размер. ${orderLater}`;
+        ? `Выбран размер ${size}. Нажмите «Заказать», чтобы оставить заявку.`
+        : "Выберите размер перед оформлением заявки.";
     }
+
+    function orderDetails() {
+      if (!currentItem || !currentBrand) return null;
+      const variant = currentItem.variants[currentTone] || currentItem.variants[0];
+      const sizes = listedSizes(variant.size);
+      const selectedSize = document.querySelector("#size-options .size.on")?.textContent.trim() || "";
+      if (sizes.length && !selectedSize) {
+        document.getElementById("choice").textContent = "Сначала выберите размер.";
+        document.getElementById("size-options").scrollIntoView({ behavior: "smooth", block: "center" });
+        return null;
+      }
+      return {
+        brand: brands[currentBrand].title,
+        product: currentItem.name,
+        model: variant.cut || "",
+        color: variant.tone || "не указан",
+        size: selectedSize || variant.size || "не указан",
+        price: variant.price || "не указана",
+        page: location.href
+      };
+    }
+
+    function openOrderForm() {
+      const details = orderDetails();
+      if (!details) return;
+      pendingOrder = details;
+      orderStartedAt = Date.now();
+      orderForm.reset();
+      orderStatus.textContent = "";
+      orderStatus.className = "order-status";
+      orderSubmit.textContent = "Отправить заявку";
+      orderSubmit.disabled = !orderApiConfigured;
+      document.getElementById("order-summary").textContent = [
+        details.brand,
+        details.product,
+        details.model ? `Модель: ${details.model}` : "",
+        `Цвет: ${details.color}`,
+        `Размер: ${details.size}`,
+        `Цена: ${details.price}`
+      ].filter(Boolean).join("\n");
+      orderDialog.showModal();
+      orderForm.elements.customerName.focus();
+    }
+
+    document.querySelector(".product-actions .buy").addEventListener("click", openOrderForm);
+    document.getElementById("order-close").addEventListener("click", () => orderDialog.close());
+    orderDialog.addEventListener("click", (event) => {
+      if (event.target === orderDialog) orderDialog.close();
+    });
+    orderDialog.addEventListener("close", () => {
+      orderForm.reset();
+      orderStatus.textContent = "";
+      orderStatus.className = "order-status";
+      orderSubmit.textContent = "Отправить заявку";
+      orderSubmit.disabled = !orderApiConfigured;
+      pendingOrder = null;
+      document.querySelector(".product-actions .buy")?.focus();
+    });
+    orderForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!orderApiConfigured || !pendingOrder) {
+        orderStatus.textContent = "Форма пока не подключена к Telegram. Заявка не отправлена.";
+        orderStatus.className = "order-status error";
+        return;
+      }
+      if (orderStartedAt && Date.now() - orderStartedAt < 1200) {
+        orderStatus.textContent = "Подождите секунду и попробуйте отправить заявку ещё раз.";
+        orderStatus.className = "order-status error";
+        return;
+      }
+      const values = new FormData(orderForm);
+      const payload = {
+        ...pendingOrder,
+        customerName: values.get("customerName"),
+        phone: values.get("phone"),
+        delivery: values.get("delivery"),
+        comment: values.get("comment"),
+        consent: values.get("consent") === "on",
+        website: values.get("website"),
+        startedAt: orderStartedAt
+      };
+      orderSubmit.disabled = true;
+      orderSubmit.textContent = "Отправляем…";
+      orderStatus.textContent = "";
+      orderStatus.className = "order-status";
+      let orderSent = false;
+      try {
+        const response = await fetch(ORDER_API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error("Order submission failed");
+        orderSent = true;
+        orderStatus.textContent = "Заявка отправлена! Мы свяжемся с вами для подтверждения заказа.";
+        orderStatus.className = "order-status success";
+        orderSubmit.textContent = "Заявка отправлена";
+        window.setTimeout(() => {
+          if (orderDialog.open) orderDialog.close();
+        }, 2200);
+      } catch (error) {
+        orderStatus.textContent = "Не удалось отправить заявку. Проверьте интернет и попробуйте ещё раз.";
+        orderStatus.className = "order-status error";
+      } finally {
+        orderSubmit.disabled = orderSent || !orderApiConfigured;
+        if (!orderSent) orderSubmit.textContent = "Отправить заявку";
+      }
+    });
 
     function cardPrice(item) {
       const prices = item.variants.filter(variantInStock).map((variant) => variant.price).filter(Boolean);
@@ -1954,7 +2146,7 @@
       buyButton.textContent = unavailable ? "Нет в наличии" : "Заказать";
       document.getElementById("choice").textContent = unavailable
         ? "Сейчас нет в наличии."
-        : options.length ? `Выберите размер. ${orderLater}` : orderLater;
+        : options.length ? "Выберите размер, затем нажмите «Заказать»." : "Нажмите «Заказать», чтобы оставить заявку.";
     }
 
     function paintProduct(id, index, animate) {
