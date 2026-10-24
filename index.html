@@ -240,7 +240,8 @@
       opacity: 1;
       transition: opacity 0.35s ease;
     }
-    .product-cloth > img.is-fading { opacity: 0; }
+    .cloth > img { transition-duration: 0.18s; }
+    .cloth > img.is-fading, .product-cloth > img.is-fading { opacity: 0; }
     .cloth > .ph, .product-cloth > .ph {
       position: absolute;
       left: 12px;
@@ -2321,6 +2322,47 @@
       }, { passive: false });
     }
     let suppressItemCardClickUntil = 0;
+    const itemCardPhotoTransitions = new WeakMap();
+    function setItemCardPhoto(cloth, source) {
+      const image = cloth.querySelector("img");
+      if (!image || image.src === new URL(source, document.baseURI).href) return;
+      const previous = itemCardPhotoTransitions.get(cloth);
+      if (previous) {
+        window.clearTimeout(previous.timer);
+        if (previous.preload) {
+          previous.preload.onload = null;
+          previous.preload.onerror = null;
+        }
+      }
+      const transition = { timer: 0, preload: null, started: false };
+      itemCardPhotoTransitions.set(cloth, transition);
+      const showPhoto = () => {
+        if (transition.started || itemCardPhotoTransitions.get(cloth) !== transition) return;
+        transition.started = true;
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          image.classList.remove("is-fading");
+          image.src = source;
+          itemCardPhotoTransitions.delete(cloth);
+          return;
+        }
+        image.classList.add("is-fading");
+        transition.timer = window.setTimeout(() => {
+          if (itemCardPhotoTransitions.get(cloth) !== transition) return;
+          image.src = source;
+          window.requestAnimationFrame(() => {
+            if (itemCardPhotoTransitions.get(cloth) !== transition) return;
+            image.classList.remove("is-fading");
+            itemCardPhotoTransitions.delete(cloth);
+          });
+        }, 180);
+      };
+      const preload = new Image();
+      transition.preload = preload;
+      preload.onload = showPhoto;
+      preload.onerror = showPhoto;
+      preload.src = source;
+      if (preload.complete) showPhoto();
+    }
     function enableItemCardSwipe(container) {
       let pointerStart = null;
       container.addEventListener("pointerdown", (event) => {
@@ -2340,8 +2382,7 @@
         if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY) * 1.25) return;
         const nextIndex = (Number(cloth.dataset.photoIndex) + (deltaX < 0 ? 1 : -1) + photos.length) % photos.length;
         cloth.dataset.photoIndex = String(nextIndex);
-        const image = cloth.querySelector("img");
-        if (image) image.src = photos[nextIndex];
+        setItemCardPhoto(cloth, photos[nextIndex]);
         cloth.querySelectorAll(".item-gallery-dots span").forEach((dot, index) => {
           dot.classList.toggle("on", index === nextIndex);
         });
@@ -2357,8 +2398,7 @@
         if (photos.length < 2) return;
         const nextIndex = (Number(cloth.dataset.photoIndex) + (direction > 0 ? 1 : -1) + photos.length) % photos.length;
         cloth.dataset.photoIndex = String(nextIndex);
-        const image = cloth.querySelector("img");
-        if (image) image.src = photos[nextIndex];
+        setItemCardPhoto(cloth, photos[nextIndex]);
         cloth.querySelectorAll(".item-gallery-dots span").forEach((dot, index) => {
           dot.classList.toggle("on", index === nextIndex);
         });
