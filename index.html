@@ -2291,6 +2291,35 @@
         navigate(button.dataset.brand);
       });
     });
+    function enableTrackpadSwipe(element, onSwipe, canSwipe) {
+      let deltaX = 0;
+      let direction = 0;
+      let handled = false;
+      let resetTimer = 0;
+      element.addEventListener("wheel", (event) => {
+        if (event.ctrlKey || event.deltaMode !== WheelEvent.DOM_DELTA_PIXEL || !canSwipe(event)) return;
+        if (event.target.closest("button")) return;
+        if (Math.abs(event.deltaX) < 1 || Math.abs(event.deltaX) < Math.abs(event.deltaY) * 1.25) return;
+        if (event.cancelable) event.preventDefault();
+        const nextDirection = Math.sign(event.deltaX);
+        if (direction && nextDirection !== direction) {
+          deltaX = 0;
+          handled = false;
+        }
+        direction = nextDirection;
+        deltaX += event.deltaX;
+        if (!handled && Math.abs(deltaX) >= 40) {
+          onSwipe(direction, event);
+          handled = true;
+        }
+        window.clearTimeout(resetTimer);
+        resetTimer = window.setTimeout(() => {
+          deltaX = 0;
+          direction = 0;
+          handled = false;
+        }, 180);
+      }, { passive: false });
+    }
     let suppressItemCardClickUntil = 0;
     function enableItemCardSwipe(container) {
       let pointerStart = null;
@@ -2321,6 +2350,19 @@
       window.addEventListener("pointercancel", (event) => {
         if (pointerStart?.id === event.pointerId) pointerStart = null;
       });
+      enableTrackpadSwipe(container, (direction, event) => {
+        const cloth = event.target.closest(".cloth[data-gallery-photos]");
+        if (!cloth) return;
+        const photos = JSON.parse(decodeURIComponent(cloth.dataset.galleryPhotos));
+        if (photos.length < 2) return;
+        const nextIndex = (Number(cloth.dataset.photoIndex) + (direction > 0 ? 1 : -1) + photos.length) % photos.length;
+        cloth.dataset.photoIndex = String(nextIndex);
+        const image = cloth.querySelector("img");
+        if (image) image.src = photos[nextIndex];
+        cloth.querySelectorAll(".item-gallery-dots span").forEach((dot, index) => {
+          dot.classList.toggle("on", index === nextIndex);
+        });
+      }, (event) => Boolean(event.target.closest(".cloth[data-gallery-photos]")));
     }
     enableItemCardSwipe(items);
     enableItemCardSwipe(catalogBody);
@@ -2431,6 +2473,8 @@
     const productCloth = document.getElementById("product-cloth");
     enablePhotoSwipe(productCloth, () => { suppressProductClickUntil = Date.now() + 500; });
     enablePhotoSwipe(lightbox, () => { suppressLightboxClickUntil = Date.now() + 500; });
+    enableTrackpadSwipe(productCloth, (direction) => stepPhoto(direction > 0 ? 1 : -1), () => currentPhotos.length > 1);
+    enableTrackpadSwipe(lightbox, (direction) => stepPhoto(direction > 0 ? 1 : -1), () => currentPhotos.length > 1 && !lightbox.hidden);
     document.getElementById("gallery-prev").addEventListener("click", (event) => {
       event.stopPropagation();
       stepPhoto(-1);
