@@ -2256,7 +2256,7 @@
         return;
       }
       if (first === "catalog") {
-        const gender = second === "women" || second === "men" ? second : "all";
+        const gender = ["unisex", "women", "men"].includes(second) ? second : "all";
         paintCatalog(gender, animate);
         return;
       }
