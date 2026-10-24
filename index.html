@@ -225,6 +225,7 @@
       outline-offset: -1px;
       background-color: var(--swatch);
       overflow: hidden;
+      touch-action: pan-y;
     }
     .cloth.has-photo, .product-cloth.has-photo {
       background-color: #ebe4da;
@@ -366,6 +367,31 @@
       transition: background 0.25s ease, transform 0.25s ease;
     }
     .gallery-dots span.on {
+      background: #fff;
+      transform: scale(1.15);
+    }
+    .item-gallery-dots {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 12px;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      pointer-events: none;
+    }
+    .item-gallery-dots span {
+      display: block;
+      width: 6px;
+      height: 6px;
+      margin: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      box-shadow: 0 0 0 1px rgba(28,24,20,0.18);
+      transition: background 0.25s ease, transform 0.25s ease;
+    }
+    .item-gallery-dots span.on {
       background: #fff;
       transform: scale(1.15);
     }
@@ -2013,17 +2039,24 @@
     function itemCard(id, item) {
       const first = item.variants.find(variantInStock) || item.variants[0];
       const price = cardPrice(item);
-      const photo = variantPhotos(first)[0] || first.photo || "";
+      const photos = variantPhotos(first);
+      const photo = photos[0] || first.photo || "";
+      const cardPhotos = photos.length ? photos : photo ? [photo] : [];
       const color = first.color;
       const clothStyle = `--swatch:${color}`;
       const cardStyle = photo
         ? `--swatch:${color}`
         : `--swatch:${color};background-image:linear-gradient(${color},${color})`;
       const photoClass = photo ? " has-photo" : "";
+      const galleryClass = cardPhotos.length > 1 ? " has-gallery" : "";
+      const galleryData = cardPhotos.length > 1 ? ` data-gallery-photos="${encodeURIComponent(JSON.stringify(cardPhotos))}" data-photo-index="0"` : "";
       const photoTag = photo
         ? `<img src="${photo}" alt="${item.name}" loading="lazy" decoding="async">`
         : "";
-      return `<a class="item" href="?${id}/${item.slug}" data-brand="${id}" data-slug="${item.slug}" style="${cardStyle}"><div class="cloth${photoClass}" style="${clothStyle}">${photoTag}<span class="ph">Место под фото</span></div><span class="body"><b>${item.name}</b>${price ? `<span class="price">${price}</span>` : ""}</span></a>`;
+      const galleryDots = cardPhotos.length > 1
+        ? `<div class="item-gallery-dots" aria-hidden="true">${cardPhotos.map((_, index) => `<span class="${index === 0 ? "on" : ""}"></span>`).join("")}</div>`
+        : "";
+      return `<a class="item" href="?${id}/${item.slug}" data-brand="${id}" data-slug="${item.slug}" style="${cardStyle}"><div class="cloth${photoClass}${galleryClass}" style="${clothStyle}"${galleryData}>${photoTag}${galleryDots}<span class="ph">Место под фото</span></div><span class="body"><b>${item.name}</b>${price ? `<span class="price">${price}</span>` : ""}</span></a>`;
     }
 
     function renderBrandFilters(data) {
@@ -2258,9 +2291,48 @@
         navigate(button.dataset.brand);
       });
     });
+    let suppressItemCardClickUntil = 0;
+    function enableItemCardSwipe(container) {
+      let pointerStart = null;
+      container.addEventListener("pointerdown", (event) => {
+        if (event.pointerType === "mouse") return;
+        const cloth = event.target.closest(".cloth[data-gallery-photos]");
+        if (!cloth) return;
+        const photos = JSON.parse(decodeURIComponent(cloth.dataset.galleryPhotos));
+        if (photos.length < 2) return;
+        pointerStart = { id: event.pointerId, x: event.clientX, y: event.clientY, cloth, photos };
+      });
+      window.addEventListener("pointerup", (event) => {
+        if (!pointerStart || event.pointerId !== pointerStart.id) return;
+        const deltaX = event.clientX - pointerStart.x;
+        const deltaY = event.clientY - pointerStart.y;
+        const { cloth, photos } = pointerStart;
+        pointerStart = null;
+        if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY) * 1.25) return;
+        const nextIndex = (Number(cloth.dataset.photoIndex) + (deltaX < 0 ? 1 : -1) + photos.length) % photos.length;
+        cloth.dataset.photoIndex = String(nextIndex);
+        const image = cloth.querySelector("img");
+        if (image) image.src = photos[nextIndex];
+        cloth.querySelectorAll(".item-gallery-dots span").forEach((dot, index) => {
+          dot.classList.toggle("on", index === nextIndex);
+        });
+        suppressItemCardClickUntil = Date.now() + 500;
+      });
+      window.addEventListener("pointercancel", (event) => {
+        if (pointerStart?.id === event.pointerId) pointerStart = null;
+      });
+    }
+    enableItemCardSwipe(items);
+    enableItemCardSwipe(catalogBody);
     function openItemCard(event) {
       const card = event.target.closest("a.item");
       if (!card) return;
+      if (Date.now() < suppressItemCardClickUntil) {
+        suppressItemCardClickUntil = 0;
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
       event.preventDefault();
       const brandId = card.dataset.brand || currentBrand;
