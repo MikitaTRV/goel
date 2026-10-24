@@ -23,11 +23,17 @@ SHEET_PREFIXES = {
     "oduvanchikрозовый": ("oduvanchik", "розовый"),
     "oduvanchikнебесный": ("oduvanchik", "небесный"),
     "oduvanchikсливочный": ("oduvanchik-zip-yellow", "светло-жёлтый"),
+    "jesusloversclubsweatshirtсиний": ("jesus-lovers-club-sweatshirt", "синий"),
+    "jesusloversclubsweatshirtиндиго": ("jesus-lovers-club-sweatshirt", "синий"),
+    "jesusloversclubсвитшотсиний": ("jesus-lovers-club-sweatshirt", "синий"),
+    "jesusloversclubсвитшотиндиго": ("jesus-lovers-club-sweatshirt", "синий"),
     "барашеккофе": ("shepherd-women", "кофе"),
     "барашекизумруд": ("shepherd-men", "изумруд"),
     "onlyjesusчерный": ("only-jesus", "чёрный"),
     "onlyjesusтравяной": ("only-jesus", "травяной"),
     "childofgodборд": ("child-of-god", "розовый"),
+    "childofgodбелый": ("child-of-god", "белый"),
+    "childofgodмолочный": ("child-of-god", "белый"),
     "lovebut": ("love-like-jesus", "травяной"),
     "jesusislordгорчица": ("jesus-is-lord-women", "горчичный"),
     "богестьлюбовьмолоко": ("bog-est-lubov-men", "молочный"),
@@ -47,6 +53,7 @@ SHEET_PREFIXES = {
 ALWAYS_MANAGED_VARIANTS = {
     "child-of-god|белый",
     "child-of-god|небесный",
+    "jesus-lovers-club-sweatshirt|синий",
 }
 
 SIZE_ORDER = {size: index for index, size in enumerate(("XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL", "OS"))}
