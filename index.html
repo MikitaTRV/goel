@@ -648,6 +648,7 @@
       </div>
       <div class="filters" id="catalog-filters">
         <button type="button" data-catalog-filter="all">Всё</button>
+        <button type="button" data-catalog-filter="unisex">Унисекс</button>
         <button type="button" data-catalog-filter="women">Женское</button>
         <button type="button" data-catalog-filter="men">Мужское</button>
       </div>
@@ -1661,7 +1662,7 @@
     const menuList = document.getElementById("country-menu");
     const catalogBtn = document.getElementById("catalog-btn");
     const catalogMenu = document.getElementById("catalog-menu");
-    const genderLabel = { all: "Всё", women: "Женское", men: "Мужское" };
+    const genderLabel = { all: "Всё", unisex: "Унисекс", women: "Женское", men: "Мужское" };
     function stockToken(value) {
       return String(value || "")
         .trim()
@@ -1871,12 +1872,15 @@
 
     function itemMatchesGender(item, gender) {
       if (!gender || gender === "all") return true;
-      if (!item.gender || item.gender === "unisex") return true;
-      return item.gender === gender;
+      const itemGender = item.gender === "women" || item.gender === "men" ? item.gender : "unisex";
+      return itemGender === gender;
     }
 
-    function brandHasGender(data) {
-      return data.items.some((item) => item && item.slug && Array.isArray(item.variants));
+    function brandGenderOptions(data) {
+      const available = new Set(data.items
+        .filter((item) => item && item.slug && Array.isArray(item.variants))
+        .map((item) => item.gender === "women" || item.gender === "men" ? item.gender : "unisex"));
+      return ["unisex", "women", "men"].filter((gender) => available.has(gender));
     }
 
     function filterItemsByGender(list, gender) {
@@ -2087,14 +2091,17 @@
 
     function renderBrandFilters(data) {
       const bar = document.getElementById("brand-filters");
-      if (!brandHasGender(data)) {
+      const available = brandGenderOptions(data);
+      if (available.length < 2) {
         bar.hidden = true;
         bar.innerHTML = "";
         brandGenderFilter = "all";
         return;
       }
+      const options = ["all", ...available];
+      if (!options.includes(brandGenderFilter)) brandGenderFilter = "all";
       bar.hidden = false;
-      bar.innerHTML = ["all", "women", "men"].map((key) =>
+      bar.innerHTML = options.map((key) =>
         `<button type="button" data-brand-filter="${key}" class="${brandGenderFilter === key ? "on" : ""}">${genderLabel[key]}</button>`
       ).join("");
     }
@@ -2102,7 +2109,6 @@
     function paintBrand(id, animate) {
       const data = brands[id];
       currentBrand = id;
-      if (!brandHasGender(data)) brandGenderFilter = "all";
       reveal(() => {
         document.getElementById("crumb-country").textContent = data.country;
         document.getElementById("crumb-brand").textContent = data.title;
