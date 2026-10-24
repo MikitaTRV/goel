@@ -240,7 +240,7 @@
       opacity: 1;
       transition: opacity 0.35s ease;
     }
-    .cloth > img { transition-duration: 0.18s; }
+    .cloth > img, .product-cloth > img, .lightbox img { transition-duration: 0.18s; }
     .cloth > img.is-fading, .product-cloth > img.is-fading { opacity: 0; }
     .cloth > .ph, .product-cloth > .ph {
       position: absolute;
@@ -1641,6 +1641,7 @@
     let currentTone = 0;
     let currentPhotos = [];
     let currentPhotoIndex = 0;
+    let productPhotoTransition = null;
     let brandGenderFilter = "all";
     const ORDER_API_URL = "https://goel-order-api.o-el.workers.dev/order";
     const orderDialog = document.getElementById("order-dialog");
@@ -1767,6 +1768,15 @@
       const prev = document.getElementById("gallery-prev");
       const next = document.getElementById("gallery-next");
       const dots = document.getElementById("gallery-dots");
+      if (productPhotoTransition) {
+        window.clearTimeout(productPhotoTransition.fadeTimer);
+        window.clearTimeout(productPhotoTransition.revealTimer);
+        if (productPhotoTransition.preload) {
+          productPhotoTransition.preload.onload = null;
+          productPhotoTransition.preload.onerror = null;
+        }
+        productPhotoTransition = null;
+      }
       if (!currentPhotos.length) {
         photoEl.hidden = true;
         photoEl.removeAttribute("src");
@@ -1789,23 +1799,38 @@
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       currentPhotoIndex = nextIndex;
       photoEl.alt = alt;
-      const finish = () => {
-        applyPhotoSrc(photoEl, src, true);
-        syncGalleryChrome(photoEl);
-        if (!animate || reduce) return;
-        requestAnimationFrame(() => {
-          photoEl.classList.remove("is-fading");
-          if (!lightbox.hidden) lightboxPhoto.classList.remove("is-fading");
-        });
-      };
       if (animate && !reduce) {
+        const transition = { fadeTimer: 0, revealTimer: 0, preload: null, ready: false };
+        productPhotoTransition = transition;
+        syncGalleryChrome(photoEl);
         photoEl.classList.add("is-fading");
         if (!lightbox.hidden) lightboxPhoto.classList.add("is-fading");
-        window.setTimeout(finish, 180);
+        const showPhoto = () => {
+          if (transition.ready || productPhotoTransition !== transition) return;
+          transition.ready = true;
+          transition.fadeTimer = window.setTimeout(() => {
+            if (productPhotoTransition !== transition) return;
+            applyPhotoSrc(photoEl, src, true);
+            syncGalleryChrome(photoEl);
+            transition.revealTimer = window.setTimeout(() => {
+              if (productPhotoTransition !== transition) return;
+              photoEl.classList.remove("is-fading");
+              if (!lightbox.hidden) lightboxPhoto.classList.remove("is-fading");
+              productPhotoTransition = null;
+            }, 32);
+          }, 180);
+        };
+        const preload = new Image();
+        transition.preload = preload;
+        preload.onload = showPhoto;
+        preload.onerror = showPhoto;
+        preload.src = src;
+        if (preload.complete) showPhoto();
       } else {
         photoEl.classList.remove("is-fading");
         lightboxPhoto.classList.remove("is-fading");
-        finish();
+        applyPhotoSrc(photoEl, src, true);
+        syncGalleryChrome(photoEl);
       }
     }
 
