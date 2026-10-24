@@ -89,8 +89,8 @@
     nav.links { margin-left: auto; display: flex; align-items: center; gap: 12px; }
     .language-picker { position: relative; display: inline-flex; align-items: center; color: var(--ink); font-size: 15px; }
     .language-picker > span { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-    .language-picker::after { content: "▾"; position: absolute; right: 0; color: var(--muted); font-size: 12px; pointer-events: none; }
-    .language-picker select { max-width: 130px; min-width: 0; border: 0; padding: 0 17px 0 0; background: transparent; color: var(--ink); font: inherit; cursor: pointer; -webkit-appearance: none; appearance: none; }
+    .language-picker::after { content: "▾"; position: absolute; right: 1px; color: var(--muted); font-size: 12px; pointer-events: none; }
+    .language-picker select { max-width: 130px; min-width: 0; border: 0; padding: 0 12px 0 0; background: transparent; color: var(--ink); font: inherit; cursor: pointer; -webkit-appearance: none; appearance: none; }
     .language-picker:hover select { color: var(--accent); }
     .language-picker:focus-within select { outline: 2px solid var(--accent); outline-offset: 3px; }
     nav.links a {
@@ -552,6 +552,12 @@
       .crumbs { flex-wrap: wrap; margin: 20px 0 16px; }
     }
     @media (max-width: 560px) {
+      header { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 10px 14px; }
+      header > #logo { grid-column: 1; grid-row: 1; }
+      header > .country-nav { grid-column: 1; grid-row: 2; }
+      header > .catalog-nav { grid-column: 2; grid-row: 2; }
+      header > .language-picker { grid-column: 2; grid-row: 1; justify-self: end; margin-left: 0; }
+      header > nav.links { grid-column: 3; grid-row: 1; justify-self: end; margin-left: 0; }
       .wrap { width: calc(100% - 24px); }
       h1 { font-size: 24px; }
       .brand-head h1 { font-size: 22px; }
@@ -559,8 +565,6 @@
       .items { grid-template-columns: 1fr; gap: 12px; padding: 20px 0 32px; }
       .item .body { padding: 14px; }
       nav.links { gap: 8px; }
-      .language-picker { margin-left: auto; }
-      nav.links { margin-left: 0; }
       .language-picker select { max-width: 116px; }
       .brand { grid-template-columns: 52px 1fr auto; gap: 10px; padding: 10px; }
       .swatch { width: 52px; height: 52px; }
@@ -582,13 +586,13 @@
   <div class="wrap">
     <header>
       <button class="mark" id="logo" type="button">GO'EL</button>
-      <div class="menu">
+      <div class="menu country-nav">
         <button type="button" id="countries-btn" data-i18n="countries" aria-expanded="false" aria-controls="country-menu">Страны ▾</button>
         <div class="menu-list" id="country-menu" hidden>
           <button type="button" data-slug="belarus" data-i18n="belarus">Беларусь</button>
         </div>
       </div>
-      <div class="menu">
+      <div class="menu catalog-nav">
         <button type="button" id="catalog-btn" data-i18n="catalogMenu" aria-expanded="false" aria-controls="catalog-menu">Каталог ▾</button>
         <div class="menu-list" id="catalog-menu" hidden>
           <button type="button" data-catalog="all" data-i18n="all">Всё</button>
