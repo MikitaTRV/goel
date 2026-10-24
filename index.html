@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>GO'EL — христианские бренды одежды</title>
+  <title data-i18n="pageTitle">GO'EL — христианские бренды одежды</title>
   <style>
     :root {
       --bg: #f6f3ee;
@@ -87,6 +87,8 @@
     .menu-list button { display: block; width: 100%; padding: 10px 14px; font-size: 15px; }
     .menu-list button:hover { background: #f3efe8; }
     nav.links { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    .language-picker { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 13px; }
+    .language-picker select { max-width: 130px; border: 1px solid var(--line); padding: 6px 8px; background: var(--paper); color: var(--ink); font: inherit; }
     nav.links a {
       display: inline-flex;
       align-items: center;
@@ -299,7 +301,7 @@
       cursor: zoom-in;
     }
     .product-cloth.has-photo::after {
-      content: "Нажмите, чтобы увеличить";
+      content: attr(data-zoom-label);
       position: absolute;
       left: 12px;
       bottom: 12px;
@@ -553,6 +555,9 @@
       .items { grid-template-columns: 1fr; gap: 12px; padding: 20px 0 32px; }
       .item .body { padding: 14px; }
       nav.links { gap: 8px; }
+      .language-picker { margin-left: auto; }
+      nav.links { margin-left: 0; }
+      .language-picker select { max-width: 116px; }
       .brand { grid-template-columns: 52px 1fr auto; gap: 10px; padding: 10px; }
       .swatch { width: 52px; height: 52px; }
       .brand b { font-size: 16px; }
@@ -567,27 +572,34 @@
       .lightbox-nav.prev { left: 8px; }
       .lightbox-nav.next { right: 8px; }
     }
-  </style>
+  </style>  </style>
 </head>
 <body>
   <div class="wrap">
     <header>
       <button class="mark" id="logo" type="button">GO'EL</button>
       <div class="menu">
-        <button type="button" id="countries-btn" aria-expanded="false" aria-controls="country-menu">Страны ▾</button>
+        <button type="button" id="countries-btn" data-i18n="countries" aria-expanded="false" aria-controls="country-menu">Страны ▾</button>
         <div class="menu-list" id="country-menu" hidden>
-          <button type="button" data-slug="belarus">Беларусь</button>
+          <button type="button" data-slug="belarus" data-i18n="belarus">Беларусь</button>
         </div>
       </div>
       <div class="menu">
-        <button type="button" id="catalog-btn" aria-expanded="false" aria-controls="catalog-menu">Каталог ▾</button>
+        <button type="button" id="catalog-btn" data-i18n="catalogMenu" aria-expanded="false" aria-controls="catalog-menu">Каталог ▾</button>
         <div class="menu-list" id="catalog-menu" hidden>
-          <button type="button" data-catalog="all">Всё</button>
-          <button type="button" data-catalog="women">Женское</button>
-          <button type="button" data-catalog="men">Мужское</button>
+          <button type="button" data-catalog="all" data-i18n="all">Всё</button>
+          <button type="button" data-catalog="unisex" data-i18n="unisex">Унисекс</button>
+          <button type="button" data-catalog="women" data-i18n="women">Женское</button>
+          <button type="button" data-catalog="men" data-i18n="men">Мужское</button>
         </div>
       </div>
-      <nav class="links" aria-label="Социальные сети">
+      <label class="language-picker"><span data-i18n="languageLabel">Язык</span><select id="language-select" aria-label="Язык" data-i18n-aria="languageLabel">
+        <option value="ru">Русский</option>
+        <option value="be">Беларуская</option>
+        <option value="uk">Українська</option>
+        <option value="en">English</option>
+      </select></label>
+      <nav class="links" aria-label="Социальные сети" data-i18n-aria="socialNetworks">
         <a href="https://t.me/JHVHGOeL" aria-label="Telegram" title="Telegram">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.6 3.4 2.8 10.7c-1.3.5-1.3 1.2-.2 1.5l4.6 1.4 1.7 5.4c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.4-2.3 4.8 3.5c.9.5 1.5.2 1.7-.8L23.3 5c.3-1.3-.5-1.9-1.7-1.6zM8.7 13.2l9.3-5.8c.5-.3.9-.1.5.2l-7.7 7-.3 3.4-1.8-4.8z"/></svg>
         </a>
@@ -600,27 +612,27 @@
     <div id="stage">
     <section id="home" class="view on">
       <div class="hero">
-        <h1>Христианские бренды<br>одежды в одном месте</h1>
-        <p class="verse">«Искупитель наш — Господь Саваоф<br>имя Ему, Святый Израилев.»<span>Isa 47:4</span></p>
+        <h1><span data-i18n="heroLine1">Христианские бренды</span><br><span data-i18n="heroLine2">одежды в одном месте</span></h1>
+        <p class="verse">«<span data-i18n="verseLine1">Искупитель наш — Господь Саваоф</span><br><span data-i18n="verseLine2">имя Ему, Святый Израилев.</span>»<span>Isa 47:4</span></p>
       </div>
       <div class="crumbs" id="home-crumbs" hidden>
-        <button type="button" id="home-all">Все бренды</button>
+        <button type="button" id="home-all" data-i18n="allBrands">Все бренды</button>
         <span>›</span>
         <span class="here" id="home-country"></span>
       </div>
       <div data-country-group="Беларусь">
-        <h2>Беларусь</h2>
+        <h2 data-i18n="belarus">Беларусь</h2>
         <button class="brand" data-brand="godderob">
           <img class="swatch" src="img/godderob/avatar.jpg" alt="" width="64" height="64">
           <span><b>godderob</b></span>
-          <span class="go">Смотреть</span>
+          <span class="go" data-i18n="view">Смотреть</span>
         </button>
       </div>
     </section>
 
     <section id="brand" class="view">
       <div class="crumbs">
-        <button type="button" id="crumb-all">Все бренды</button>
+        <button type="button" id="crumb-all" data-i18n="allBrands">Все бренды</button>
         <span>›</span>
         <button type="button" id="crumb-country"></button>
         <span>›</span>
@@ -631,33 +643,33 @@
         <p class="blurb" id="blurb"></p>
       </div>
       <p class="stock" id="note"></p>
-      <p class="ahead">Выберите вещь и вариант — заявку можно будет оставить прямо на сайте.</p>
+      <p class="ahead" data-i18n="chooseItemHint">Выберите вещь и вариант — заявку можно будет оставить прямо на сайте.</p>
       <div class="filters" id="brand-filters" hidden></div>
       <div class="items" id="items"></div>
     </section>
 
     <section id="catalog" class="view">
       <div class="crumbs">
-        <button type="button" id="catalog-crumb-all">Все бренды</button>
+        <button type="button" id="catalog-crumb-all" data-i18n="allBrands">Все бренды</button>
         <span>›</span>
         <span class="here" id="catalog-crumb"></span>
       </div>
       <div class="brand-head">
-        <h1 id="catalog-title">Каталог</h1>
-        <p class="blurb" id="catalog-blurb">Одежда всех брендов в одном месте.</p>
+        <h1 id="catalog-title" data-i18n="catalogTitle">Каталог</h1>
+        <p class="blurb" id="catalog-blurb" data-i18n="catalogDescription">Одежда всех брендов в одном месте.</p>
       </div>
-      <div class="filters" id="catalog-filters">
-        <button type="button" data-catalog-filter="all">Всё</button>
-        <button type="button" data-catalog-filter="unisex">Унисекс</button>
-        <button type="button" data-catalog-filter="women">Женское</button>
-        <button type="button" data-catalog-filter="men">Мужское</button>
+    <div class="filters" id="catalog-filters">
+      <button type="button" data-catalog-filter="all" data-i18n="all">Всё</button>
+      <button type="button" data-catalog-filter="unisex" data-i18n="unisex">Унисекс</button>
+      <button type="button" data-catalog-filter="women" data-i18n="women">Женское</button>
+      <button type="button" data-catalog-filter="men" data-i18n="men">Мужское</button>
       </div>
       <div id="catalog-body"></div>
     </section>
 
     <section id="product" class="view">
       <div class="crumbs">
-        <button type="button" id="product-all">Все бренды</button>
+        <button type="button" id="product-all" data-i18n="allBrands">Все бренды</button>
         <span>›</span>
         <button type="button" id="product-country"></button>
         <span>›</span>
@@ -666,34 +678,34 @@
         <span class="here" id="product-crumb"></span>
       </div>
       <article class="product">
-        <div class="product-cloth" id="product-cloth" role="button" tabindex="-1" aria-label="Увеличить фото">
+        <div class="product-cloth" id="product-cloth" role="button" tabindex="-1" aria-label="Нажмите, чтобы увеличить" data-i18n-aria="enlargePhoto">
           <img id="product-photo" alt="" hidden>
-          <button type="button" class="gallery-nav prev" id="gallery-prev" hidden aria-label="Предыдущее фото">‹</button>
-          <button type="button" class="gallery-nav next" id="gallery-next" hidden aria-label="Следующее фото">›</button>
+          <button type="button" class="gallery-nav prev" id="gallery-prev" hidden aria-label="Предыдущее фото" data-i18n-aria="previousPhoto">‹</button>
+          <button type="button" class="gallery-nav next" id="gallery-next" hidden aria-label="Следующее фото" data-i18n-aria="nextPhoto">›</button>
           <div class="gallery-dots" id="gallery-dots" hidden></div>
-          <span class="ph">Место под фото</span>
+          <span class="ph" data-i18n="photoPlaceholder">Место под фото</span>
         </div>
         <div class="product-copy">
           <h1 id="product-title"></h1>
           <div class="product-options">
             <div class="cuts" id="product-cuts" hidden>
-              <p>Модель</p>
+              <p data-i18n="model">Модель</p>
               <div id="cut-options"></div>
             </div>
             <div class="colors" id="product-colors" hidden>
-              <p id="color-label">Цвет</p>
+              <p id="color-label" data-i18n="color">Цвет</p>
               <div id="color-options"></div>
             </div>
             <p class="size-range" id="size-range" hidden></p>
             <div class="sizes" id="product-sizes" hidden>
-              <p>Размер</p>
+              <p data-i18n="size">Размер</p>
               <div id="size-options"></div>
             </div>
             <p class="product-price" id="product-price" hidden></p>
           </div>
           <div class="product-actions">
-            <button type="button" class="buy">Заказать</button>
-            <p class="order" id="choice">Выберите размер, затем нажмите «Заказать».</p>
+            <button type="button" class="buy" data-i18n="order">Заказать</button>
+            <p class="order" id="choice" data-i18n="orderNotConnected">Оформление заказа ещё не включено.</p>
           </div>
         </div>
       </article>
@@ -701,46 +713,176 @@
     </div>
   </div>
   <div class="lightbox" id="lightbox" hidden>
-    <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Закрыть">×</button>
-    <button type="button" class="lightbox-nav prev" id="lightbox-prev" hidden aria-label="Предыдущее фото">‹</button>
+    <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Закрыть" data-i18n-aria="close">×</button>
+    <button type="button" class="lightbox-nav prev" id="lightbox-prev" hidden aria-label="Предыдущее фото" data-i18n-aria="previousPhoto">‹</button>
     <img id="lightbox-photo" alt="">
-    <button type="button" class="lightbox-nav next" id="lightbox-next" hidden aria-label="Следующее фото">›</button>
+    <button type="button" class="lightbox-nav next" id="lightbox-next" hidden aria-label="Следующее фото" data-i18n-aria="nextPhoto">›</button>
     <div class="lightbox-count" id="lightbox-count" hidden></div>
   </div>
   <dialog class="order-dialog" id="order-dialog" aria-labelledby="order-title">
     <form class="order-form" id="order-form">
       <div class="order-form-head">
         <div>
-          <h2 id="order-title">Заявка на заказ</h2>
+          <h2 id="order-title" data-i18n="orderTitle">Заявка на заказ</h2>
           <p class="order-status" id="order-setup-note">Подключаем приём заказов в Telegram.</p>
         </div>
-        <button class="order-close" type="button" id="order-close" aria-label="Закрыть форму">×</button>
+        <button class="order-close" type="button" id="order-close" aria-label="Закрыть форму" data-i18n-aria="closeForm">×</button>
       </div>
       <p class="order-summary" id="order-summary"></p>
-      <label>Имя
+      <label><span data-i18n="customerName">Имя</span>
         <input name="customerName" autocomplete="name" maxlength="80" required>
       </label>
-      <label>Телефон
+      <label><span data-i18n="phone">Телефон</span>
         <input name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="32" placeholder="+375…" required>
       </label>
-      <label>Город и адрес или пункт выдачи
+      <label><span data-i18n="deliveryAddress">Город и адрес или пункт выдачи</span>
         <textarea name="delivery" autocomplete="street-address" maxlength="500" required></textarea>
       </label>
-      <label>Комментарий <span>(необязательно)</span>
+      <label><span data-i18n="comment">Комментарий</span> <span data-i18n="optional">(необязательно)</span>
         <textarea name="comment" maxlength="500"></textarea>
       </label>
       <label class="order-consent">
         <input name="consent" type="checkbox" required>
-        <span>Согласен(на), что GO’EL использует мои данные, чтобы связаться со мной по поводу этого заказа.</span>
+        <span data-i18n="consent">Согласен(на), что GO’EL использует мои данные, чтобы связаться со мной по поводу этого заказа.</span>
       </label>
-      <label class="order-honeypot" aria-hidden="true" tabindex="-1">Не заполняйте это поле
+      <label class="order-honeypot" aria-hidden="true" tabindex="-1"><span data-i18n="honeypot">Не заполняйте это поле</span>
         <input name="website" autocomplete="off" tabindex="-1">
       </label>
-      <button class="buy order-submit" id="order-submit" type="submit" disabled>Отправить заявку</button>
+      <button class="buy order-submit" id="order-submit" type="submit" disabled data-i18n="submitOrder">Отправить заявку</button>
       <p class="order-status" id="order-status" role="status" aria-live="polite"></p>
     </form>
   </dialog>
   <script>
+    const translations = {
+      ru: {
+        pageTitle: "GO'EL — христианские бренды одежды", countries: "Страны ▾", belarus: "Беларусь", catalogMenu: "Каталог ▾",
+        all: "Всё", unisex: "Унисекс", women: "Женское", men: "Мужское", languageLabel: "Язык", socialNetworks: "Социальные сети",
+        heroLine1: "Христианские бренды", heroLine2: "одежды в одном месте", verseLine1: "Искупитель наш — Господь Саваоф", verseLine2: "имя Ему, Святый Израилев.",
+        allBrands: "Все бренды", view: "Смотреть", chooseItemHint: "Выберите вещь и вариант — заявку можно будет оставить прямо на сайте.",
+        catalogTitle: "Каталог", catalogDescription: "Одежда всех брендов в одном месте.", catalogFilteredDescription: "{{gender}} от всех брендов.",
+        enlargePhoto: "Нажмите, чтобы увеличить", previousPhoto: "Предыдущее фото", nextPhoto: "Следующее фото", photoPlaceholder: "Место под фото",
+        model: "Модель", color: "Цвет", size: "Размер", order: "Заказать", orderNotConnected: "Оформление заказа ещё не включено.",
+        orderTitle: "Заявка на заказ", orderSetupConnected: "После отправки заявка придёт GO’EL в Telegram.", orderSetupDisabled: "Приём заявок включится после подключения Telegram-бота.",
+        close: "Закрыть", closeForm: "Закрыть форму", customerName: "Имя", phone: "Телефон", deliveryAddress: "Город и адрес или пункт выдачи",
+        comment: "Комментарий", optional: "(необязательно)", consent: "Согласен(на), что GO’EL использует мои данные, чтобы связаться со мной по поводу этого заказа.",
+        honeypot: "Не заполняйте это поле", submitOrder: "Отправить заявку", sendingOrder: "Отправляем…", orderSent: "Заявка отправлена",
+        formNotReady: "Форма пока не подключена к Telegram. Заявка не отправлена.", waitBeforeResend: "Подождите секунду и попробуйте отправить заявку ещё раз.",
+        orderSuccess: "Заявка отправлена! Мы свяжемся с вами для подтверждения заказа.", orderFailure: "Не удалось отправить заявку. Проверьте интернет и попробуйте ещё раз.",
+        chooseSize: "Выберите размер, затем нажмите «Заказать», чтобы оставить заявку.", pressOrderToRequest: "Нажмите «Заказать», чтобы оставить заявку.", chooseSizeBeforeOrder: "Выберите размер перед оформлением заявки.",
+        selectedSizeMessage: "Выбран размер {{size}}. Нажмите «Заказать», чтобы оставить заявку.", firstChooseSize: "Сначала выберите размер.",
+        unavailable: "Нет в наличии", nowUnavailable: "Сейчас нет в наличии", sizeRange: "Размеры {{size}}", singleSize: "Размер {{size}}",
+        oversizeFit: "Посадка Oversize", oversizeFitLabel: "Посадка оверсайз", noFilterItems: "В этом фильтре пока нет вещей.",
+        noCatalogItems: "Пока нет вещей в этом разделе.", from: "от", pricePending: "Уточняется", colorUnknown: "не указан", sizeUnknown: "не указан", priceUnknown: "не указана",
+        summaryModel: "Модель", summaryColor: "Цвет", summarySize: "Размер", summaryPrice: "Цена",
+        darkBlue: "тёмно-синий", pink: "розовый", skyBlue: "небесный", lightYellow: "светло-жёлтый", white: "белый", mustard: "горчичный",
+        brown: "коричневый", grassGreen: "травяной", graphite: "графитовый", burgundy: "бордовый", blue: "синий", black: "чёрный",
+        beige: "бежевый", red: "красный", coffee: "кофе", emerald: "изумруд", milk: "молочный", sand: "песочный", ginger: "рыжий", darkGreen: "тёмно-зелёный"
+      },
+      be: {
+        pageTitle: "GO'EL — хрысціянскія брэнды адзення", countries: "Краіны ▾", belarus: "Беларусь", catalogMenu: "Каталог ▾",
+        all: "Усё", unisex: "Унісекс", women: "Жаночае", men: "Мужчынскае", languageLabel: "Мова", socialNetworks: "Сацыяльныя сеткі",
+        heroLine1: "Хрысціянскія брэнды", heroLine2: "адзення ў адным месцы", verseLine1: "Збаўца наш — Гасподзь Саваоф", verseLine2: "імя Яму — Святы Ізраілеў.",
+        allBrands: "Усе брэнды", view: "Глядзець", chooseItemHint: "Выберыце рэч і варыянт — заяўку можна будзе пакінуць проста на сайце.",
+        catalogTitle: "Каталог", catalogDescription: "Адзенне ўсіх брэндаў у адным месцы.", catalogFilteredDescription: "{{gender}} ад усіх брэндаў.",
+        enlargePhoto: "Націсніце, каб павялічыць", previousPhoto: "Папярэдняе фота", nextPhoto: "Наступнае фота", photoPlaceholder: "Месца для фота",
+        model: "Мадэль", color: "Колер", size: "Памер", order: "Замовіць", orderNotConnected: "Афармленне замовы яшчэ не ўключана.",
+        orderTitle: "Заяўка на замову", orderSetupConnected: "Пасля адпраўкі заяўка прыйдзе GO’EL у Telegram.", orderSetupDisabled: "Прыём заявак уключыцца пасля падключэння Telegram-бота.",
+        close: "Закрыць", closeForm: "Закрыць форму", customerName: "Імя", phone: "Тэлефон", deliveryAddress: "Горад і адрас або пункт выдачы",
+        comment: "Каментарый", optional: "(неабавязкова)", consent: "Пагаджаюся, што GO’EL будзе выкарыстоўваць мае даныя, каб звязацца са мной наконт гэтай замовы.",
+        honeypot: "Не запаўняйце гэтае поле", submitOrder: "Адправіць заяўку", sendingOrder: "Адпраўляем…", orderSent: "Заяўка адпраўлена",
+        formNotReady: "Форма пакуль не падключана да Telegram. Заяўка не адпраўлена.", waitBeforeResend: "Пачакайце секунду і паспрабуйце адправіць заяўку яшчэ раз.",
+        orderSuccess: "Заяўка адпраўлена! Мы звяжамся з вамі, каб пацвердзіць замову.", orderFailure: "Не ўдалося адправіць заяўку. Праверце інтэрнэт і паспрабуйце яшчэ раз.",
+        chooseSize: "Выберыце памер, затым націсніце «Замовіць», каб пакінуць заяўку.", pressOrderToRequest: "Націсніце «Замовіць», каб пакінуць заяўку.", chooseSizeBeforeOrder: "Выберыце памер перад афармленнем заяўкі.",
+        selectedSizeMessage: "Выбраны памер {{size}}. Націсніце «Замовіць», каб пакінуць заяўку.", firstChooseSize: "Спачатку выберыце памер.",
+        unavailable: "Няма ў наяўнасці", nowUnavailable: "Зараз няма ў наяўнасці", sizeRange: "Памеры {{size}}", singleSize: "Памер {{size}}",
+        oversizeFit: "Крой Oversize", oversizeFitLabel: "Крой оверсайз", noFilterItems: "У гэтым фільтры пакуль няма рэчаў.",
+        noCatalogItems: "У гэтым раздзеле пакуль няма рэчаў.", from: "ад", pricePending: "Удакладняецца", colorUnknown: "не пазначаны", sizeUnknown: "не пазначаны", priceUnknown: "не пазначана",
+        summaryModel: "Мадэль", summaryColor: "Колер", summarySize: "Памер", summaryPrice: "Цана",
+        darkBlue: "цёмна-сіні", pink: "ружовы", skyBlue: "нябесны", lightYellow: "светла-жоўты", white: "белы", mustard: "гарчычны",
+        brown: "карычневы", grassGreen: "травяны", graphite: "графітавы", burgundy: "бардовы", blue: "сіні", black: "чорны",
+        beige: "бэжавы", red: "чырвоны", coffee: "кававы", emerald: "смарагдавы", milk: "малочны", sand: "пясочны", ginger: "рыжы", darkGreen: "цёмна-зялёны"
+      },
+      uk: {
+        pageTitle: "GO'EL — християнські бренди одягу", countries: "Країни ▾", belarus: "Білорусь", catalogMenu: "Каталог ▾",
+        all: "Усе", unisex: "Унісекс", women: "Жіноче", men: "Чоловіче", languageLabel: "Мова", socialNetworks: "Соціальні мережі",
+        heroLine1: "Християнські бренди", heroLine2: "одягу в одному місці", verseLine1: "Викупитель наш — Господь Саваот", verseLine2: "ім’я Йому — Святий Ізраїлів.",
+        allBrands: "Усі бренди", view: "Переглянути", chooseItemHint: "Оберіть річ і варіант — заявку можна буде залишити просто на сайті.",
+        catalogTitle: "Каталог", catalogDescription: "Одяг усіх брендів в одному місці.", catalogFilteredDescription: "{{gender}} від усіх брендів.",
+        enlargePhoto: "Натисніть, щоб збільшити", previousPhoto: "Попереднє фото", nextPhoto: "Наступне фото", photoPlaceholder: "Місце для фото",
+        model: "Модель", color: "Колір", size: "Розмір", order: "Замовити", orderNotConnected: "Оформлення замовлення ще не ввімкнено.",
+        orderTitle: "Заявка на замовлення", orderSetupConnected: "Після надсилання заявка надійде GO’EL у Telegram.", orderSetupDisabled: "Приймання заявок увімкнеться після підключення Telegram-бота.",
+        close: "Закрити", closeForm: "Закрити форму", customerName: "Ім’я", phone: "Телефон", deliveryAddress: "Місто й адреса або пункт видачі",
+        comment: "Коментар", optional: "(необов’язково)", consent: "Погоджуюся, що GO’EL використовуватиме мої дані, щоб зв’язатися зі мною щодо цього замовлення.",
+        honeypot: "Не заповнюйте це поле", submitOrder: "Надіслати заявку", sendingOrder: "Надсилаємо…", orderSent: "Заявку надіслано",
+        formNotReady: "Форму ще не підключено до Telegram. Заявку не надіслано.", waitBeforeResend: "Зачекайте секунду й спробуйте надіслати заявку ще раз.",
+        orderSuccess: "Заявку надіслано! Ми зв’яжемося з вами для підтвердження замовлення.", orderFailure: "Не вдалося надіслати заявку. Перевірте інтернет і спробуйте ще раз.",
+        chooseSize: "Оберіть розмір, а потім натисніть «Замовити», щоб залишити заявку.", pressOrderToRequest: "Натисніть «Замовити», щоб залишити заявку.", chooseSizeBeforeOrder: "Оберіть розмір перед оформленням заявки.",
+        selectedSizeMessage: "Обраний розмір {{size}}. Натисніть «Замовити», щоб залишити заявку.", firstChooseSize: "Спочатку оберіть розмір.",
+        unavailable: "Немає в наявності", nowUnavailable: "Зараз немає в наявності", sizeRange: "Розміри {{size}}", singleSize: "Розмір {{size}}",
+        oversizeFit: "Посадка Oversize", oversizeFitLabel: "Посадка оверсайз", noFilterItems: "У цьому фільтрі поки немає речей.",
+        noCatalogItems: "У цьому розділі поки немає речей.", from: "від", pricePending: "Уточнюється", colorUnknown: "не вказаний", sizeUnknown: "не вказаний", priceUnknown: "не вказана",
+        summaryModel: "Модель", summaryColor: "Колір", summarySize: "Розмір", summaryPrice: "Ціна",
+        darkBlue: "темно-синій", pink: "рожевий", skyBlue: "блакитний", lightYellow: "світло-жовтий", white: "білий", mustard: "гірчичний",
+        brown: "коричневий", grassGreen: "трав’яний", graphite: "графітовий", burgundy: "бордовий", blue: "синій", black: "чорний",
+        beige: "бежевий", red: "червоний", coffee: "кавовий", emerald: "смарагдовий", milk: "молочний", sand: "пісочний", ginger: "рудий", darkGreen: "темно-зелений"
+      },
+      en: {
+        pageTitle: "GO'EL — Christian clothing brands", countries: "Countries ▾", belarus: "Belarus", catalogMenu: "Catalog ▾",
+        all: "All", unisex: "Unisex", women: "Women", men: "Men", languageLabel: "Language", socialNetworks: "Social media",
+        heroLine1: "Christian clothing brands", heroLine2: "all in one place", verseLine1: "Our Redeemer is the Lord of hosts", verseLine2: "is His name, the Holy One of Israel.",
+        allBrands: "All brands", view: "Browse", chooseItemHint: "Choose an item and a variant — you can submit a request right here on the site.",
+        catalogTitle: "Catalog", catalogDescription: "Clothing from all brands in one place.", catalogFilteredDescription: "{{gender}} clothing from all brands.",
+        enlargePhoto: "Click to enlarge", previousPhoto: "Previous photo", nextPhoto: "Next photo", photoPlaceholder: "Photo placeholder",
+        model: "Style", color: "Color", size: "Size", order: "Order", orderNotConnected: "Online ordering is not available yet.",
+        orderTitle: "Order request", orderSetupConnected: "Your request will be sent to GO’EL on Telegram.", orderSetupDisabled: "Order requests will be enabled once the Telegram bot is connected.",
+        close: "Close", closeForm: "Close form", customerName: "Name", phone: "Phone", deliveryAddress: "City and address or pickup point",
+        comment: "Comment", optional: "(optional)", consent: "I agree that GO’EL may use my information to contact me about this order.",
+        honeypot: "Leave this field empty", submitOrder: "Submit request", sendingOrder: "Sending…", orderSent: "Request sent",
+        formNotReady: "The form is not connected to Telegram yet. Your request was not sent.", waitBeforeResend: "Please wait a moment and try submitting your request again.",
+        orderSuccess: "Request sent! We’ll contact you to confirm your order.", orderFailure: "Could not send your request. Check your internet connection and try again.",
+        chooseSize: "Choose a size, then select “Order” to submit a request.", pressOrderToRequest: "Select “Order” to submit a request.", chooseSizeBeforeOrder: "Choose a size before submitting your request.",
+        selectedSizeMessage: "Size {{size}} selected. Select “Order” to submit a request.", firstChooseSize: "Choose a size first.",
+        unavailable: "Out of stock", nowUnavailable: "Currently out of stock", sizeRange: "Sizes {{size}}", singleSize: "Size {{size}}",
+        oversizeFit: "Oversize fit", oversizeFitLabel: "Oversize fit", noFilterItems: "There are no items in this filter yet.",
+        noCatalogItems: "There are no items in this section yet.", from: "from", pricePending: "Price on request", colorUnknown: "not specified", sizeUnknown: "not specified", priceUnknown: "not specified",
+        summaryModel: "Style", summaryColor: "Color", summarySize: "Size", summaryPrice: "Price",
+        darkBlue: "dark blue", pink: "pink", skyBlue: "sky blue", lightYellow: "light yellow", white: "white", mustard: "mustard",
+        brown: "brown", grassGreen: "grass green", graphite: "graphite", burgundy: "burgundy", blue: "blue", black: "black",
+        beige: "beige", red: "red", coffee: "coffee", emerald: "emerald", milk: "milk", sand: "sand", ginger: "ginger", darkGreen: "dark green"
+      }
+    };
+    let currentLanguage = "ru";
+    try {
+      const savedLanguage = localStorage.getItem("goel-language");
+      if (savedLanguage && translations[savedLanguage]) currentLanguage = savedLanguage;
+    } catch (error) {}
+    function t(key, values = {}) {
+      let text = translations[currentLanguage]?.[key] || translations.ru[key] || key;
+      Object.entries(values).forEach(([name, value]) => { text = text.replaceAll(`{{${name}}}`, value); });
+      return text;
+    }
+    const toneTranslationKeys = {
+      "тёмно-синий": "darkBlue", "розовый": "pink", "небесный": "skyBlue", "светло-жёлтый": "lightYellow", "белый": "white",
+      "горчичный": "mustard", "коричневый": "brown", "травяной": "grassGreen", "графитовый": "graphite", "бордовый": "burgundy",
+      "синий": "blue", "чёрный": "black", "бежевый": "beige", "красный": "red", "кофе": "coffee", "изумруд": "emerald",
+      "молочный": "milk", "песочный": "sand", "рыжий": "ginger", "тёмно-зелёный": "darkGreen"
+    };
+    function localizedTone(tone) { return toneTranslationKeys[tone] ? t(toneTranslationKeys[tone]) : tone; }
+    function localizedCountry(country) { return country === "Беларусь" ? t("belarus") : country; }
+    function localizedPrice(price) { return price === "Уточняется" ? t("pricePending") : price; }
+    function applyStaticTranslations() {
+      document.documentElement.lang = currentLanguage;
+      document.title = t("pageTitle");
+      document.querySelectorAll("[data-i18n]").forEach((element) => { element.textContent = t(element.dataset.i18n); });
+      document.querySelectorAll("[data-i18n-aria]").forEach((element) => { element.setAttribute("aria-label", t(element.dataset.i18nAria)); });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => { element.placeholder = t(element.dataset.i18nPlaceholder); });
+      const languageSelect = document.getElementById("language-select");
+      if (languageSelect) languageSelect.value = currentLanguage;
+      const productCloth = document.getElementById("product-cloth");
+      if (productCloth) productCloth.dataset.zoomLabel = t("enlargePhoto");
+      const setupNote = document.getElementById("order-setup-note");
+      if (setupNote) setupNote.textContent = t(orderApiConfigured ? "orderSetupConnected" : "orderSetupDisabled");
+    }
     const countryName = { belarus: "Беларусь" };
     const countrySlug = { "Беларусь": "belarus" };
     const brands = {
@@ -1654,15 +1796,13 @@
     let orderStartedAt = 0;
     const orderApiConfigured = /^https:\/\//.test(ORDER_API_URL) && !ORDER_API_URL.includes("YOUR-");
     orderSubmit.disabled = !orderApiConfigured;
-    orderSetupNote.textContent = orderApiConfigured
-      ? "После отправки заявка придёт GO’EL в Telegram."
-      : "Приём заявок включится после подключения Telegram-бота.";
+    orderSetupNote.textContent = t(orderApiConfigured ? "orderSetupConnected" : "orderSetupDisabled");
     const stage = document.getElementById("stage");
     const menuBtn = document.getElementById("countries-btn");
     const menuList = document.getElementById("country-menu");
     const catalogBtn = document.getElementById("catalog-btn");
     const catalogMenu = document.getElementById("catalog-menu");
-    const genderLabel = { all: "Всё", unisex: "Унисекс", women: "Женское", men: "Мужское" };
+    let genderLabel = { all: t("all"), unisex: t("unisex"), women: t("women"), men: t("men") };
     function stockToken(value) {
       return String(value || "")
         .trim()
@@ -1794,7 +1934,7 @@
       const nextIndex = (index + currentPhotos.length) % currentPhotos.length;
       const src = currentPhotos[nextIndex];
       const alt = currentItem
-        ? `${currentItem.name}${currentItem.variants[currentTone]?.tone ? ", " + currentItem.variants[currentTone].tone : ""}`
+        ? `${currentItem.name}${currentItem.variants[currentTone]?.tone ? ", " + localizedTone(currentItem.variants[currentTone].tone) : ""}`
         : "";
       const animate = opts.animate && currentPhotos.length > 1 && photoEl.src && !photoEl.hidden;
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1922,15 +2062,15 @@
 
     function rangeLabel(size) {
       if (!size) return "";
-      if (/^oversize$/i.test(size.trim())) return "Посадка Oversize";
-      if (/^оверсайз$/i.test(size.trim())) return "Посадка оверсайз";
-      return size.includes("–") ? `Размеры ${size}` : `Размер ${size}`;
+      if (/^oversize$/i.test(size.trim())) return t("oversizeFit");
+      if (/^оверсайз$/i.test(size.trim())) return t("oversizeFitLabel");
+      return size.includes("–") ? t("sizeRange", { size }) : t("singleSize", { size });
     }
 
     function writeChoice(size) {
       document.getElementById("choice").textContent = size
-        ? `Выбран размер ${size}. Нажмите «Заказать», чтобы оставить заявку.`
-        : "Выберите размер перед оформлением заявки.";
+        ? t("selectedSizeMessage", { size })
+        : t("chooseSizeBeforeOrder");
     }
 
     function orderDetails() {
@@ -1939,7 +2079,7 @@
       const sizes = listedSizes(variant.size);
       const selectedSize = document.querySelector("#size-options .size.on")?.textContent.trim() || "";
       if (sizes.length && !selectedSize) {
-        document.getElementById("choice").textContent = "Сначала выберите размер.";
+        document.getElementById("choice").textContent = t("firstChooseSize");
         document.getElementById("size-options").scrollIntoView({ behavior: "smooth", block: "center" });
         return null;
       }
@@ -1947,9 +2087,9 @@
         brand: brands[currentBrand].title,
         product: currentItem.name,
         model: variant.cut || "",
-        color: variant.tone || "не указан",
-        size: selectedSize || variant.size || "не указан",
-        price: variant.price || "не указана",
+        color: variant.tone ? localizedTone(variant.tone) : t("colorUnknown"),
+        size: selectedSize || variant.size || t("sizeUnknown"),
+        price: variant.price ? localizedPrice(variant.price) : t("priceUnknown"),
         page: location.href
       };
     }
@@ -1962,15 +2102,15 @@
       orderForm.reset();
       orderStatus.textContent = "";
       orderStatus.className = "order-status";
-      orderSubmit.textContent = "Отправить заявку";
+      orderSubmit.textContent = t("submitOrder");
       orderSubmit.disabled = !orderApiConfigured;
       document.getElementById("order-summary").textContent = [
         details.brand,
         details.product,
-        details.model ? `Модель: ${details.model}` : "",
-        `Цвет: ${details.color}`,
-        `Размер: ${details.size}`,
-        `Цена: ${details.price}`
+        details.model ? `${t("summaryModel")}: ${details.model}` : "",
+        `${t("summaryColor")}: ${details.color}`,
+        `${t("summarySize")}: ${details.size}`,
+        `${t("summaryPrice")}: ${details.price}`
       ].filter(Boolean).join("\n");
       orderDialog.showModal();
       orderForm.elements.customerName.focus();
@@ -1985,7 +2125,7 @@
       orderForm.reset();
       orderStatus.textContent = "";
       orderStatus.className = "order-status";
-      orderSubmit.textContent = "Отправить заявку";
+      orderSubmit.textContent = t("submitOrder");
       orderSubmit.disabled = !orderApiConfigured;
       pendingOrder = null;
       document.querySelector(".product-actions .buy")?.focus();
@@ -1993,12 +2133,12 @@
     orderForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       if (!orderApiConfigured || !pendingOrder) {
-        orderStatus.textContent = "Форма пока не подключена к Telegram. Заявка не отправлена.";
+        orderStatus.textContent = t("formNotReady");
         orderStatus.className = "order-status error";
         return;
       }
       if (orderStartedAt && Date.now() - orderStartedAt < 1200) {
-        orderStatus.textContent = "Подождите секунду и попробуйте отправить заявку ещё раз.";
+        orderStatus.textContent = t("waitBeforeResend");
         orderStatus.className = "order-status error";
         return;
       }
@@ -2014,7 +2154,7 @@
         startedAt: orderStartedAt
       };
       orderSubmit.disabled = true;
-      orderSubmit.textContent = "Отправляем…";
+      orderSubmit.textContent = t("sendingOrder");
       orderStatus.textContent = "";
       orderStatus.className = "order-status";
       let orderSent = false;
@@ -2026,23 +2166,23 @@
         });
         if (!response.ok) throw new Error("Order submission failed");
         orderSent = true;
-        orderStatus.textContent = "Заявка отправлена! Мы свяжемся с вами для подтверждения заказа.";
+        orderStatus.textContent = t("orderSuccess");
         orderStatus.className = "order-status success";
-        orderSubmit.textContent = "Заявка отправлена";
+        orderSubmit.textContent = t("orderSent");
         window.setTimeout(() => {
           if (orderDialog.open) orderDialog.close();
         }, 2200);
       } catch (error) {
-        orderStatus.textContent = "Не удалось отправить заявку. Проверьте интернет и попробуйте ещё раз.";
+        orderStatus.textContent = t("orderFailure");
         orderStatus.className = "order-status error";
       } finally {
         orderSubmit.disabled = orderSent || !orderApiConfigured;
-        if (!orderSent) orderSubmit.textContent = "Отправить заявку";
+        if (!orderSent) orderSubmit.textContent = t("submitOrder");
       }
     });
 
     function cardPrice(item) {
-      const prices = item.variants.filter(variantInStock).map((variant) => variant.price).filter(Boolean);
+      const prices = item.variants.filter(variantInStock).map((variant) => localizedPrice(variant.price || "")).filter(Boolean);
       if (!prices.length) return "";
       const unique = [...new Set(prices)];
       if (unique.length === 1) return unique[0];
@@ -2050,7 +2190,7 @@
       if (!numbers.length) return unique[0];
       const min = Math.min(...numbers);
       const unit = unique[0].replace(/[\d.,\s]+/, "").trim();
-      return `от ${min} ${unit}`.trim();
+      return `${t("from")} ${min} ${unit}`.trim();
     }
 
     function paintCountry(country, animate) {
@@ -2061,7 +2201,7 @@
         });
         home.classList.toggle("filtered", filtered);
         document.getElementById("home-crumbs").hidden = !filtered;
-        if (filtered) document.getElementById("home-country").textContent = country;
+        if (filtered) document.getElementById("home-country").textContent = localizedCountry(country);
         showHome();
       }, animate);
     }
@@ -2086,7 +2226,7 @@
       const galleryDots = cardPhotos.length > 1
         ? `<div class="item-gallery-dots" aria-hidden="true">${cardPhotos.map((_, index) => `<span class="${index === 0 ? "on" : ""}"></span>`).join("")}</div>`
         : "";
-      return `<a class="item" href="?${id}/${item.slug}" data-brand="${id}" data-slug="${item.slug}" style="${cardStyle}"><div class="cloth${photoClass}${galleryClass}" style="${clothStyle}"${galleryData}>${photoTag}${galleryDots}<span class="ph">Место под фото</span></div><span class="body"><b>${item.name}</b>${price ? `<span class="price">${price}</span>` : ""}</span></a>`;
+      return `<a class="item" href="?${id}/${item.slug}" data-brand="${id}" data-slug="${item.slug}" style="${cardStyle}"><div class="cloth${photoClass}${galleryClass}" style="${clothStyle}"${galleryData}>${photoTag}${galleryDots}<span class="ph">${t("photoPlaceholder")}</span></div><span class="body"><b>${item.name}</b>${price ? `<span class="price">${price}</span>` : ""}</span></a>`;
     }
 
     function renderBrandFilters(data) {
@@ -2110,7 +2250,7 @@
       const data = brands[id];
       currentBrand = id;
       reveal(() => {
-        document.getElementById("crumb-country").textContent = data.country;
+        document.getElementById("crumb-country").textContent = localizedCountry(data.country);
         document.getElementById("crumb-brand").textContent = data.title;
         document.getElementById("title").textContent = data.title;
         const blurb = document.getElementById("blurb");
@@ -2123,7 +2263,7 @@
         const list = filterItemsByGender(data.items, brandGenderFilter);
         items.innerHTML = list.length
           ? list.map((item) => itemCard(id, item)).join("")
-          : `<p class="blurb">В этом фильтре пока нет вещей.</p>`;
+          : `<p class="blurb">${t("noFilterItems")}</p>`;
         home.classList.remove("on");
         product.classList.remove("on");
         catalog.classList.remove("on");
@@ -2134,11 +2274,11 @@
     function paintCatalog(gender, animate) {
       const g = genderLabel[gender] ? gender : "all";
       reveal(() => {
-        document.getElementById("catalog-crumb").textContent = g === "all" ? "Каталог" : genderLabel[g];
-        document.getElementById("catalog-title").textContent = g === "all" ? "Каталог" : genderLabel[g];
+        document.getElementById("catalog-crumb").textContent = g === "all" ? t("catalogTitle") : genderLabel[g];
+        document.getElementById("catalog-title").textContent = g === "all" ? t("catalogTitle") : genderLabel[g];
         document.getElementById("catalog-blurb").textContent = g === "all"
-          ? "Одежда всех брендов в одном месте."
-          : `${genderLabel[g]} от всех брендов.`;
+          ? t("catalogDescription")
+          : t("catalogFilteredDescription", { gender: genderLabel[g] });
         document.querySelectorAll("#catalog-filters [data-catalog-filter]").forEach((btn) => {
           btn.classList.toggle("on", btn.dataset.catalogFilter === g);
         });
@@ -2147,7 +2287,7 @@
           ? groups.map(({ id, data, items: list }) =>
               `<div class="catalog-group"><h2>${data.title}</h2><div class="items">${list.map((item) => itemCard(id, item)).join("")}</div></div>`
             ).join("")
-          : `<p class="blurb">Пока нет вещей в этом разделе.</p>`;
+          : `<p class="blurb">${t("noCatalogItems")}</p>`;
         home.classList.remove("on");
         brand.classList.remove("on");
         product.classList.remove("on");
@@ -2185,12 +2325,12 @@
       const many = colorPool.length > 1;
       colors.hidden = !many;
       document.getElementById("color-label").textContent = variant.tone
-        ? `Цвет: ${variant.tone}`
-        : "Цвет";
+        ? `${t("color")}: ${localizedTone(variant.tone)}`
+        : t("color");
       document.getElementById("color-options").innerHTML = many
         ? colorPool.map((option) => {
             const index = item.variants.indexOf(option);
-            return `<button type="button" class="tone${index === currentTone ? " on" : ""}" data-tone="${index}" style="--tone:${option.color}" aria-label="${option.tone || "Цвет"}"></button>`;
+            return `<button type="button" class="tone${index === currentTone ? " on" : ""}" data-tone="${index}" style="--tone:${option.color}" aria-label="${localizedTone(option.tone) || t("color")}"></button>`;
           }).join("")
         : "";
       const options = listedSizes(variant.size);
@@ -2199,7 +2339,7 @@
       const unavailable = !variantInStock(variant);
       range.hidden = !unavailable && (options.length > 0 || !variant.size);
       range.textContent = unavailable
-        ? "Сейчас нет в наличии"
+        ? t("nowUnavailable")
         : options.length || !variant.size ? "" : rangeLabel(variant.size);
       sizes.hidden = unavailable || options.length === 0;
       document.getElementById("size-options").innerHTML = options.map((option) =>
@@ -2207,13 +2347,13 @@
       ).join("");
       const priceEl = document.getElementById("product-price");
       priceEl.hidden = !variant.price;
-      priceEl.textContent = variant.price || "";
+      priceEl.textContent = localizedPrice(variant.price || "");
       const buyButton = document.querySelector(".buy");
       buyButton.disabled = unavailable;
-      buyButton.textContent = unavailable ? "Нет в наличии" : "Заказать";
+      buyButton.textContent = unavailable ? t("unavailable") : t("order");
       document.getElementById("choice").textContent = unavailable
-        ? "Сейчас нет в наличии."
-        : options.length ? "Выберите размер, затем нажмите «Заказать»." : "Нажмите «Заказать», чтобы оставить заявку.";
+        ? t("nowUnavailable")
+        : options.length ? t("chooseSize") : t("pressOrderToRequest");
     }
 
     function paintProduct(id, index, animate) {
@@ -2222,7 +2362,7 @@
       currentBrand = id;
       currentItem = item;
       reveal(() => {
-        document.getElementById("product-country").textContent = data.country;
+        document.getElementById("product-country").textContent = localizedCountry(data.country);
         document.getElementById("product-brand").textContent = data.title;
         document.getElementById("product-crumb").textContent = item.name;
         document.getElementById("product-title").textContent = item.name;
@@ -2278,6 +2418,34 @@
       paintCountry("all", animate);
     }
 
+    function setLanguage(language, refresh = true) {
+      currentLanguage = translations[language] ? language : "ru";
+      try { localStorage.setItem("goel-language", currentLanguage); } catch (error) {}
+      genderLabel = { all: t("all"), unisex: t("unisex"), women: t("women"), men: t("men") };
+      applyStaticTranslations();
+      if (!refresh) return;
+
+      const [routeBrand, routeProduct] = currentRoute().split("/").filter(Boolean);
+      const isProductRoute = Boolean(routeProduct && brands[routeBrand]);
+      const savedItemSlug = currentItem?.slug;
+      const savedTone = currentTone;
+      const savedPhoto = currentPhotoIndex;
+      const savedSize = document.querySelector("#size-options .size.on")?.textContent.trim() || "";
+      closeLightbox();
+      apply(false);
+      if (isProductRoute && currentItem?.slug === savedItemSlug) {
+        fillVariant(brands[currentBrand], currentItem, savedTone);
+        showProductPhoto(savedPhoto);
+        if (savedSize) {
+          const sizeButton = [...document.querySelectorAll("#size-options .size")].find((button) => button.textContent.trim() === savedSize);
+          if (sizeButton) {
+            sizeButton.classList.add("on");
+            writeChoice(savedSize);
+          }
+        }
+      }
+    }
+
     function navigate(route) {
       const next = String(route).replace(/^#/, "");
       closeLightbox();
@@ -2315,7 +2483,7 @@
     document.getElementById("crumb-all").addEventListener("click", () => navigate(""));
     document.getElementById("catalog-crumb-all").addEventListener("click", () => navigate(""));
     document.getElementById("crumb-country").addEventListener("click", () => {
-      navigate(countrySlug[document.getElementById("crumb-country").textContent]);
+      navigate(countrySlug[brands[currentBrand]?.country] || "");
     });
     document.querySelectorAll("#home [data-brand]").forEach((button) => {
       button.addEventListener("click", () => {
@@ -2468,7 +2636,7 @@
     });
     document.getElementById("product-all").addEventListener("click", () => navigate(""));
     document.getElementById("product-country").addEventListener("click", () => {
-      navigate(countrySlug[document.getElementById("product-country").textContent]);
+      navigate(countrySlug[brands[currentBrand]?.country] || "");
     });
     document.getElementById("product-brand").addEventListener("click", () => {
       brandGenderFilter = "all";
@@ -2606,6 +2774,8 @@
       if (event.key === "ArrowRight") stepPhoto(1);
     });
 
+    document.getElementById("language-select").addEventListener("change", (event) => setLanguage(event.target.value));
+    setLanguage(currentLanguage, false);
     loadAvailabilityFeed().finally(() => apply(false));
     window.addEventListener("popstate", () => {
       closeLightbox();
