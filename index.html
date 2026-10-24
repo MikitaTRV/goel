@@ -17,10 +17,31 @@
     html { color-scheme: light; }
     html, body { margin: 0; }
     body {
+      position: relative;
+      isolation: isolate;
       background: var(--bg);
       color: var(--ink);
       font-family: "Avenir Next", "Helvetica Neue", sans-serif;
       line-height: 1.5;
+    }
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+    body::before {
+      z-index: -2;
+      inset: -24px;
+      background: url("img/godderob/jlc-sweatshirt-blue-group-02.jpg") center 38% / cover no-repeat;
+      filter: blur(22px) saturate(0.72);
+      opacity: 0.58;
+      transform: scale(1.04);
+    }
+    body::after {
+      z-index: -1;
+      background: rgba(246, 243, 238, 0.58);
     }
     a { color: inherit; text-decoration: none; }
     button {
@@ -114,6 +135,14 @@
       #stage.enter { animation: none; }
       .cloth > img, .product-cloth > img, .lightbox img { transition: none; }
       .gallery-nav, .lightbox-nav, .gallery-dots span { transition: none; }
+    }
+    @media (max-width: 640px) {
+      body::before {
+        background-position: 58% center;
+        filter: blur(18px) saturate(0.68);
+        opacity: 0.5;
+      }
+      body::after { background: rgba(246, 243, 238, 0.66); }
     }
     #home-crumbs { margin-top: 0; }
     .crumbs { display: flex; gap: 8px; align-items: center; margin: 28px 0 22px; font-size: 14px; line-height: 1.4; color: var(--muted); }
