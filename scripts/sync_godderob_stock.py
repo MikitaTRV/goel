@@ -27,7 +27,7 @@ SHEET_PREFIXES = {
     "барашекизумруд": ("shepherd-men", "изумруд"),
     "onlyjesusчерный": ("only-jesus", "чёрный"),
     "onlyjesusтравяной": ("only-jesus", "травяной"),
-    "childofgodборд": ("child-of-god", "белый"),
+    "childofgodборд": ("child-of-god", "розовый"),
     "lovebut": ("love-like-jesus", "травяной"),
     "jesusislordгорчица": ("jesus-is-lord-women", "горчичный"),
     "богестьлюбовьмолоко": ("bog-est-lubov-men", "молочный"),
@@ -42,6 +42,11 @@ SHEET_PREFIXES = {
     "пластырь": ("jesus-healed", "белый"),
     "saved": ("saved", "бордовый"),
     "богестьлюбовьроз": ("bog-est-lubov-women", "розовый"),
+}
+
+ALWAYS_MANAGED_VARIANTS = {
+    "child-of-god|белый",
+    "child-of-god|небесный",
 }
 
 SIZE_ORDER = {size: index for index, size in enumerate(("XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL", "OS"))}
@@ -97,7 +102,7 @@ def parse_stock(csv_text: str) -> dict[str, object]:
         if quantity > 0:
             sizes[target].add(size)
 
-    managed = sorted({f"{slug}|{normalize(tone)}" for slug, tone in SHEET_PREFIXES.values()})
+    managed = sorted({f"{slug}|{normalize(tone)}" for slug, tone in SHEET_PREFIXES.values()} | ALWAYS_MANAGED_VARIANTS)
     availability: dict[str, dict[str, list[str]]] = defaultdict(dict)
     for (slug, tone), available_sizes in sizes.items():
         availability[slug][tone] = sorted(available_sizes, key=lambda size: SIZE_ORDER.get(size, 999))
