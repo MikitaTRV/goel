@@ -100,10 +100,15 @@
     .desktop-language-menu button[aria-checked="true"] { color: var(--accent); }
     .mobile-nav { display: none; }
     .mobile-menu-list { left: 50%; width: min(260px, calc(100vw - 48px)); max-height: calc(100vh - 84px); overflow-y: auto; padding: 4px 0; transform: translateX(-50%); }
-    .mobile-menu-heading { display: block; padding: 8px 14px 4px; color: var(--muted); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
+    .mobile-submenu-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 10px 14px; font-size: 15px; }
+    .mobile-submenu-toggle[aria-expanded="true"] { color: var(--accent); }
+    .mobile-submenu-list { margin: 0 12px 6px; padding-left: 8px; border-left: 1px solid var(--line); }
+    .mobile-submenu-list button { padding: 9px 12px; }
     .mobile-language-picker { width: 100%; justify-content: space-between; gap: 12px; margin-top: 4px; padding: 10px 14px; border-top: 1px solid var(--line); }
     .mobile-language-picker > span { position: static; width: auto; height: auto; padding: 0; margin: 0; overflow: visible; clip: auto; white-space: normal; border: 0; color: var(--muted); font-size: 14px; }
     .mobile-language-picker select { max-width: 140px; text-align: right; }
+    .desktop-language-menu button { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+    .language-code { min-width: 32px; font-weight: 600; }
     nav.links a {
       display: inline-flex;
       align-items: center;
@@ -615,35 +620,39 @@
         </div>
       </div>
       <div class="desktop-language-picker">
-        <button type="button" class="desktop-language-button" id="desktop-language-btn" aria-expanded="false" aria-controls="desktop-language-menu" aria-haspopup="menu"><span id="desktop-language-value">Русский</span><span aria-hidden="true">▾</span></button>
+        <button type="button" class="desktop-language-button" id="desktop-language-btn" aria-expanded="false" aria-controls="desktop-language-menu" aria-haspopup="menu"><span id="desktop-language-value">🇷🇺 RUS</span><span aria-hidden="true">▾</span></button>
         <div class="menu-list desktop-language-menu" id="desktop-language-menu" role="menu" hidden>
-          <button type="button" role="menuitemradio" data-language="ru" aria-checked="true">Русский</button>
-          <button type="button" role="menuitemradio" data-language="be" aria-checked="false">Беларуская</button>
-          <button type="button" role="menuitemradio" data-language="uk" aria-checked="false">Українська</button>
-          <button type="button" role="menuitemradio" data-language="en" aria-checked="false">English</button>
+          <button type="button" role="menuitemradio" data-language="ru" data-short="🇷🇺 RUS" aria-checked="true"><span aria-hidden="true">🇷🇺</span><span class="language-code">RUS</span><span>Русский</span></button>
+          <button type="button" role="menuitemradio" data-language="be" data-short="🇧🇾 BEL" aria-checked="false"><span aria-hidden="true">🇧🇾</span><span class="language-code">BEL</span><span>Беларуская</span></button>
+          <button type="button" role="menuitemradio" data-language="uk" data-short="🇺🇦 UKR" aria-checked="false"><span aria-hidden="true">🇺🇦</span><span class="language-code">UKR</span><span>Українська</span></button>
+          <button type="button" role="menuitemradio" data-language="en" data-short="🇬🇧 ENG" aria-checked="false"><span aria-hidden="true">🇬🇧</span><span class="language-code">ENG</span><span>English</span></button>
         </div>
         <select id="language-select" class="language-select" aria-hidden="true" tabindex="-1" hidden>
-          <option value="ru">Русский</option>
-          <option value="be">Беларуская</option>
-          <option value="uk">Українська</option>
-          <option value="en">English</option>
+          <option value="ru" data-short="🇷🇺 RUS">Русский</option>
+          <option value="be" data-short="🇧🇾 BEL">Беларуская</option>
+          <option value="uk" data-short="🇺🇦 UKR">Українська</option>
+          <option value="en" data-short="🇬🇧 ENG">English</option>
         </select>
       </div>
       <div class="menu mobile-nav">
         <button type="button" id="mobile-menu-btn" data-i18n="mobileMenu" aria-expanded="false" aria-controls="mobile-menu-list">Меню ▾</button>
         <div class="menu-list mobile-menu-list" id="mobile-menu-list" hidden>
-          <span class="mobile-menu-heading" data-i18n="countriesTitle">Страны</span>
-          <button type="button" data-slug="belarus" data-i18n="belarus">Беларусь</button>
-          <span class="mobile-menu-heading" data-i18n="catalogTitle">Каталог</span>
-          <button type="button" data-catalog="all" data-i18n="all">Всё</button>
-          <button type="button" data-catalog="unisex" data-i18n="unisex">Унисекс</button>
-          <button type="button" data-catalog="women" data-i18n="women">Женское</button>
-          <button type="button" data-catalog="men" data-i18n="men">Мужское</button>
+          <button type="button" class="mobile-submenu-toggle" id="mobile-countries-toggle" aria-expanded="false" aria-controls="mobile-countries-list"><span data-i18n="countries">Страны</span><span aria-hidden="true">▾</span></button>
+          <div class="mobile-submenu-list" id="mobile-countries-list" hidden>
+            <button type="button" data-slug="belarus" data-i18n="belarus">Беларусь</button>
+          </div>
+          <button type="button" class="mobile-submenu-toggle" id="mobile-catalog-toggle" aria-expanded="false" aria-controls="mobile-catalog-list"><span data-i18n="catalogMenu">Каталог</span><span aria-hidden="true">▾</span></button>
+          <div class="mobile-submenu-list" id="mobile-catalog-list" hidden>
+            <button type="button" data-catalog="all" data-i18n="all">Всё</button>
+            <button type="button" data-catalog="unisex" data-i18n="unisex">Унисекс</button>
+            <button type="button" data-catalog="women" data-i18n="women">Женское</button>
+            <button type="button" data-catalog="men" data-i18n="men">Мужское</button>
+          </div>
           <label class="language-picker mobile-language-picker"><span data-i18n="languageLabel">Язык</span><select id="mobile-language-select" class="language-select" aria-label="Язык" data-i18n-aria="languageLabel">
-            <option value="ru">Русский</option>
-            <option value="be">Беларуская</option>
-            <option value="uk">Українська</option>
-            <option value="en">English</option>
+            <option value="ru">🇷🇺 RUS</option>
+            <option value="be">🇧🇾 BEL</option>
+            <option value="uk">🇺🇦 UKR</option>
+            <option value="en">🇬🇧 ENG</option>
           </select></label>
         </div>
       </div>
@@ -927,7 +936,7 @@
       document.querySelectorAll(".language-select").forEach((languageSelect) => { languageSelect.value = currentLanguage; });
       const desktopLanguageValue = document.getElementById("desktop-language-value");
       if (desktopLanguageValue) {
-        desktopLanguageValue.textContent = document.querySelector("#language-select option:checked")?.textContent || t("languageLabel");
+        desktopLanguageValue.textContent = document.querySelector("#language-select option:checked")?.dataset.short || t("languageLabel");
       }
       document.querySelectorAll("#desktop-language-menu [data-language]").forEach((option) => {
         option.setAttribute("aria-checked", String(option.dataset.language === currentLanguage));
@@ -1858,6 +1867,10 @@
     const catalogMenu = document.getElementById("catalog-menu");
     const mobileMenuBtn = document.getElementById("mobile-menu-btn");
     const mobileMenuList = document.getElementById("mobile-menu-list");
+    const mobileCountriesToggle = document.getElementById("mobile-countries-toggle");
+    const mobileCountriesList = document.getElementById("mobile-countries-list");
+    const mobileCatalogToggle = document.getElementById("mobile-catalog-toggle");
+    const mobileCatalogList = document.getElementById("mobile-catalog-list");
     const desktopLanguageBtn = document.getElementById("desktop-language-btn");
     const desktopLanguageMenu = document.getElementById("desktop-language-menu");
     let genderLabel = { all: t("all"), unisex: t("unisex"), women: t("women"), men: t("men") };
@@ -2055,6 +2068,10 @@
       catalogBtn.setAttribute("aria-expanded", "false");
       mobileMenuList.hidden = true;
       mobileMenuBtn.setAttribute("aria-expanded", "false");
+      mobileCountriesList.hidden = true;
+      mobileCountriesToggle.setAttribute("aria-expanded", "false");
+      mobileCatalogList.hidden = true;
+      mobileCatalogToggle.setAttribute("aria-expanded", "false");
       desktopLanguageMenu.hidden = true;
       desktopLanguageBtn.setAttribute("aria-expanded", "false");
     }
@@ -2070,6 +2087,14 @@
         list.hidden = false;
         btn.setAttribute("aria-expanded", "true");
       }
+    }
+
+    function toggleSubmenu(btn, list, otherBtn, otherList) {
+      const willOpen = list.hidden;
+      otherList.hidden = true;
+      otherBtn.setAttribute("aria-expanded", "false");
+      list.hidden = !willOpen;
+      btn.setAttribute("aria-expanded", String(willOpen));
     }
 
     function itemMatchesGender(item, gender) {
@@ -2530,6 +2555,14 @@
     mobileMenuBtn.addEventListener("click", (event) => {
       event.stopPropagation();
       toggleMenu(mobileMenuBtn, mobileMenuList);
+    });
+    mobileCountriesToggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+      toggleSubmenu(mobileCountriesToggle, mobileCountriesList, mobileCatalogToggle, mobileCatalogList);
+    });
+    mobileCatalogToggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+      toggleSubmenu(mobileCatalogToggle, mobileCatalogList, mobileCountriesToggle, mobileCountriesList);
     });
     desktopLanguageBtn.addEventListener("click", (event) => {
       event.stopPropagation();
