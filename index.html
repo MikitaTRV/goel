@@ -2059,7 +2059,7 @@
     }
 
     const brandCategoryKeys = ["tshirts", "sweatshirts", "longSleeves", "halfZips", "caps"];
-    const brandCategoryLabel = {
+    let brandCategoryLabel = {
       all: t("all"), tshirts: t("tshirts"), sweatshirts: t("sweatshirts"),
       longSleeves: t("longSleeves"), halfZips: t("halfZips"), caps: t("caps")
     };
@@ -2487,6 +2487,7 @@
       currentLanguage = translations[language] ? language : "ru";
       try { localStorage.setItem("goel-language", currentLanguage); } catch (error) {}
       genderLabel = { all: t("all"), unisex: t("unisex"), women: t("women"), men: t("men") };
+      brandCategoryLabel = { all: t("all"), tshirts: t("tshirts"), sweatshirts: t("sweatshirts"), longSleeves: t("longSleeves"), halfZips: t("halfZips"), caps: t("caps") };
       applyStaticTranslations();
       if (!refresh) return;
 
