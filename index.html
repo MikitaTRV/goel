@@ -93,6 +93,11 @@
     .language-picker select { max-width: 130px; min-width: 0; border: 0; padding: 0 12px 0 0; background: transparent; color: var(--ink); font: inherit; cursor: pointer; -webkit-appearance: none; appearance: none; }
     .language-picker:hover select { color: var(--accent); }
     .language-picker:focus-within select { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .desktop-language-picker { position: relative; display: inline-flex; align-items: center; }
+    .desktop-language-button { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; }
+    .desktop-language-button[aria-expanded="true"] { color: var(--accent); }
+    .desktop-language-menu { top: calc(100% + 10px); left: 0; z-index: 3; width: max-content; min-width: 100%; }
+    .desktop-language-menu button[aria-checked="true"] { color: var(--accent); }
     .mobile-nav { display: none; }
     .mobile-menu-list { left: 50%; width: min(260px, calc(100vw - 48px)); max-height: calc(100vh - 84px); overflow-y: auto; padding: 4px 0; transform: translateX(-50%); }
     .mobile-menu-heading { display: block; padding: 8px 14px 4px; color: var(--muted); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
@@ -609,12 +614,21 @@
           <button type="button" data-catalog="men" data-i18n="men">Мужское</button>
         </div>
       </div>
-      <label class="language-picker desktop-language-picker"><span data-i18n="languageLabel">Язык</span><select id="language-select" class="language-select" aria-label="Язык" data-i18n-aria="languageLabel">
-        <option value="ru">Русский</option>
-        <option value="be">Беларуская</option>
-        <option value="uk">Українська</option>
-        <option value="en">English</option>
-      </select></label>
+      <div class="desktop-language-picker">
+        <button type="button" class="desktop-language-button" id="desktop-language-btn" aria-expanded="false" aria-controls="desktop-language-menu" aria-haspopup="menu"><span id="desktop-language-value">Русский</span><span aria-hidden="true">▾</span></button>
+        <div class="menu-list desktop-language-menu" id="desktop-language-menu" role="menu" hidden>
+          <button type="button" role="menuitemradio" data-language="ru" aria-checked="true">Русский</button>
+          <button type="button" role="menuitemradio" data-language="be" aria-checked="false">Беларуская</button>
+          <button type="button" role="menuitemradio" data-language="uk" aria-checked="false">Українська</button>
+          <button type="button" role="menuitemradio" data-language="en" aria-checked="false">English</button>
+        </div>
+        <select id="language-select" class="language-select" aria-hidden="true" tabindex="-1" hidden>
+          <option value="ru">Русский</option>
+          <option value="be">Беларуская</option>
+          <option value="uk">Українська</option>
+          <option value="en">English</option>
+        </select>
+      </div>
       <div class="menu mobile-nav">
         <button type="button" id="mobile-menu-btn" data-i18n="mobileMenu" aria-expanded="false" aria-controls="mobile-menu-list">Меню ▾</button>
         <div class="menu-list mobile-menu-list" id="mobile-menu-list" hidden>
@@ -911,6 +925,13 @@
       document.querySelectorAll("[data-i18n-aria]").forEach((element) => { element.setAttribute("aria-label", t(element.dataset.i18nAria)); });
       document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => { element.placeholder = t(element.dataset.i18nPlaceholder); });
       document.querySelectorAll(".language-select").forEach((languageSelect) => { languageSelect.value = currentLanguage; });
+      const desktopLanguageValue = document.getElementById("desktop-language-value");
+      if (desktopLanguageValue) {
+        desktopLanguageValue.textContent = document.querySelector("#language-select option:checked")?.textContent || t("languageLabel");
+      }
+      document.querySelectorAll("#desktop-language-menu [data-language]").forEach((option) => {
+        option.setAttribute("aria-checked", String(option.dataset.language === currentLanguage));
+      });
       const productCloth = document.getElementById("product-cloth");
       if (productCloth) productCloth.dataset.zoomLabel = t("enlargePhoto");
       const setupNote = document.getElementById("order-setup-note");
@@ -1837,6 +1858,8 @@
     const catalogMenu = document.getElementById("catalog-menu");
     const mobileMenuBtn = document.getElementById("mobile-menu-btn");
     const mobileMenuList = document.getElementById("mobile-menu-list");
+    const desktopLanguageBtn = document.getElementById("desktop-language-btn");
+    const desktopLanguageMenu = document.getElementById("desktop-language-menu");
     let genderLabel = { all: t("all"), unisex: t("unisex"), women: t("women"), men: t("men") };
     function stockToken(value) {
       return String(value || "")
@@ -2032,6 +2055,8 @@
       catalogBtn.setAttribute("aria-expanded", "false");
       mobileMenuList.hidden = true;
       mobileMenuBtn.setAttribute("aria-expanded", "false");
+      desktopLanguageMenu.hidden = true;
+      desktopLanguageBtn.setAttribute("aria-expanded", "false");
     }
 
     function closeMenu() {
@@ -2506,10 +2531,22 @@
       event.stopPropagation();
       toggleMenu(mobileMenuBtn, mobileMenuList);
     });
+    desktopLanguageBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      toggleMenu(desktopLanguageBtn, desktopLanguageMenu);
+    });
     menuList.addEventListener("click", (event) => event.stopPropagation());
     catalogMenu.addEventListener("click", (event) => event.stopPropagation());
     mobileMenuList.addEventListener("click", (event) => event.stopPropagation());
+    desktopLanguageMenu.addEventListener("click", (event) => event.stopPropagation());
     document.addEventListener("click", closeMenus);
+
+    desktopLanguageMenu.querySelectorAll("[data-language]").forEach((option) => {
+      option.addEventListener("click", () => {
+        setLanguage(option.dataset.language);
+        desktopLanguageBtn.focus();
+      });
+    });
 
     document.querySelectorAll("#country-menu [data-slug], #mobile-menu-list [data-slug]").forEach((button) => {
       button.addEventListener("click", () => navigate(button.dataset.slug));
