@@ -2067,11 +2067,11 @@
     function itemCategory(item) {
       const name = String(item?.name || "").trim();
       const categories = [
-        [/^футболка\b/i, "tshirts"],
-        [/^свитшот\b/i, "sweatshirts"],
-        [/^лонгслив\b/i, "longSleeves"],
-        [/^полузип\b/i, "halfZips"],
-        [/^кепка\b/i, "caps"]
+        [/^футболка(?:\s|$)/i, "tshirts"],
+        [/^свитшот(?:\s|$)/i, "sweatshirts"],
+        [/^лонгслив(?:\s|$)/i, "longSleeves"],
+        [/^полузип(?:\s|$)/i, "halfZips"],
+        [/^кепка(?:\s|$)/i, "caps"]
       ];
       return categories.find(([pattern]) => pattern.test(name))?.[1] || "";
     }
