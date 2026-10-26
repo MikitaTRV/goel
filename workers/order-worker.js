@@ -37,6 +37,77 @@ function escapeHtml(value) {
   })[character]);
 }
 
+function stockToken(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/ё/g, "е")
+    .replace(/[^a-z0-9а-я]/g, "");
+}
+
+function stockSize(value) {
+  return String(value || "")
+    .trim()
+    .toUpperCase()
+    .replace(/[Хх]/g, "X")
+    .replace(/XXL/g, "2XL");
+}
+
+async function checkStock(items, env) {
+  const trackedItems = items.filter((item) =>
+    item.inventoryBrandId === "godderob" || item.brand.toLowerCase() === "godderob"
+  );
+  if (!trackedItems.length) return "available";
+  if (trackedItems.some((item) => !item.inventorySlug || !item.inventoryTone || !item.inventorySize)) {
+    return "unavailable";
+  }
+
+  const feedUrl = env.STOCK_FEED_URL || "https://mikitatrv.github.io/goel/data/godderob-availability.json";
+  const response = await fetch(feedUrl, {
+    headers: { "Cache-Control": "no-cache", "Pragma": "no-cache" }
+  });
+  if (!response.ok) throw new Error("Availability feed unavailable");
+
+  const feed = await response.json();
+  if (![1, 2].includes(feed.schemaVersion) || !Array.isArray(feed.managedVariants) || !feed.availableSizes) {
+    throw new Error("Invalid availability feed");
+  }
+  if (feed.schemaVersion === 2 && (!feed.maxOrderable || typeof feed.maxOrderable !== "object")) {
+    throw new Error("Availability feed has no order limits");
+  }
+
+  const requested = new Map();
+  for (const item of trackedItems) {
+    const slug = item.inventorySlug;
+    const tone = stockToken(item.inventoryTone);
+    const size = stockSize(item.inventorySize);
+    const key = JSON.stringify([slug, tone, size]);
+    requested.set(key, { slug, tone, size, quantity: (requested.get(key)?.quantity || 0) + item.quantity });
+  }
+
+  for (const item of requested.values()) {
+    if (!feed.managedVariants.includes(`${item.slug}|${item.tone}`)) {
+      if (item.quantity > 1) return "unavailable";
+      continue;
+    }
+    const sizesByTone = feed.availableSizes[item.slug] || {};
+    const matchedTone = Object.entries(sizesByTone).find(([feedTone]) => stockToken(feedTone) === item.tone);
+    const availableSizes = matchedTone?.[1] || [];
+    if (!Array.isArray(availableSizes) || !availableSizes.some((size) => stockSize(size) === item.size)) {
+      return "unavailable";
+    }
+    if (feed.schemaVersion === 1) {
+      if (item.quantity > 1) return "unavailable";
+      continue;
+    }
+
+    const maxOrderable = Object.entries(feed.maxOrderable[item.slug]?.[matchedTone[0]] || {})
+      .find(([size]) => stockSize(size) === item.size)?.[1];
+    if (!Number.isInteger(maxOrderable) || item.quantity > maxOrderable) return "unavailable";
+  }
+  return "available";
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
@@ -97,6 +168,10 @@ export default {
     }
     const items = incomingItems.map((item) => ({
       brand: text(item?.brand, 100),
+      inventoryBrandId: text(item?.inventoryBrandId, 100),
+      inventorySlug: text(item?.inventorySlug, 100),
+      inventoryTone: text(item?.inventoryTone, 100),
+      inventorySize: text(item?.inventorySize, 40),
       product: text(item?.product, 160),
       model: text(item?.model, 100),
       color: text(item?.color, 100),
@@ -121,6 +196,17 @@ export default {
       body.consent !== true
     ) {
       return jsonResponse({ error: "Please complete the required fields" }, 400, corsHeaders);
+    }
+
+    let stockStatus;
+    try {
+      stockStatus = await checkStock(items, env);
+    } catch (error) {
+      console.error("Could not verify order stock", error);
+      return jsonResponse({ error: "Stock verification unavailable" }, 503, corsHeaders);
+    }
+    if (stockStatus === "unavailable") {
+      return jsonResponse({ error: "insufficient_stock" }, 409, corsHeaders);
     }
 
     const lines = [

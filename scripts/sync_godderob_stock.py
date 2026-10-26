@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Convert Alina's Google Sheets availability tab to a public size-only feed."""
+"""Convert Alina's Google Sheets stock tab to a public, quantity-capped feed."""
 
 from __future__ import annotations
 
@@ -72,6 +72,7 @@ ALWAYS_MANAGED_VARIANTS = {
 
 SIZE_ORDER = {size: index for index, size in enumerate(("XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL", "OS"))}
 SIZE_LOOKALIKE = str.maketrans({"Х": "X", "х": "x", "М": "M", "м": "m", "С": "S", "с": "s", "Л": "L", "л": "l"})
+MAX_PUBLIC_ORDER_QUANTITY = 3
 
 
 def normalize(value: str) -> str:
@@ -102,7 +103,7 @@ def parse_stock(csv_text: str) -> dict[str, object]:
     if missing:
         raise ValueError(f"Наличие CSV missing columns: {', '.join(sorted(missing))}")
 
-    sizes: dict[tuple[str, str], set[str]] = defaultdict(set)
+    quantities: dict[tuple[str, str, str], int] = defaultdict(int)
     for row in reader:
         article = (row.get(headers["Артикул_размера"]) or "").strip()
         size = normalize_size(row.get(headers["Размер"]) or "")
@@ -120,10 +121,18 @@ def parse_stock(csv_text: str) -> dict[str, object]:
         target = SHEET_PREFIXES.get(prefix)
         if target is None:
             continue
-        if quantity > 0:
-            sizes[target].add(size)
+        slug, tone = target
+        quantities[(slug, tone, size)] += quantity
 
     managed = sorted({f"{slug}|{normalize(tone)}" for slug, tone in SHEET_PREFIXES.values()} | ALWAYS_MANAGED_VARIANTS)
+    sizes: dict[tuple[str, str], set[str]] = defaultdict(set)
+    orderable: dict[str, dict[str, dict[str, int]]] = defaultdict(lambda: defaultdict(dict))
+    for (slug, tone, size), quantity in quantities.items():
+        if quantity <= 0:
+            continue
+        sizes[(slug, tone)].add(size)
+        orderable[slug][tone][size] = min(quantity, MAX_PUBLIC_ORDER_QUANTITY)
+
     availability: dict[str, dict[str, list[str]]] = defaultdict(dict)
     for (slug, tone), available_sizes in sizes.items():
         availability[slug][tone] = sorted(available_sizes, key=lambda size: SIZE_ORDER.get(size, 999))
@@ -131,9 +140,10 @@ def parse_stock(csv_text: str) -> dict[str, object]:
     if not sizes:
         raise ValueError("No mapped positive stock rows found; refusing to publish empty availability")
     return {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "managedVariants": managed,
         "availableSizes": dict(availability),
+        "maxOrderable": {slug: dict(tones) for slug, tones in orderable.items()},
     }
 
 
@@ -160,7 +170,7 @@ def main() -> None:
     stock = parse_stock(csv_text)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(stock, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"Wrote sizes for {len(stock['availableSizes'])} product variants; no unit counts exported.")
+    print(f"Wrote sizes and order limits (capped at {MAX_PUBLIC_ORDER_QUANTITY}) for {len(stock['availableSizes'])} product variants; exact unit counts are not exported.")
 
 
 if __name__ == "__main__":
