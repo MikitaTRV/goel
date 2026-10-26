@@ -219,9 +219,32 @@
       color: var(--ink);
       background: #f3efe8;
     }
-    .category-filter { display: inline-flex; align-items: center; gap: 10px; color: var(--muted); font-size: 14px; }
-    .category-filter select { min-width: 190px; max-width: 100%; padding: 8px 36px 8px 12px; border: 1px solid var(--line); border-radius: 3px; background: var(--paper); color: var(--ink); font: inherit; cursor: pointer; }
-    .category-filter select:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+    .category-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; width: 100%; }
+    .filter-anchor { position: relative; flex: 0 0 auto; }
+    .filters .filter-toggle { display: inline-flex; align-items: center; gap: 9px; min-height: 42px; padding: 8px 13px; border: 1px solid var(--line); border-radius: 3px; background: var(--paper); color: var(--ink); font: inherit; font-size: 14px; cursor: pointer; transition: background .16s ease, border-color .16s ease; }
+    .filters .filter-toggle:hover, .filters .filter-toggle[aria-expanded="true"] { border-color: #cfc6bb; background: #f8f5ef; color: var(--ink); }
+    .filters .filter-toggle.has-selection { border-color: var(--ink); background: #f3efe8; color: var(--ink); }
+    .filters .filter-toggle:focus-visible, .filters .filter-reset:focus-visible, .filters .filter-chip:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+    .filter-icon { width: 17px; height: 17px; flex: none; }
+    .filter-badge { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px; background: var(--ink); color: var(--paper); font-size: 11px; line-height: 1; }
+    .filter-badge[hidden] { display: none; }
+    .filter-popover { position: absolute; z-index: 30; top: calc(100% + 8px); left: 0; width: min(290px, calc(100vw - 32px)); padding: 8px; border: 1px solid var(--line); background: var(--paper); box-shadow: 0 12px 30px rgba(38, 32, 24, .14); }
+    .filter-popover[hidden] { display: none; }
+    .filter-options { display: grid; gap: 2px; }
+    .filter-option { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 44px; padding: 7px 9px; border-radius: 2px; color: var(--ink); font-size: 14px; cursor: pointer; }
+    .filter-option:hover { background: #f8f5ef; }
+    .filter-option input { width: 16px; height: 16px; margin: 0; accent-color: var(--ink); }
+    .filter-option-count { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+    .filter-option.is-disabled { color: var(--muted); cursor: default; }
+    .filter-option.is-disabled:hover { background: transparent; }
+    .filters .filter-reset { width: 100%; margin-top: 5px; padding: 10px 9px 5px; border: 0; border-top: 1px solid var(--line); background: transparent; color: var(--muted); font: inherit; font-size: 13px; text-align: left; cursor: pointer; }
+    .filters .filter-reset:hover { color: var(--ink); }
+    .filter-reset[hidden] { display: none; }
+    .filter-active-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .filter-active-list[hidden] { display: none; }
+    .filters .filter-chip { display: inline-flex; align-items: center; gap: 7px; min-height: 32px; padding: 5px 9px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255, 252, 248, .8); color: var(--ink); font: inherit; font-size: 12px; cursor: pointer; }
+    .filters .filter-chip:hover { border-color: #cfc6bb; background: #f3efe8; color: var(--ink); }
+    .filter-chip-x { color: var(--muted); font-size: 15px; line-height: 1; }
     .catalog-group { margin-top: 8px; }
     .catalog-group h2 { margin: 28px 0 0; }
     .catalog-group .items { padding-top: 14px; padding-bottom: 8px; }
@@ -780,7 +803,7 @@
     const translations = {
       ru: {
         pageTitle: "GO'EL — христианские бренды одежды", countries: "Страны", countriesTitle: "Страны", mobileMenu: "Меню", belarus: "Беларусь", catalogMenu: "Каталог",
-        all: "Всё", unisex: "Унисекс", women: "Женское", men: "Мужское", tshirts: "Футболки", sweatshirts: "Свитшоты", longSleeves: "Лонгсливы", halfZips: "Полузипы", caps: "Кепки", category: "Категория", languageLabel: "Язык", socialNetworks: "Социальные сети",
+        all: "Всё", unisex: "Унисекс", women: "Женское", men: "Мужское", tshirts: "Футболки", sweatshirts: "Свитшоты", longSleeves: "Лонгсливы", halfZips: "Полузипы", caps: "Кепки", filters: "Фильтры", clearFilters: "Сбросить", selectedCount: "Выбрано: {{count}}", removeFilter: "Убрать фильтр «{{category}}»", languageLabel: "Язык", socialNetworks: "Социальные сети",
         heroLine1: "Христианские бренды", heroLine2: "одежды в одном месте", verseLine1: "Искупитель наш — Господь Саваоф", verseLine2: "имя Ему, Святый Израилев.",
         allBrands: "Все бренды", view: "Смотреть", chooseItemHint: "Выберите вещь и вариант — заявку можно будет оставить прямо на сайте.",
         catalogTitle: "Каталог", catalogDescription: "Одежда всех брендов в одном месте.", catalogFilteredDescription: "{{gender}} от всех брендов.",
@@ -804,7 +827,7 @@
       },
       be: {
         pageTitle: "GO'EL — хрысціянскія брэнды адзення", countries: "Краіны", countriesTitle: "Краіны", mobileMenu: "Меню", belarus: "Беларусь", catalogMenu: "Каталог",
-        all: "Усё", unisex: "Унісекс", women: "Жаночае", men: "Мужчынскае", tshirts: "Футболкі", sweatshirts: "Світшоты", longSleeves: "Лонгслівы", halfZips: "Паўзіпы", caps: "Кепкі", category: "Катэгорыя", languageLabel: "Мова", socialNetworks: "Сацыяльныя сеткі",
+        all: "Усё", unisex: "Унісекс", women: "Жаночае", men: "Мужчынскае", tshirts: "Футболкі", sweatshirts: "Світшоты", longSleeves: "Лонгслівы", halfZips: "Паўзіпы", caps: "Кепкі", filters: "Фільтры", clearFilters: "Скінуць", selectedCount: "Выбрана: {{count}}", removeFilter: "Выдаліць фільтр «{{category}}»", languageLabel: "Мова", socialNetworks: "Сацыяльныя сеткі",
         heroLine1: "Хрысціянскія брэнды", heroLine2: "адзення ў адным месцы", verseLine1: "Збаўца наш — Гасподзь Саваоф", verseLine2: "імя Яму — Святы Ізраілеў.",
         allBrands: "Усе брэнды", view: "Глядзець", chooseItemHint: "Выберыце рэч і варыянт — заяўку можна будзе пакінуць проста на сайце.",
         catalogTitle: "Каталог", catalogDescription: "Адзенне ўсіх брэндаў у адным месцы.", catalogFilteredDescription: "{{gender}} ад усіх брэндаў.",
@@ -828,7 +851,7 @@
       },
       uk: {
         pageTitle: "GO'EL — християнські бренди одягу", countries: "Країни", countriesTitle: "Країни", mobileMenu: "Меню", belarus: "Білорусь", catalogMenu: "Каталог",
-        all: "Усе", unisex: "Унісекс", women: "Жіноче", men: "Чоловіче", tshirts: "Футболки", sweatshirts: "Світшоти", longSleeves: "Лонгсліви", halfZips: "Півзіпи", caps: "Кепки", category: "Категорія", languageLabel: "Мова", socialNetworks: "Соціальні мережі",
+        all: "Усе", unisex: "Унісекс", women: "Жіноче", men: "Чоловіче", tshirts: "Футболки", sweatshirts: "Світшоти", longSleeves: "Лонгсліви", halfZips: "Півзіпи", caps: "Кепки", filters: "Фільтри", clearFilters: "Скинути", selectedCount: "Обрано: {{count}}", removeFilter: "Видалити фільтр «{{category}}»", languageLabel: "Мова", socialNetworks: "Соціальні мережі",
         heroLine1: "Християнські бренди", heroLine2: "одягу в одному місці", verseLine1: "Викупитель наш — Господь Саваот", verseLine2: "ім’я Йому — Святий Ізраїлів.",
         allBrands: "Усі бренди", view: "Переглянути", chooseItemHint: "Оберіть річ і варіант — заявку можна буде залишити просто на сайті.",
         catalogTitle: "Каталог", catalogDescription: "Одяг усіх брендів в одному місці.", catalogFilteredDescription: "{{gender}} від усіх брендів.",
@@ -852,7 +875,7 @@
       },
       en: {
         pageTitle: "GO'EL — Christian clothing brands", countries: "Countries", countriesTitle: "Countries", mobileMenu: "Menu", belarus: "Belarus", catalogMenu: "Catalog",
-        all: "All", unisex: "Unisex", women: "Women", men: "Men", tshirts: "T-shirts", sweatshirts: "Sweatshirts", longSleeves: "Long sleeves", halfZips: "Half-zips", caps: "Caps", category: "Category", languageLabel: "Language", socialNetworks: "Social media",
+        all: "All", unisex: "Unisex", women: "Women", men: "Men", tshirts: "T-shirts", sweatshirts: "Sweatshirts", longSleeves: "Long sleeves", halfZips: "Half-zips", caps: "Caps", filters: "Filters", clearFilters: "Clear", selectedCount: "Selected: {{count}}", removeFilter: "Remove {{category}} filter", languageLabel: "Language", socialNetworks: "Social media",
         heroLine1: "Christian clothing brands", heroLine2: "all in one place", verseLine1: "Our Redeemer is the Lord of hosts", verseLine2: "is His name, the Holy One of Israel.",
         allBrands: "All brands", view: "Browse", chooseItemHint: "Choose an item and a variant — you can submit a request right here on the site.",
         catalogTitle: "Catalog", catalogDescription: "Clothing from all brands in one place.", catalogFilteredDescription: "{{gender}} clothing from all brands.",
@@ -1810,7 +1833,7 @@
     let currentPhotos = [];
     let currentPhotoIndex = 0;
     let productPhotoTransition = null;
-    let brandCategoryFilter = "all";
+    let brandCategoryFilters = [];
     const ORDER_API_URL = "https://goel-order-api.o-el.workers.dev/order";
     const orderDialog = document.getElementById("order-dialog");
     const orderForm = document.getElementById("order-form");
@@ -2087,8 +2110,9 @@
       return brandCategoryKeys.filter((category) => available.has(category));
     }
 
-    function filterItemsByCategory(list, category) {
-      return list.filter((item) => itemInStock(item) && (category === "all" || itemCategory(item) === category));
+    function filterItemsByCategory(list, categories) {
+      const selected = new Set(categories);
+      return list.filter((item) => itemInStock(item) && (!selected.size || selected.has(itemCategory(item))));
     }
 
     function filterItemsByGender(list, gender) {
@@ -2299,17 +2323,22 @@
 
     function renderBrandFilters(data) {
       const bar = document.getElementById("brand-filters");
-      const available = brandCategoryOptions(data);
-      if (available.length < 2) {
+      const categories = brandCategoryOptions(data);
+      if (!categories.length) {
         bar.hidden = true;
         bar.innerHTML = "";
-        brandCategoryFilter = "all";
+        brandCategoryFilters = [];
         return;
       }
-      const options = ["all", ...available];
-      if (!options.includes(brandCategoryFilter)) brandCategoryFilter = "all";
+      brandCategoryFilters = brandCategoryFilters.filter((category) => categories.includes(category));
+      const selected = new Set(brandCategoryFilters);
       bar.hidden = false;
-      bar.innerHTML = `<label class="category-filter"><span>${t("category")}</span><select id="brand-category-filter" aria-label="${t("category")}">${options.map((key) => `<option value="${key}"${brandCategoryFilter === key ? " selected" : ""}>${brandCategoryLabel[key]}</option>`).join("")}</select></label>`;
+      const options = categories.map((category) => {
+        const count = data.items.filter((item) => itemInStock(item) && itemCategory(item) === category).length;
+        return `<label class="filter-option${count ? "" : " is-disabled"}"><input type="checkbox" data-brand-category="${category}"${selected.has(category) ? " checked" : ""}${count ? "" : " disabled"}><span>${brandCategoryLabel[category]}</span><span class="filter-option-count">${count}</span></label>`;
+      }).join("");
+      bar.innerHTML = `<div class="category-filter"><div class="filter-anchor"><button type="button" class="filter-toggle" id="brand-filter-toggle" aria-expanded="false" aria-controls="brand-filter-panel"><svg class="filter-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5h16l-6.5 7.5v5l-3 1.5v-6.5L4 5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span>${t("filters")}</span><span class="filter-badge" aria-hidden="true" hidden></span></button><div class="filter-popover" id="brand-filter-panel" hidden><div class="filter-options" role="group" aria-label="${t("filters")}">${options}</div><button type="button" class="filter-reset" hidden>${t("clearFilters")}</button></div></div><div class="filter-active-list" hidden></div></div>`;
+      updateBrandFilterSummary();
     }
 
     function paintBrand(id, animate) {
@@ -2326,15 +2355,48 @@
         note.textContent = data.note || "";
         note.hidden = !data.note;
         renderBrandFilters(data);
-        const list = filterItemsByCategory(data.items, brandCategoryFilter);
-        items.innerHTML = list.length
-          ? list.map((item) => itemCard(id, item)).join("")
-          : `<p class="blurb">${t("noFilterItems")}</p>`;
+        renderBrandItems(id, data);
         home.classList.remove("on");
         product.classList.remove("on");
         catalog.classList.remove("on");
         brand.classList.add("on");
       }, animate);
+    }
+
+    function renderBrandItems(id, data) {
+      const list = filterItemsByCategory(data.items, brandCategoryFilters);
+      items.innerHTML = list.length
+        ? list.map((item) => itemCard(id, item)).join("")
+        : `<p class="blurb">${t("noFilterItems")}</p>`;
+    }
+
+    function updateBrandFilterSummary() {
+      const bar = document.getElementById("brand-filters");
+      const toggle = bar.querySelector("#brand-filter-toggle");
+      if (!toggle) return;
+      const count = brandCategoryFilters.length;
+      const badge = bar.querySelector(".filter-badge");
+      const reset = bar.querySelector(".filter-reset");
+      const chips = bar.querySelector(".filter-active-list");
+      badge.textContent = String(count);
+      badge.hidden = count === 0;
+      reset.hidden = count === 0;
+      chips.hidden = count === 0;
+      toggle.classList.toggle("has-selection", count > 0);
+      toggle.setAttribute("aria-label", count ? `${t("filters")}, ${t("selectedCount", { count })}` : t("filters"));
+      chips.innerHTML = brandCategoryFilters.map((category) => {
+        const label = brandCategoryLabel[category];
+        return `<button type="button" class="filter-chip" data-remove-brand-category="${category}" aria-label="${t("removeFilter", { category: label })}">${label}<span class="filter-chip-x" aria-hidden="true">×</span></button>`;
+      }).join("");
+    }
+
+    function setBrandFilterPanelOpen(open, restoreFocus = false) {
+      const toggle = document.getElementById("brand-filter-toggle");
+      const panel = document.getElementById("brand-filter-panel");
+      if (!toggle || !panel) return;
+      panel.hidden = !open;
+      toggle.setAttribute("aria-expanded", String(open));
+      if (!open && restoreFocus) toggle.focus();
     }
 
     function paintCatalog(gender, animate) {
@@ -2570,7 +2632,7 @@
     document.querySelectorAll("#home [data-brand]").forEach((button) => {
       button.addEventListener("click", (event) => {
         event.preventDefault();
-        brandCategoryFilter = "all";
+        brandCategoryFilters = [];
         navigate(button.dataset.brand);
       });
     });
@@ -2705,15 +2767,42 @@
     }
     items.addEventListener("click", openItemCard);
     catalogBody.addEventListener("click", openItemCard);
+    document.getElementById("brand-filters").addEventListener("click", (event) => {
+      const toggle = event.target.closest("#brand-filter-toggle");
+      if (toggle) {
+        setBrandFilterPanelOpen(toggle.getAttribute("aria-expanded") !== "true");
+        return;
+      }
+      const reset = event.target.closest(".filter-reset");
+      if (reset && currentBrand) {
+        brandCategoryFilters = [];
+        document.querySelectorAll("#brand-filter-panel [data-brand-category]").forEach((checkbox) => { checkbox.checked = false; });
+        updateBrandFilterSummary();
+        renderBrandItems(currentBrand, brands[currentBrand]);
+        return;
+      }
+      const chip = event.target.closest("[data-remove-brand-category]");
+      if (chip && currentBrand) {
+        const category = chip.dataset.removeBrandCategory;
+        brandCategoryFilters = brandCategoryFilters.filter((selected) => selected !== category);
+        const checkbox = [...document.querySelectorAll("#brand-filter-panel [data-brand-category]")]
+          .find((option) => option.dataset.brandCategory === category);
+        if (checkbox) checkbox.checked = false;
+        updateBrandFilterSummary();
+        renderBrandItems(currentBrand, brands[currentBrand]);
+      }
+    });
     document.getElementById("brand-filters").addEventListener("change", (event) => {
-      const select = event.target.closest("#brand-category-filter");
-      if (!select || !currentBrand) return;
-      brandCategoryFilter = select.value;
-      const data = brands[currentBrand];
-      const list = filterItemsByCategory(data.items, brandCategoryFilter);
-      items.innerHTML = list.length
-        ? list.map((item) => itemCard(currentBrand, item)).join("")
-        : `<p class="blurb">${t("noFilterItems")}</p>`;
+      const checkbox = event.target.closest("[data-brand-category]");
+      if (!checkbox || !currentBrand) return;
+      brandCategoryFilters = [...document.querySelectorAll("#brand-filter-panel [data-brand-category]:checked")]
+        .map((option) => option.dataset.brandCategory);
+      updateBrandFilterSummary();
+      renderBrandItems(currentBrand, brands[currentBrand]);
+    });
+    document.addEventListener("click", (event) => {
+      const filter = document.querySelector(".category-filter");
+      if (filter && !filter.contains(event.target)) setBrandFilterPanelOpen(false);
     });
     document.getElementById("catalog-filters").addEventListener("click", (event) => {
       const button = event.target.closest("[data-catalog-filter]");
@@ -2726,7 +2815,7 @@
       navigate(countrySlug[brands[currentBrand]?.country] || "");
     });
     document.getElementById("product-brand").addEventListener("click", () => {
-      brandCategoryFilter = "all";
+      brandCategoryFilters = [];
       navigate(currentBrand);
     });
     document.getElementById("cut-options").addEventListener("click", (event) => {
@@ -2855,6 +2944,11 @@
     });
     lightboxPhoto.addEventListener("click", (event) => event.stopPropagation());
     document.addEventListener("keydown", (event) => {
+      const filterToggle = document.getElementById("brand-filter-toggle");
+      if (event.key === "Escape" && filterToggle?.getAttribute("aria-expanded") === "true") {
+        setBrandFilterPanelOpen(false, true);
+        return;
+      }
       if (lightbox.hidden) return;
       if (event.key === "Escape") closeLightbox();
       if (event.key === "ArrowLeft") stepPhoto(-1);
