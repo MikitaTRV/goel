@@ -2381,13 +2381,13 @@
       const categoryOptions = categories.map((category) => {
         const count = countItemsForCategory(data, category);
         const checked = brandCategoryFilters.includes(category);
-        return `<label class="filter-option${count ? "" : " is-disabled"}"><input type="checkbox" data-brand-category="${category}"${checked ? " checked" : ""}${count || checked ? "" : " disabled"}><span>${brandCategoryLabel[category]}</span><span class="filter-option-count">${count}</span></label>`;
+        return `<label class="filter-option${count ? "" : " is-disabled"}" data-filter-order="${brandCategoryKeys.indexOf(category)}"><input type="checkbox" data-brand-category="${category}"${checked ? " checked" : ""}${count || checked ? "" : " disabled"}><span>${brandCategoryLabel[category]}</span><span class="filter-option-count">${count}</span></label>`;
       }).join("");
-      const colorOptions = colors.map(({ tone, color }) => {
+      const colorOptions = colors.map(({ tone, color }, index) => {
         const count = countItemsForColor(data, tone);
         const checked = brandColorFilters.includes(tone);
         const label = localizedTone(tone);
-        return `<label class="filter-option filter-color-option${count ? "" : " is-disabled"}"><input type="checkbox" data-brand-color="${tone}"${checked ? " checked" : ""}${count || checked ? "" : " disabled"}><span class="filter-color-swatch" style="--filter-color:${color}" aria-hidden="true"></span><span>${label}</span><span class="filter-option-count">${count}</span></label>`;
+        return `<label class="filter-option filter-color-option${count ? "" : " is-disabled"}" data-filter-order="${index}"><input type="checkbox" data-brand-color="${tone}"${checked ? " checked" : ""}${count || checked ? "" : " disabled"}><span class="filter-color-swatch" style="--filter-color:${color}" aria-hidden="true"></span><span>${label}</span><span class="filter-option-count">${count}</span></label>`;
       }).join("");
       bar.innerHTML = `<div class="category-filter"><div class="filter-anchor"><button type="button" class="filter-toggle" id="brand-filter-toggle" aria-expanded="false" aria-controls="brand-filter-panel"><svg class="filter-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5h16l-6.5 7.5v5l-3 1.5v-6.5L4 5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span>${t("filters")}</span><span class="filter-badge" aria-hidden="true" hidden></span></button><div class="filter-popover" id="brand-filter-panel" hidden><section class="filter-group"><button type="button" class="filter-group-toggle" data-filter-group-toggle="category" aria-expanded="false" aria-controls="brand-category-submenu"><span>${t("categoryFilter")}</span><span class="filter-group-end"><span class="filter-group-count" data-filter-group-count="category" hidden></span><span class="filter-group-chevron" aria-hidden="true">›</span></span></button><div class="filter-submenu" id="brand-category-submenu" hidden><div class="filter-options" role="group" aria-label="${t("categoryFilter")}">${categoryOptions}</div></div></section><section class="filter-group"><button type="button" class="filter-group-toggle" data-filter-group-toggle="color" aria-expanded="false" aria-controls="brand-color-submenu"><span>${t("color")}</span><span class="filter-group-end"><span class="filter-group-count" data-filter-group-count="color" hidden></span><span class="filter-group-chevron" aria-hidden="true">›</span></span></button><div class="filter-submenu" id="brand-color-submenu" hidden><div class="filter-options" role="group" aria-label="${t("color")}">${colorOptions}</div></div></section><button type="button" class="filter-reset" hidden>${t("clearFilters")}</button></div></div><div class="filter-active-list" hidden></div></div>`;
       updateBrandFilterSummary();
@@ -2434,6 +2434,18 @@
         input.closest(".filter-option").querySelector(".filter-option-count").textContent = String(count);
         input.disabled = count === 0 && !input.checked;
         input.closest(".filter-option").classList.toggle("is-disabled", count === 0);
+      });
+      ["#brand-category-submenu .filter-options", "#brand-color-submenu .filter-options"].forEach((selector) => {
+        const options = document.querySelector(selector);
+        if (!options) return;
+        [...options.children]
+          .sort((left, right) => {
+            const leftAvailable = Number(left.querySelector(".filter-option-count").textContent) > 0;
+            const rightAvailable = Number(right.querySelector(".filter-option-count").textContent) > 0;
+            return Number(rightAvailable) - Number(leftAvailable)
+              || Number(left.dataset.filterOrder) - Number(right.dataset.filterOrder);
+          })
+          .forEach((option) => options.append(option));
       });
     }
 
