@@ -83,13 +83,31 @@ export default {
       return jsonResponse({ error: "Invalid submission time" }, 400, corsHeaders);
     }
 
+    const incomingItems = Array.isArray(body.items) ? body.items : [{
+      brand: body.brand,
+      product: body.product,
+      model: body.model,
+      color: body.color,
+      size: body.size,
+      price: body.price,
+      quantity: 1
+    }];
+    if (!incomingItems.length || incomingItems.length > 25) {
+      return jsonResponse({ error: "Invalid items" }, 400, corsHeaders);
+    }
+    const items = incomingItems.map((item) => ({
+      brand: text(item?.brand, 100),
+      product: text(item?.product, 160),
+      model: text(item?.model, 100),
+      color: text(item?.color, 100),
+      size: text(item?.size, 80),
+      price: text(item?.price, 80),
+      quantity: Number(item?.quantity ?? 1)
+    }));
+    if (items.some((item) => !item.brand || !item.product || !Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 99)) {
+      return jsonResponse({ error: "Invalid items" }, 400, corsHeaders);
+    }
     const order = {
-      brand: text(body.brand, 100),
-      product: text(body.product, 160),
-      model: text(body.model, 100),
-      color: text(body.color, 100),
-      size: text(body.size, 80),
-      price: text(body.price, 80),
       customerName: text(body.customerName, 80),
       phone: text(body.phone, 32),
       delivery: text(body.delivery, 500),
@@ -100,9 +118,7 @@ export default {
       order.customerName.length < 2 ||
       order.phone.replace(/[^\d+]/g, "").length < 6 ||
       order.delivery.length < 5 ||
-      body.consent !== true ||
-      !order.brand ||
-      !order.product
+      body.consent !== true
     ) {
       return jsonResponse({ error: "Please complete the required fields" }, 400, corsHeaders);
     }
@@ -110,13 +126,15 @@ export default {
     const lines = [
       "<b>Новая заявка с сайта GO’EL</b>",
       "",
-      `<b>Бренд:</b> ${escapeHtml(order.brand)}`,
-      `<b>Товар:</b> ${escapeHtml(order.product)}`,
-      order.model ? `<b>Модель:</b> ${escapeHtml(order.model)}` : "",
-      `<b>Цвет:</b> ${escapeHtml(order.color || "не указан")}`,
-      `<b>Размер:</b> ${escapeHtml(order.size || "не указан")}`,
-      `<b>Цена:</b> ${escapeHtml(order.price || "не указана")}`,
-      "",
+      ...items.flatMap((item, index) => [
+        `<b>${index + 1}. ${escapeHtml(item.brand)} — ${escapeHtml(item.product)}</b>`,
+        item.model ? `<b>Модель:</b> ${escapeHtml(item.model)}` : "",
+        `<b>Цвет:</b> ${escapeHtml(item.color || "не указан")}`,
+        `<b>Размер:</b> ${escapeHtml(item.size || "не указан")}`,
+        `<b>Количество:</b> ${item.quantity}`,
+        `<b>Цена за шт.:</b> ${escapeHtml(item.price || "не указана")}`,
+        ""
+      ]),
       `<b>Покупатель:</b> ${escapeHtml(order.customerName)}`,
       `<b>Телефон:</b> ${escapeHtml(order.phone)}`,
       `<b>Доставка:</b> ${escapeHtml(order.delivery)}`,

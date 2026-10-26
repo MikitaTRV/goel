@@ -353,6 +353,36 @@
     }
     .product-actions .buy { margin-top: 0; }
     .product-actions .order { margin-top: 12px; }
+    .cart-toggle { position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 4px 8px; color: var(--ink); font-size: 14px; white-space: nowrap; }
+    .cart-toggle:hover { color: var(--accent); }
+    .cart-toggle svg { width: 22px; height: 22px; }
+    .cart-count { position: absolute; top: -2px; left: 21px; display: grid; place-items: center; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 10px; line-height: 1; }
+    .cart-count[hidden] { display: none; }
+    .cart-view h1 { margin: 0; }
+    .cart-empty { margin: 20px 0; color: var(--muted); }
+    .cart-lines { display: grid; gap: 12px; margin-top: 20px; }
+    .cart-line { display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 12px; border: 1px solid var(--line); background: var(--paper); }
+    .cart-line[hidden] { display: none; }
+    .cart-image { display: block; width: 96px; aspect-ratio: 1; object-fit: cover; background: #ebe4da; }
+    .cart-line-title { margin: 0; font-size: 16px; line-height: 1.35; }
+    .cart-line-meta { margin: 5px 0 0; color: var(--muted); font-size: 14px; line-height: 1.4; }
+    .cart-line-price { margin: 8px 0 0; font-size: 14px; }
+    .cart-line-unavailable { margin: 7px 0 0; color: #9b302a; font-size: 13px; }
+    .cart-line-controls { display: flex; align-items: center; gap: 7px; }
+    .cart-quantity-button, .cart-remove { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid var(--line); background: var(--paper); font-size: 18px; text-align: center; }
+    .cart-quantity-button:hover, .cart-remove:hover { border-color: #cfc6bb; background: #f3efe8; }
+    .cart-quantity { min-width: 22px; text-align: center; font-size: 14px; font-variant-numeric: tabular-nums; }
+    .cart-remove { margin-left: 4px; color: var(--muted); font-size: 21px; }
+    .cart-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+    .cart-footer[hidden] { display: none; }
+    .cart-total { margin: 0; font-size: 18px; font-weight: 600; }
+    .cart-checkout { width: auto; min-width: 220px; margin: 0; text-align: center; }
+    .checkout-form { max-width: 620px; margin-top: 24px; border: 1px solid var(--line); background: var(--paper); }
+    .checkout-form[hidden] { display: none; }
+    .checkout-summary { margin: 0; padding: 12px 14px; background: #f3efe8; font-size: 14px; line-height: 1.55; white-space: pre-line; }
+    .cart-success { margin: 20px 0; padding: 14px 16px; border: 1px solid #b8cfba; background: #f1f7f0; color: #356b42; }
+    .cart-success[hidden] { display: none; }
+    .cart-focus:focus-visible, .cart-quantity-button:focus-visible, .cart-remove:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
     .product-cloth.has-photo {
       cursor: zoom-in;
     }
@@ -605,11 +635,13 @@
     }
     @media (max-width: 560px) {
       .filter-popover { max-height: min(70vh, 560px, calc(100vh - 300px)); max-height: min(70vh, 560px, calc(100dvh - 300px)); }
-      header { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 10px 14px; }
+      header { display: grid; grid-template-columns: minmax(0, 1fr) auto auto auto; gap: 10px 14px; }
       header > #logo { grid-column: 1; grid-row: 1; }
       header > .site-nav { grid-column: 2; grid-row: 1; justify-self: end; }
       .site-menu-list { left: 50%; width: min(260px, calc(100vw - 48px)); transform: translateX(-50%); }
-      header > nav.links { grid-column: 3; grid-row: 1; justify-self: end; margin-left: 0; }
+      header > .cart-toggle { grid-column: 3; grid-row: 1; justify-self: end; width: 36px; padding: 0; }
+      .cart-toggle-label { display: none; }
+      header > nav.links { grid-column: 4; grid-row: 1; justify-self: end; margin-left: 0; }
       .wrap { width: calc(100% - 24px); }
       h1 { font-size: 24px; }
       .brand-head h1 { font-size: 22px; }
@@ -624,6 +656,11 @@
       .cut, .size { min-width: 48px; height: 40px; }
       .tone { width: 34px; height: 34px; }
       .buy { width: 100%; text-align: center; }
+      .cart-line { grid-template-columns: 76px minmax(0, 1fr); gap: 12px; padding: 10px; }
+      .cart-image { width: 76px; }
+      .cart-line-controls { grid-column: 2; justify-self: start; }
+      .cart-footer { align-items: stretch; flex-direction: column; }
+      .cart-checkout { width: 100%; }
       .order-form { padding: 18px; }
       .order-form h2 { font-size: 21px; }
       .lightbox { padding: 12px; }
@@ -660,6 +697,10 @@
           </div>
         </div>
       </div>
+      <button type="button" class="cart-toggle cart-focus" id="cart-toggle" aria-label="Корзина">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 1.9-1.4L21 9H6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1" fill="currentColor"/><circle cx="18" cy="20" r="1" fill="currentColor"/></svg>
+        <span class="cart-toggle-label" data-i18n="cart">Корзина</span><span class="cart-count" id="cart-count" hidden></span>
+      </button>
       <nav class="links" aria-label="Социальные сети" data-i18n-aria="socialNetworks">
         <a href="https://t.me/JHVHGOeL" aria-label="Telegram" title="Telegram">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.6 3.4 2.8 10.7c-1.3.5-1.3 1.2-.2 1.5l4.6 1.4 1.7 5.4c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.4-2.3 4.8 3.5c.9.5 1.5.2 1.7-.8L23.3 5c.3-1.3-.5-1.9-1.7-1.6zM8.7 13.2l9.3-5.8c.5-.3.9-.1.5.2l-7.7 7-.3 3.4-1.8-4.8z"/></svg>
@@ -765,11 +806,56 @@
             <p class="product-price" id="product-price" hidden></p>
           </div>
           <div class="product-actions">
-            <button type="button" class="buy" data-i18n="order">Заказать</button>
+            <button type="button" class="buy" id="add-to-cart" data-i18n="addToCart">В корзину</button>
             <p class="order" id="choice" data-i18n="orderNotConnected">Оформление заказа ещё не включено.</p>
           </div>
         </div>
       </article>
+    </section>
+    <section id="cart" class="view">
+      <div class="crumbs">
+        <button type="button" id="cart-continue" data-i18n="continueShopping">Продолжить покупки</button>
+        <span>›</span>
+        <span class="here" data-i18n="cartTitle">Корзина</span>
+      </div>
+      <h1 data-i18n="cartTitle">Корзина</h1>
+      <p class="cart-empty" id="cart-empty" data-i18n="cartEmpty" hidden>Корзина пока пуста. Добавьте товары из каталога.</p>
+      <div class="cart-lines" id="cart-lines"></div>
+      <div class="cart-footer" id="cart-footer" hidden>
+        <p class="cart-total" id="cart-total"></p>
+        <button type="button" class="buy cart-checkout" id="cart-checkout" data-i18n="cartCheckout">Оформить заявку</button>
+      </div>
+      <p class="cart-success" id="cart-success" role="status" aria-live="polite" hidden></p>
+      <form class="order-form checkout-form" id="order-form" hidden>
+        <div class="order-form-head">
+          <div>
+            <h2 data-i18n="checkoutTitle">Контактные данные</h2>
+            <p class="order-status" id="order-setup-note">После отправки заявка придёт GO’EL в Telegram.</p>
+          </div>
+        </div>
+        <p class="checkout-summary" id="order-summary"></p>
+        <label><span data-i18n="customerName">Имя</span>
+          <input name="customerName" autocomplete="name" maxlength="80" required>
+        </label>
+        <label><span data-i18n="phone">Телефон</span>
+          <input name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="32" placeholder="+375…" required>
+        </label>
+        <label><span data-i18n="deliveryAddress">Город и адрес или пункт выдачи</span>
+          <textarea name="delivery" autocomplete="street-address" maxlength="500" required></textarea>
+        </label>
+        <label><span data-i18n="comment">Комментарий</span> <span data-i18n="optional">(необязательно)</span>
+          <textarea name="comment" maxlength="500"></textarea>
+        </label>
+        <label class="order-consent">
+          <input name="consent" type="checkbox" required>
+          <span data-i18n="consent">Согласен(на), что GO’EL использует мои данные, чтобы связаться со мной по поводу этого заказа.</span>
+        </label>
+        <label class="order-honeypot" aria-hidden="true" tabindex="-1"><span data-i18n="honeypot">Не заполняйте это поле</span>
+          <input name="website" autocomplete="off" tabindex="-1">
+        </label>
+        <button class="buy order-submit" id="order-submit" type="submit" disabled data-i18n="submitOrder">Отправить заявку</button>
+        <p class="order-status" id="order-status" role="status" aria-live="polite"></p>
+      </form>
     </section>
     </div>
   </div>
@@ -780,46 +866,14 @@
     <button type="button" class="lightbox-nav next" id="lightbox-next" hidden aria-label="Следующее фото" data-i18n-aria="nextPhoto">›</button>
     <div class="lightbox-count" id="lightbox-count" hidden></div>
   </div>
-  <dialog class="order-dialog" id="order-dialog" aria-labelledby="order-title">
-    <form class="order-form" id="order-form">
-      <div class="order-form-head">
-        <div>
-          <h2 id="order-title" data-i18n="orderTitle">Заявка на заказ</h2>
-          <p class="order-status" id="order-setup-note">Подключаем приём заказов в Telegram.</p>
-        </div>
-        <button class="order-close" type="button" id="order-close" aria-label="Закрыть форму" data-i18n-aria="closeForm">×</button>
-      </div>
-      <p class="order-summary" id="order-summary"></p>
-      <label><span data-i18n="customerName">Имя</span>
-        <input name="customerName" autocomplete="name" maxlength="80" required>
-      </label>
-      <label><span data-i18n="phone">Телефон</span>
-        <input name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="32" placeholder="+375…" required>
-      </label>
-      <label><span data-i18n="deliveryAddress">Город и адрес или пункт выдачи</span>
-        <textarea name="delivery" autocomplete="street-address" maxlength="500" required></textarea>
-      </label>
-      <label><span data-i18n="comment">Комментарий</span> <span data-i18n="optional">(необязательно)</span>
-        <textarea name="comment" maxlength="500"></textarea>
-      </label>
-      <label class="order-consent">
-        <input name="consent" type="checkbox" required>
-        <span data-i18n="consent">Согласен(на), что GO’EL использует мои данные, чтобы связаться со мной по поводу этого заказа.</span>
-      </label>
-      <label class="order-honeypot" aria-hidden="true" tabindex="-1"><span data-i18n="honeypot">Не заполняйте это поле</span>
-        <input name="website" autocomplete="off" tabindex="-1">
-      </label>
-      <button class="buy order-submit" id="order-submit" type="submit" disabled data-i18n="submitOrder">Отправить заявку</button>
-      <p class="order-status" id="order-status" role="status" aria-live="polite"></p>
-    </form>
-  </dialog>
   <script>
     const translations = {
       ru: {
         pageTitle: "GO'EL — христианские бренды одежды", countries: "Страны", countriesTitle: "Страны", mobileMenu: "Меню", belarus: "Беларусь", catalogMenu: "Каталог",
         all: "Всё", unisex: "Унисекс", women: "Женское", men: "Мужское", tshirts: "Футболки", sweatshirts: "Свитшоты", longSleeves: "Лонгсливы", halfZips: "Полузипы", caps: "Кепки", categoryFilter: "Категория одежды", filters: "Фильтры", clearFilters: "Сбросить", selectedCount: "Выбрано: {{count}}", removeFilter: "Убрать фильтр «{{category}}»", languageLabel: "Язык", socialNetworks: "Социальные сети",
         heroLine1: "Христианские бренды", heroLine2: "одежды в одном месте", verseLine1: "Искупитель наш — Господь Саваоф", verseLine2: "имя Ему, Святый Израилев.",
-        allBrands: "Все бренды", view: "Смотреть", chooseItemHint: "Выберите вещь и вариант — заявку можно будет оставить прямо на сайте.",
+        allBrands: "Все бренды", view: "Смотреть", chooseItemHint: "Выберите вещь и вариант — заявку можно будет оставить прямо на сайте.", cart: "Корзина", cartTitle: "Корзина", cartCount: "Корзина, товаров: {{count}}", cartEmpty: "Корзина пока пуста. Добавьте товары из каталога.", continueShopping: "Продолжить покупки", addToCart: "В корзину", addedToCart: "Добавлено в корзину.", cartCheckout: "Оформить заявку", cartTotal: "Итого: {{total}}", cartTotalOnRequest: "Итого: стоимость уточняется", cartUnavailable: "Этот вариант больше недоступен. Удалите его из корзины, чтобы продолжить.", removeCartItem: "Удалить товар", decreaseQuantity: "Уменьшить количество", increaseQuantity: "Увеличить количество", checkoutTitle: "Контактные данные",
+        cartLimit: "В корзине может быть не больше 25 разных товаров.",
         catalogTitle: "Каталог", catalogDescription: "Одежда всех брендов в одном месте.", catalogFilteredDescription: "{{gender}} от всех брендов.",
         enlargePhoto: "Нажмите, чтобы увеличить", previousPhoto: "Предыдущее фото", nextPhoto: "Следующее фото", photoPlaceholder: "Место под фото",
         model: "Модель", color: "Цвет", size: "Размер", order: "Заказать", orderNotConnected: "Оформление заказа ещё не включено.",
@@ -829,8 +883,8 @@
         honeypot: "Не заполняйте это поле", submitOrder: "Отправить заявку", sendingOrder: "Отправляем…", orderSent: "Заявка отправлена",
         formNotReady: "Форма пока не подключена к Telegram. Заявка не отправлена.", waitBeforeResend: "Подождите секунду и попробуйте отправить заявку ещё раз.",
         orderSuccess: "Заявка отправлена! Мы свяжемся с вами для подтверждения заказа.", orderFailure: "Не удалось отправить заявку. Проверьте интернет и попробуйте ещё раз.",
-        chooseSize: "Выберите размер, затем нажмите «Заказать», чтобы оставить заявку.", pressOrderToRequest: "Нажмите «Заказать», чтобы оставить заявку.", chooseSizeBeforeOrder: "Выберите размер перед оформлением заявки.",
-        selectedSizeMessage: "Выбран размер {{size}}. Нажмите «Заказать», чтобы оставить заявку.", firstChooseSize: "Сначала выберите размер.",
+        chooseSize: "Выберите размер, затем добавьте вещь в корзину.", pressOrderToRequest: "Добавьте вещь в корзину, чтобы продолжить.", chooseSizeBeforeOrder: "Выберите размер перед добавлением в корзину.",
+        selectedSizeMessage: "Выбран размер {{size}}. Добавьте вещь в корзину.", firstChooseSize: "Сначала выберите размер.",
         unavailable: "Нет в наличии", nowUnavailable: "Сейчас нет в наличии", sizeRange: "Размеры {{size}}", singleSize: "Размер {{size}}",
         oversizeFit: "Посадка Oversize", oversizeFitLabel: "Посадка оверсайз", noFilterItems: "В этом фильтре пока нет вещей.",
         noCatalogItems: "Пока нет вещей в этом разделе.", from: "от", pricePending: "Уточняется", colorUnknown: "не указан", sizeUnknown: "не указан", priceUnknown: "не указана",
@@ -843,7 +897,8 @@
         pageTitle: "GO'EL — хрысціянскія брэнды адзення", countries: "Краіны", countriesTitle: "Краіны", mobileMenu: "Меню", belarus: "Беларусь", catalogMenu: "Каталог",
         all: "Усё", unisex: "Унісекс", women: "Жаночае", men: "Мужчынскае", tshirts: "Футболкі", sweatshirts: "Світшоты", longSleeves: "Лонгслівы", halfZips: "Паўзіпы", caps: "Кепкі", categoryFilter: "Катэгорыя адзення", filters: "Фільтры", clearFilters: "Скінуць", selectedCount: "Выбрана: {{count}}", removeFilter: "Выдаліць фільтр «{{category}}»", languageLabel: "Мова", socialNetworks: "Сацыяльныя сеткі",
         heroLine1: "Хрысціянскія брэнды", heroLine2: "адзення ў адным месцы", verseLine1: "Збаўца наш — Гасподзь Саваоф", verseLine2: "імя Яму — Святы Ізраілеў.",
-        allBrands: "Усе брэнды", view: "Глядзець", chooseItemHint: "Выберыце рэч і варыянт — заяўку можна будзе пакінуць проста на сайце.",
+        allBrands: "Усе брэнды", view: "Глядзець", chooseItemHint: "Выберыце рэч і варыянт — заяўку можна будзе пакінуць проста на сайце.", cart: "Кошык", cartTitle: "Кошык", cartCount: "Кошык, тавараў: {{count}}", cartEmpty: "Кошык пакуль пусты. Дадайце тавары з каталога.", continueShopping: "Працягнуць пакупкі", addToCart: "У кошык", addedToCart: "Дададзена ў кошык.", cartCheckout: "Аформіць заяўку", cartTotal: "Разам: {{total}}", cartTotalOnRequest: "Разам: кошт удакладняецца", cartUnavailable: "Гэты варыянт больш недаступны. Выдаліце яго з кошыка, каб працягнуць.", removeCartItem: "Выдаліць тавар", decreaseQuantity: "Паменшыць колькасць", increaseQuantity: "Павялічыць колькасць", checkoutTitle: "Кантактныя даныя",
+        cartLimit: "У кошыку можа быць не больш за 25 розных тавараў.",
         catalogTitle: "Каталог", catalogDescription: "Адзенне ўсіх брэндаў у адным месцы.", catalogFilteredDescription: "{{gender}} ад усіх брэндаў.",
         enlargePhoto: "Націсніце, каб павялічыць", previousPhoto: "Папярэдняе фота", nextPhoto: "Наступнае фота", photoPlaceholder: "Месца для фота",
         model: "Мадэль", color: "Колер", size: "Памер", order: "Замовіць", orderNotConnected: "Афармленне замовы яшчэ не ўключана.",
@@ -853,8 +908,8 @@
         honeypot: "Не запаўняйце гэтае поле", submitOrder: "Адправіць заяўку", sendingOrder: "Адпраўляем…", orderSent: "Заяўка адпраўлена",
         formNotReady: "Форма пакуль не падключана да Telegram. Заяўка не адпраўлена.", waitBeforeResend: "Пачакайце секунду і паспрабуйце адправіць заяўку яшчэ раз.",
         orderSuccess: "Заяўка адпраўлена! Мы звяжамся з вамі, каб пацвердзіць замову.", orderFailure: "Не ўдалося адправіць заяўку. Праверце інтэрнэт і паспрабуйце яшчэ раз.",
-        chooseSize: "Выберыце памер, затым націсніце «Замовіць», каб пакінуць заяўку.", pressOrderToRequest: "Націсніце «Замовіць», каб пакінуць заяўку.", chooseSizeBeforeOrder: "Выберыце памер перад афармленнем заяўкі.",
-        selectedSizeMessage: "Выбраны памер {{size}}. Націсніце «Замовіць», каб пакінуць заяўку.", firstChooseSize: "Спачатку выберыце памер.",
+        chooseSize: "Выберыце памер, затым дадайце рэч у кошык.", pressOrderToRequest: "Дадайце рэч у кошык, каб працягнуць.", chooseSizeBeforeOrder: "Выберыце памер перад даданнем у кошык.",
+        selectedSizeMessage: "Выбраны памер {{size}}. Дадайце рэч у кошык.", firstChooseSize: "Спачатку выберыце памер.",
         unavailable: "Няма ў наяўнасці", nowUnavailable: "Зараз няма ў наяўнасці", sizeRange: "Памеры {{size}}", singleSize: "Памер {{size}}",
         oversizeFit: "Крой Oversize", oversizeFitLabel: "Крой оверсайз", noFilterItems: "У гэтым фільтры пакуль няма рэчаў.",
         noCatalogItems: "У гэтым раздзеле пакуль няма рэчаў.", from: "ад", pricePending: "Удакладняецца", colorUnknown: "не пазначаны", sizeUnknown: "не пазначаны", priceUnknown: "не пазначана",
@@ -867,7 +922,8 @@
         pageTitle: "GO'EL — християнські бренди одягу", countries: "Країни", countriesTitle: "Країни", mobileMenu: "Меню", belarus: "Білорусь", catalogMenu: "Каталог",
         all: "Усе", unisex: "Унісекс", women: "Жіноче", men: "Чоловіче", tshirts: "Футболки", sweatshirts: "Світшоти", longSleeves: "Лонгсліви", halfZips: "Півзіпи", caps: "Кепки", categoryFilter: "Категорія одягу", filters: "Фільтри", clearFilters: "Скинути", selectedCount: "Обрано: {{count}}", removeFilter: "Видалити фільтр «{{category}}»", languageLabel: "Мова", socialNetworks: "Соціальні мережі",
         heroLine1: "Християнські бренди", heroLine2: "одягу в одному місці", verseLine1: "Викупитель наш — Господь Саваот", verseLine2: "ім’я Йому — Святий Ізраїлів.",
-        allBrands: "Усі бренди", view: "Переглянути", chooseItemHint: "Оберіть річ і варіант — заявку можна буде залишити просто на сайті.",
+        allBrands: "Усі бренди", view: "Переглянути", chooseItemHint: "Оберіть річ і варіант — заявку можна буде залишити просто на сайті.", cart: "Кошик", cartTitle: "Кошик", cartCount: "Кошик, товарів: {{count}}", cartEmpty: "Кошик поки порожній. Додайте товари з каталогу.", continueShopping: "Продовжити покупки", addToCart: "До кошика", addedToCart: "Додано до кошика.", cartCheckout: "Оформити заявку", cartTotal: "Разом: {{total}}", cartTotalOnRequest: "Разом: вартість уточнюється", cartUnavailable: "Цей варіант більше недоступний. Видаліть його з кошика, щоб продовжити.", removeCartItem: "Видалити товар", decreaseQuantity: "Зменшити кількість", increaseQuantity: "Збільшити кількість", checkoutTitle: "Контактні дані",
+        cartLimit: "У кошику може бути не більше 25 різних товарів.",
         catalogTitle: "Каталог", catalogDescription: "Одяг усіх брендів в одному місці.", catalogFilteredDescription: "{{gender}} від усіх брендів.",
         enlargePhoto: "Натисніть, щоб збільшити", previousPhoto: "Попереднє фото", nextPhoto: "Наступне фото", photoPlaceholder: "Місце для фото",
         model: "Модель", color: "Колір", size: "Розмір", order: "Замовити", orderNotConnected: "Оформлення замовлення ще не ввімкнено.",
@@ -877,8 +933,8 @@
         honeypot: "Не заповнюйте це поле", submitOrder: "Надіслати заявку", sendingOrder: "Надсилаємо…", orderSent: "Заявку надіслано",
         formNotReady: "Форму ще не підключено до Telegram. Заявку не надіслано.", waitBeforeResend: "Зачекайте секунду й спробуйте надіслати заявку ще раз.",
         orderSuccess: "Заявку надіслано! Ми зв’яжемося з вами для підтвердження замовлення.", orderFailure: "Не вдалося надіслати заявку. Перевірте інтернет і спробуйте ще раз.",
-        chooseSize: "Оберіть розмір, а потім натисніть «Замовити», щоб залишити заявку.", pressOrderToRequest: "Натисніть «Замовити», щоб залишити заявку.", chooseSizeBeforeOrder: "Оберіть розмір перед оформленням заявки.",
-        selectedSizeMessage: "Обраний розмір {{size}}. Натисніть «Замовити», щоб залишити заявку.", firstChooseSize: "Спочатку оберіть розмір.",
+        chooseSize: "Оберіть розмір, а потім додайте річ до кошика.", pressOrderToRequest: "Додайте річ до кошика, щоб продовжити.", chooseSizeBeforeOrder: "Оберіть розмір перед додаванням до кошика.",
+        selectedSizeMessage: "Обраний розмір {{size}}. Додайте річ до кошика.", firstChooseSize: "Спочатку оберіть розмір.",
         unavailable: "Немає в наявності", nowUnavailable: "Зараз немає в наявності", sizeRange: "Розміри {{size}}", singleSize: "Розмір {{size}}",
         oversizeFit: "Посадка Oversize", oversizeFitLabel: "Посадка оверсайз", noFilterItems: "У цьому фільтрі поки немає речей.",
         noCatalogItems: "У цьому розділі поки немає речей.", from: "від", pricePending: "Уточнюється", colorUnknown: "не вказаний", sizeUnknown: "не вказаний", priceUnknown: "не вказана",
@@ -891,7 +947,8 @@
         pageTitle: "GO'EL — Christian clothing brands", countries: "Countries", countriesTitle: "Countries", mobileMenu: "Menu", belarus: "Belarus", catalogMenu: "Catalog",
         all: "All", unisex: "Unisex", women: "Women", men: "Men", tshirts: "T-shirts", sweatshirts: "Sweatshirts", longSleeves: "Long sleeves", halfZips: "Half-zips", caps: "Caps", categoryFilter: "Clothing type", filters: "Filters", clearFilters: "Clear", selectedCount: "Selected: {{count}}", removeFilter: "Remove {{category}} filter", languageLabel: "Language", socialNetworks: "Social media",
         heroLine1: "Christian clothing brands", heroLine2: "all in one place", verseLine1: "Our Redeemer is the Lord of hosts", verseLine2: "is His name, the Holy One of Israel.",
-        allBrands: "All brands", view: "Browse", chooseItemHint: "Choose an item and a variant — you can submit a request right here on the site.",
+        allBrands: "All brands", view: "Browse", chooseItemHint: "Choose an item and a variant — you can submit a request right here on the site.", cart: "Cart", cartTitle: "Your cart", cartCount: "Cart, items: {{count}}", cartEmpty: "Your cart is empty. Add items from the catalog.", continueShopping: "Continue shopping", addToCart: "Add to cart", addedToCart: "Added to cart.", cartCheckout: "Submit request", cartTotal: "Total: {{total}}", cartTotalOnRequest: "Total: price to be confirmed", cartUnavailable: "This option is no longer available. Remove it from your cart to continue.", removeCartItem: "Remove item", decreaseQuantity: "Decrease quantity", increaseQuantity: "Increase quantity", checkoutTitle: "Contact details",
+        cartLimit: "Your cart can contain up to 25 different items.",
         catalogTitle: "Catalog", catalogDescription: "Clothing from all brands in one place.", catalogFilteredDescription: "{{gender}} clothing from all brands.",
         enlargePhoto: "Click to enlarge", previousPhoto: "Previous photo", nextPhoto: "Next photo", photoPlaceholder: "Photo placeholder",
         model: "Style", color: "Color", size: "Size", order: "Order", orderNotConnected: "Online ordering is not available yet.",
@@ -901,8 +958,8 @@
         honeypot: "Leave this field empty", submitOrder: "Submit request", sendingOrder: "Sending…", orderSent: "Request sent",
         formNotReady: "The form is not connected to Telegram yet. Your request was not sent.", waitBeforeResend: "Please wait a moment and try submitting your request again.",
         orderSuccess: "Request sent! We’ll contact you to confirm your order.", orderFailure: "Could not send your request. Check your internet connection and try again.",
-        chooseSize: "Choose a size, then select “Order” to submit a request.", pressOrderToRequest: "Select “Order” to submit a request.", chooseSizeBeforeOrder: "Choose a size before submitting your request.",
-        selectedSizeMessage: "Size {{size}} selected. Select “Order” to submit a request.", firstChooseSize: "Choose a size first.",
+        chooseSize: "Choose a size, then add the item to your cart.", pressOrderToRequest: "Add the item to your cart to continue.", chooseSizeBeforeOrder: "Choose a size before adding the item to your cart.",
+        selectedSizeMessage: "Size {{size}} selected. Add the item to your cart.", firstChooseSize: "Choose a size first.",
         unavailable: "Out of stock", nowUnavailable: "Currently out of stock", sizeRange: "Sizes {{size}}", singleSize: "Size {{size}}",
         oversizeFit: "Oversize fit", oversizeFitLabel: "Oversize fit", noFilterItems: "There are no items in this filter yet.",
         noCatalogItems: "There are no items in this section yet.", from: "from", pricePending: "Price on request", colorUnknown: "not specified", sizeUnknown: "not specified", priceUnknown: "not specified",
@@ -1839,6 +1896,7 @@
     const brand = document.getElementById("brand");
     const product = document.getElementById("product");
     const catalog = document.getElementById("catalog");
+    const cartPage = document.getElementById("cart");
     const items = document.getElementById("items");
     const catalogBody = document.getElementById("catalog-body");
     let currentBrand = null;
@@ -1849,14 +1907,16 @@
     let productPhotoTransition = null;
     let brandCategoryFilters = [];
     let brandColorFilters = [];
+    const CART_STORAGE_KEY = "goel-cart-v1";
     const ORDER_API_URL = "https://goel-order-api.o-el.workers.dev/order";
-    const orderDialog = document.getElementById("order-dialog");
     const orderForm = document.getElementById("order-form");
     const orderSubmit = document.getElementById("order-submit");
     const orderStatus = document.getElementById("order-status");
     const orderSetupNote = document.getElementById("order-setup-note");
-    let pendingOrder = null;
     let orderStartedAt = 0;
+    let cartLines = loadCart();
+    let checkoutVisible = false;
+    let cartSuccessVisible = false;
     const orderApiConfigured = /^https:\/\//.test(ORDER_API_URL) && !ORDER_API_URL.includes("YOUR-");
     orderSubmit.disabled = !orderApiConfigured;
     orderSetupNote.textContent = t(orderApiConfigured ? "orderSetupConnected" : "orderSetupDisabled");
@@ -2055,6 +2115,7 @@
       brand.classList.remove("on");
       product.classList.remove("on");
       catalog.classList.remove("on");
+      cartPage.classList.remove("on");
       home.classList.add("on");
     }
 
@@ -2208,66 +2269,185 @@
         : t("chooseSizeBeforeOrder");
     }
 
-    function orderDetails() {
-      if (!currentItem || !currentBrand) return null;
+    function loadCart() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) || "[]");
+        if (!Array.isArray(saved)) return [];
+        return saved.filter((line) => line && typeof line.brand === "string" && typeof line.slug === "string")
+          .map((line) => ({
+            brand: line.brand.slice(0, 80),
+            slug: line.slug.slice(0, 100),
+            tone: typeof line.tone === "string" ? line.tone.slice(0, 80) : "",
+            cut: typeof line.cut === "string" ? line.cut.slice(0, 80) : "",
+            size: typeof line.size === "string" ? line.size.slice(0, 40) : "",
+            variantIndex: Number.isInteger(line.variantIndex) ? line.variantIndex : 0,
+            quantity: Math.max(1, Math.min(99, Number.isInteger(line.quantity) ? line.quantity : 1))
+          }));
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveCart() {
+      try { localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartLines)); } catch (error) {}
+    }
+
+    function cartLineKey(line) {
+      return JSON.stringify([line.brand, line.slug, line.tone, line.cut, line.size]);
+    }
+
+    function resolveCartLine(line) {
+      const data = brands[line.brand];
+      const item = data?.items.find((candidate) => candidate.slug === line.slug);
+      if (!item) return null;
+      const variant = item.variants.find((candidate) => (candidate.tone || "") === line.tone && (candidate.cut || "") === line.cut);
+      if (!variant) return null;
+      const sizes = listedSizes(variant.size);
+      const selectedSize = sizes.length ? (sizes.includes(line.size) ? line.size : "") : (line.size || variant.size || "");
+      const displaySize = selectedSize
+        ? (/^(oversize|оверсайз)$/i.test(selectedSize) ? rangeLabel(selectedSize) : selectedSize)
+        : t("sizeUnknown");
+      return {
+        brand: data.title,
+        brandId: line.brand,
+        slug: item.slug,
+        product: item.name,
+        model: variant.cut || "",
+        tone: variant.tone || "",
+        color: variant.tone ? localizedTone(variant.tone) : t("colorUnknown"),
+        size: displaySize,
+        price: variant.price ? localizedPrice(variant.price) : t("priceUnknown"),
+        quantity: line.quantity,
+        photo: variantPhotos(variant)[0] || variant.photo || "",
+        available: variantInStock(variant) && (!sizes.length || Boolean(selectedSize)),
+        rawPrice: variant.price || ""
+      };
+    }
+
+    function escapeCartHtml(value) {
+      return String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" })[character]);
+    }
+
+    function cartItemCount() {
+      return cartLines.reduce((sum, line) => sum + line.quantity, 0);
+    }
+
+    function updateCartBadge() {
+      const count = cartItemCount();
+      const badge = document.getElementById("cart-count");
+      badge.textContent = String(count);
+      badge.hidden = count === 0;
+      document.getElementById("cart-toggle").setAttribute("aria-label", count ? t("cartCount", { count }) : t("cart"));
+    }
+
+    function priceParts(price) {
+      const match = String(price).match(/(\d+(?:[.,]\d+)?)\s*(.*)/);
+      return match ? { amount: Number(match[1].replace(",", ".")), currency: match[2].trim() } : null;
+    }
+
+    function cartTotal(details) {
+      const parts = details.map((detail) => priceParts(detail.rawPrice));
+      if (!parts.length || parts.some((part) => !part) || new Set(parts.map((part) => part.currency)).size !== 1) return t("cartTotalOnRequest");
+      const amount = details.reduce((sum, detail, index) => sum + parts[index].amount * detail.quantity, 0);
+      const formatted = Number.isInteger(amount) ? String(amount) : amount.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
+      return t("cartTotal", { total: `${formatted} ${parts[0].currency}`.trim() });
+    }
+
+    function renderCartContents() {
+      updateCartBadge();
+      const list = document.getElementById("cart-lines");
+      const details = cartLines.map(resolveCartLine);
+      const canCheckout = details.length > 0 && details.every((detail) => detail?.available);
+      list.innerHTML = cartLines.map((line, index) => {
+        const detail = details[index];
+        if (!detail) return `<article class="cart-line"><p class="cart-line-unavailable">${escapeCartHtml(t("cartUnavailable"))}</p><button type="button" class="cart-remove cart-focus" data-cart-action="remove" data-cart-index="${index}" aria-label="${escapeCartHtml(t("removeCartItem"))}">×</button></article>`;
+        const options = [
+          detail.model ? `${t("model")}: ${detail.model}` : "",
+          `${t("color")}: ${detail.color}`,
+          `${t("size")}: ${detail.size}`
+        ].filter(Boolean).join(" · ");
+        const image = detail.photo ? `<img class="cart-image" src="${escapeCartHtml(detail.photo)}" alt="" loading="lazy">` : `<span class="cart-image"></span>`;
+        return `<article class="cart-line">${image}<div class="cart-line-copy"><h2 class="cart-line-title"><button type="button" class="cart-product-link" data-cart-action="open" data-cart-index="${index}">${escapeCartHtml(detail.product)}</button></h2><p class="cart-line-meta">${escapeCartHtml(detail.brand)} · ${escapeCartHtml(options)}</p><p class="cart-line-price">${escapeCartHtml(detail.price)}</p>${detail.available ? "" : `<p class="cart-line-unavailable">${escapeCartHtml(t("cartUnavailable"))}</p>`}</div><div class="cart-line-controls"><button type="button" class="cart-quantity-button cart-focus" data-cart-action="decrease" data-cart-index="${index}" aria-label="${escapeCartHtml(t("decreaseQuantity"))}"${line.quantity <= 1 ? " disabled" : ""}>−</button><span class="cart-quantity">${line.quantity}</span><button type="button" class="cart-quantity-button cart-focus" data-cart-action="increase" data-cart-index="${index}" aria-label="${escapeCartHtml(t("increaseQuantity"))}"${line.quantity >= 99 ? " disabled" : ""}>+</button><button type="button" class="cart-remove cart-focus" data-cart-action="remove" data-cart-index="${index}" aria-label="${escapeCartHtml(t("removeCartItem"))}">×</button></div></article>`;
+      }).join("");
+      document.getElementById("cart-empty").hidden = cartLines.length > 0;
+      document.getElementById("cart-footer").hidden = cartLines.length === 0;
+      document.getElementById("cart-total").textContent = cartTotal(details.filter(Boolean));
+      const checkout = document.getElementById("cart-checkout");
+      checkout.disabled = !orderApiConfigured || !canCheckout;
+      checkout.setAttribute("aria-disabled", String(checkout.disabled));
+      document.getElementById("order-form").hidden = !checkoutVisible || cartLines.length === 0;
+      document.getElementById("cart-success").hidden = !cartSuccessVisible;
+      document.getElementById("order-summary").textContent = details.filter(Boolean).map((detail) => [
+        `${detail.quantity} × ${detail.brand} — ${detail.product}`,
+        detail.model ? `${t("summaryModel")}: ${detail.model}` : "",
+        `${t("summaryColor")}: ${detail.color}`,
+        `${t("summarySize")}: ${detail.size}`,
+        `${t("summaryPrice")}: ${detail.price}`
+      ].filter(Boolean).join("\n")).join("\n\n") + `\n\n${cartTotal(details.filter(Boolean))}`;
+    }
+
+    function addCurrentToCart() {
+      if (!currentBrand || !currentItem) return;
       const variant = currentItem.variants[currentTone] || currentItem.variants[0];
       const sizes = listedSizes(variant.size);
       const selectedSize = document.querySelector("#size-options .size.on")?.textContent.trim() || "";
       if (sizes.length && !selectedSize) {
         document.getElementById("choice").textContent = t("firstChooseSize");
         document.getElementById("size-options").scrollIntoView({ behavior: "smooth", block: "center" });
-        return null;
+        return;
       }
-      return {
-        brand: brands[currentBrand].title,
-        product: currentItem.name,
-        model: variant.cut || "",
-        color: variant.tone ? localizedTone(variant.tone) : t("colorUnknown"),
-        size: selectedSize || variant.size || t("sizeUnknown"),
-        price: variant.price ? localizedPrice(variant.price) : t("priceUnknown"),
-        page: location.href
-      };
+      if (!variantInStock(variant)) return;
+      const line = { brand: currentBrand, slug: currentItem.slug, tone: variant.tone || "", cut: variant.cut || "", size: selectedSize || variant.size || "", variantIndex: currentTone, quantity: 1 };
+      const existing = cartLines.find((item) => cartLineKey(item) === cartLineKey(line));
+      if (!existing && cartLines.length >= 25) {
+        document.getElementById("choice").textContent = t("cartLimit");
+        return;
+      }
+      if (existing) existing.quantity = Math.min(99, existing.quantity + 1);
+      else cartLines.push(line);
+      cartSuccessVisible = false;
+      saveCart();
+      renderCartContents();
+      document.getElementById("choice").textContent = t("addedToCart");
     }
 
-    function openOrderForm() {
-      const details = orderDetails();
-      if (!details) return;
-      pendingOrder = details;
+    document.getElementById("add-to-cart").addEventListener("click", addCurrentToCart);
+    document.getElementById("cart-lines").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-cart-action]");
+      if (!button) return;
+      const index = Number(button.dataset.cartIndex);
+      const line = cartLines[index];
+      if (!line) return;
+      if (button.dataset.cartAction === "open") {
+        navigate(`${line.brand}/${line.slug}`);
+        return;
+      }
+      if (button.dataset.cartAction === "remove") cartLines.splice(index, 1);
+      if (button.dataset.cartAction === "decrease") line.quantity = Math.max(1, line.quantity - 1);
+      if (button.dataset.cartAction === "increase") line.quantity = Math.min(99, line.quantity + 1);
+      saveCart();
+      renderCartContents();
+    });
+
+    document.getElementById("cart-checkout").addEventListener("click", () => {
+      if (document.getElementById("cart-checkout").disabled) return;
+      checkoutVisible = true;
+      cartSuccessVisible = false;
+      orderForm.reset();
       orderStartedAt = Date.now();
-      orderForm.reset();
       orderStatus.textContent = "";
       orderStatus.className = "order-status";
       orderSubmit.textContent = t("submitOrder");
       orderSubmit.disabled = !orderApiConfigured;
-      document.getElementById("order-summary").textContent = [
-        details.brand,
-        details.product,
-        details.model ? `${t("summaryModel")}: ${details.model}` : "",
-        `${t("summaryColor")}: ${details.color}`,
-        `${t("summarySize")}: ${details.size}`,
-        `${t("summaryPrice")}: ${details.price}`
-      ].filter(Boolean).join("\n");
-      orderDialog.showModal();
-      orderForm.elements.customerName.focus();
-    }
+      renderCartContents();
+      orderForm.scrollIntoView({ behavior: "smooth", block: "start" });
+      orderForm.elements.customerName.focus({ preventScroll: true });
+    });
 
-    document.querySelector(".product-actions .buy").addEventListener("click", openOrderForm);
-    document.getElementById("order-close").addEventListener("click", () => orderDialog.close());
-    orderDialog.addEventListener("click", (event) => {
-      if (event.target === orderDialog) orderDialog.close();
-    });
-    orderDialog.addEventListener("close", () => {
-      orderForm.reset();
-      orderStatus.textContent = "";
-      orderStatus.className = "order-status";
-      orderSubmit.textContent = t("submitOrder");
-      orderSubmit.disabled = !orderApiConfigured;
-      pendingOrder = null;
-      document.querySelector(".product-actions .buy")?.focus();
-    });
     orderForm.addEventListener("submit", async (event) => {
       event.preventDefault();
-      if (!orderApiConfigured || !pendingOrder) {
+      const details = cartLines.map(resolveCartLine);
+      if (!orderApiConfigured || !details.length || details.some((detail) => !detail?.available)) {
         orderStatus.textContent = t("formNotReady");
         orderStatus.className = "order-status error";
         return;
@@ -2279,20 +2459,28 @@
       }
       const values = new FormData(orderForm);
       const payload = {
-        ...pendingOrder,
+        items: details.map((detail) => ({
+          brand: detail.brand,
+          product: detail.product,
+          model: detail.model,
+          color: detail.color,
+          size: detail.size,
+          price: detail.price,
+          quantity: detail.quantity
+        })),
         customerName: values.get("customerName"),
         phone: values.get("phone"),
         delivery: values.get("delivery"),
         comment: values.get("comment"),
         consent: values.get("consent") === "on",
         website: values.get("website"),
-        startedAt: orderStartedAt
+        startedAt: orderStartedAt,
+        page: location.href
       };
       orderSubmit.disabled = true;
       orderSubmit.textContent = t("sendingOrder");
       orderStatus.textContent = "";
       orderStatus.className = "order-status";
-      let orderSent = false;
       try {
         const response = await fetch(ORDER_API_URL, {
           method: "POST",
@@ -2300,19 +2488,20 @@
           body: JSON.stringify(payload)
         });
         if (!response.ok) throw new Error("Order submission failed");
-        orderSent = true;
-        orderStatus.textContent = t("orderSuccess");
-        orderStatus.className = "order-status success";
-        orderSubmit.textContent = t("orderSent");
-        window.setTimeout(() => {
-          if (orderDialog.open) orderDialog.close();
-        }, 2200);
+        cartLines = [];
+        saveCart();
+        checkoutVisible = false;
+        cartSuccessVisible = true;
+        document.getElementById("cart-success").textContent = t("orderSuccess");
+        orderForm.reset();
+        orderStatus.textContent = "";
+        renderCartContents();
       } catch (error) {
         orderStatus.textContent = t("orderFailure");
         orderStatus.className = "order-status error";
       } finally {
-        orderSubmit.disabled = orderSent || !orderApiConfigured;
-        if (!orderSent) orderSubmit.textContent = t("submitOrder");
+        orderSubmit.disabled = !orderApiConfigured || !cartLines.length;
+        if (cartLines.length) orderSubmit.textContent = t("submitOrder");
       }
     });
 
@@ -2411,6 +2600,7 @@
         home.classList.remove("on");
         product.classList.remove("on");
         catalog.classList.remove("on");
+        cartPage.classList.remove("on");
         brand.classList.add("on");
       }, animate);
     }
@@ -2510,7 +2700,19 @@
         home.classList.remove("on");
         brand.classList.remove("on");
         product.classList.remove("on");
+        cartPage.classList.remove("on");
         catalog.classList.add("on");
+      }, animate);
+    }
+
+    function paintCart(animate) {
+      reveal(() => {
+        renderCartContents();
+        home.classList.remove("on");
+        brand.classList.remove("on");
+        product.classList.remove("on");
+        catalog.classList.remove("on");
+        cartPage.classList.add("on");
       }, animate);
     }
 
@@ -2567,9 +2769,9 @@
       const priceEl = document.getElementById("product-price");
       priceEl.hidden = !variant.price;
       priceEl.textContent = localizedPrice(variant.price || "");
-      const buyButton = document.querySelector(".buy");
+      const buyButton = document.getElementById("add-to-cart");
       buyButton.disabled = unavailable;
-      buyButton.textContent = unavailable ? t("unavailable") : t("order");
+      buyButton.textContent = unavailable ? t("unavailable") : t("addToCart");
       document.getElementById("choice").textContent = unavailable
         ? t("nowUnavailable")
         : options.length ? t("chooseSize") : t("pressOrderToRequest");
@@ -2590,6 +2792,7 @@
         home.classList.remove("on");
         brand.classList.remove("on");
         catalog.classList.remove("on");
+        cartPage.classList.remove("on");
         product.classList.add("on");
       }, animate);
     }
@@ -2612,6 +2815,10 @@
       closeMenus();
       if (!first) {
         paintCountry("all", animate);
+        return;
+      }
+      if (first === "cart" && !second) {
+        paintCart(animate);
         return;
       }
       if (first === "catalog") {
@@ -2643,6 +2850,7 @@
       genderLabel = { all: t("all"), unisex: t("unisex"), women: t("women"), men: t("men") };
       brandCategoryLabel = { all: t("all"), tshirts: t("tshirts"), sweatshirts: t("sweatshirts"), longSleeves: t("longSleeves"), halfZips: t("halfZips"), caps: t("caps") };
       applyStaticTranslations();
+      updateCartBadge();
       if (!refresh) return;
 
       const [routeBrand, routeProduct] = currentRoute().split("/").filter(Boolean);
@@ -2714,6 +2922,8 @@
       });
     });
     document.getElementById("logo").addEventListener("click", () => navigate(""));
+    document.getElementById("cart-toggle").addEventListener("click", () => navigate("cart"));
+    document.getElementById("cart-continue").addEventListener("click", () => navigate("godderob"));
     document.getElementById("home-all").addEventListener("click", () => navigate(""));
     document.getElementById("crumb-all").addEventListener("click", () => navigate(""));
     document.getElementById("catalog-crumb-all").addEventListener("click", () => navigate(""));
@@ -3083,6 +3293,7 @@
     });
 
     setLanguage(currentLanguage, false);
+    renderCartContents();
     loadAvailabilityFeed().finally(() => apply(false));
     window.addEventListener("popstate", () => {
       closeLightbox();
