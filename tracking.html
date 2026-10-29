@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f3ee">
+  <title>Отслеживание заказа — GO’EL</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --paper: #fffcf8;
+      --ink: #1c1916;
+      --muted: #706962;
+      --line: #e3ddd4;
+      --accent: #7a3330;
+      --accent-soft: #efe3df;
+      --green: #506d55;
+      --shadow: 0 22px 70px rgba(46, 36, 27, 0.08);
+    }
+    * { box-sizing: border-box; }
+    html { min-width: 320px; background: var(--bg); }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 4% 12%, rgba(236, 221, 206, 0.55), transparent 36rem),
+        radial-gradient(ellipse at 96% 45%, rgba(225, 231, 216, 0.44), transparent 34rem),
+        var(--bg);
+      font-family: "Avenir Next", "Helvetica Neue", sans-serif;
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .wrap { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+    .site-header { height: 78px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(133, 119, 103, 0.2); }
+    .wordmark { font-size: 19px; font-weight: 650; letter-spacing: .055em; }
+    .back-link { display: inline-flex; align-items: center; gap: 9px; color: var(--muted); font-size: 14px; transition: color .2s ease, transform .2s ease; }
+    .back-link:hover { color: var(--accent); transform: translateX(-3px); }
+    .language-select { border: 0; background: transparent; color: var(--muted); font: inherit; cursor: pointer; }
+    .intro { max-width: 730px; margin: 76px auto 40px; text-align: center; animation: intro-in .7s cubic-bezier(.2,.75,.25,1) both; }
+    .eyebrow { margin: 0 0 13px; color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+    h1 { max-width: 700px; margin: 0 auto; font-size: clamp(40px, 6.2vw, 70px); font-weight: 550; letter-spacing: -.055em; line-height: 1.02; }
+    .intro-copy { max-width: 500px; margin: 19px auto 0; color: var(--muted); font-size: 16px; }
+    .lookup-card { position: relative; z-index: 1; width: min(650px, 100%); margin: 34px auto 0; padding: 9px; display: flex; align-items: center; gap: 8px; border: 1px solid rgba(128, 111, 96, .22); border-radius: 18px; background: rgba(255, 252, 248, .84); box-shadow: 0 14px 45px rgba(59, 47, 34, .07); backdrop-filter: blur(12px); transition: box-shadow .25s ease, border-color .25s ease; }
+    .lookup-card:focus-within { border-color: rgba(122, 51, 48, .55); box-shadow: 0 17px 52px rgba(59, 47, 34, .11), 0 0 0 4px rgba(122, 51, 48, .06); }
+    .lookup-icon { width: 42px; height: 42px; flex: 0 0 auto; display: grid; place-items: center; color: var(--accent); }
+    .lookup-icon svg { width: 21px; height: 21px; }
+    .lookup-field { min-width: 0; flex: 1; display: grid; gap: 1px; text-align: left; }
+    .lookup-field label { color: var(--muted); font-size: 11px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; }
+    .lookup-field input { width: 100%; border: 0; outline: 0; padding: 3px 0; color: var(--ink); background: transparent; font-size: 17px; letter-spacing: .09em; }
+    .lookup-field input::placeholder { color: #b0a69c; letter-spacing: .025em; }
+    .lookup-button { min-height: 49px; padding: 0 21px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; border-radius: 12px; color: #fffaf4; background: var(--accent); font-size: 14px; font-weight: 600; transition: background .2s ease, transform .2s ease; }
+    .lookup-button:hover { background: #612724; transform: translateY(-1px); }
+    .lookup-button:disabled { opacity: .65; cursor: wait; transform: none; }
+    .lookup-button svg { width: 16px; height: 16px; }
+    .lookup-hint { margin: 12px 0 0; color: #8a8178; font-size: 12px; }
+    .lookup-message { min-height: 22px; margin: 12px auto 0; color: var(--accent); font-size: 13px; }
+    .lookup-message:empty { min-height: 0; margin-top: 0; }
+    .lookup-message.success { color: var(--green); }
+    .result { width: min(1000px, 100%); margin: 38px auto 80px; animation: result-in .7s cubic-bezier(.2,.75,.25,1) both; }
+    .result[hidden] { display: none; }
+    .result-top { margin-bottom: 15px; padding: 0 4px; display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; }
+    .result-top h2 { margin: 0; font-size: clamp(22px, 3vw, 30px); font-weight: 560; letter-spacing: -.035em; }
+    .result-top p { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
+    .order-code { flex: 0 0 auto; padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--accent); background: rgba(255, 252, 248, .7); font-size: 12px; font-weight: 700; letter-spacing: .07em; }
+    .journey-card { overflow: hidden; border: 1px solid rgba(128, 111, 96, .2); border-radius: 24px; background: rgba(255, 252, 248, .9); box-shadow: var(--shadow); }
+    .journey-head { min-height: 86px; padding: 21px 27px; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--line); }
+    .journey-head-label { display: flex; align-items: center; gap: 12px; }
+    .live-mark { width: 10px; height: 10px; flex: 0 0 auto; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 5px rgba(80, 109, 85, .1); }
+    .journey-head h3 { margin: 0; font-size: 15px; font-weight: 650; }
+    .journey-head p { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+    .status-pill { padding: 8px 13px; border-radius: 999px; color: #4f684e; background: #eaf0e6; font-size: 12px; font-weight: 650; text-align: center; }
+    .journey-map { position: relative; height: 330px; margin: 9px 20px 0; overflow: hidden; }
+    .route-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+    .route-mobile { display: none; }
+    .journey-route { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .journey-route-base { stroke: #e9e2d9; stroke-width: 3; }
+    .journey-route-progress { stroke: var(--accent); stroke-width: 4; filter: drop-shadow(0 2px 4px rgba(122, 51, 48, .17)); transition: stroke-dashoffset 1.45s cubic-bezier(.22,.75,.25,1); }
+    .route-desktop .journey-route-progress { stroke: url(#routeGradientDesktop); }
+    .route-mobile .journey-route-progress { stroke: url(#routeGradientMobile); }
+    .journey-map.is-cancelled .journey-route-progress { stroke: #a47870; }
+    .route-stop { position: absolute; z-index: 1; width: 54px; height: 54px; padding: 6px; display: grid; place-items: center; border-radius: 50%; background: var(--paper); transform: translate(-50%, -50%) scale(.88); opacity: .55; transition: opacity .55s ease, transform .65s cubic-bezier(.2,.75,.25,1); }
+    .route-stop:nth-of-type(1) { left: 10%; top: 64%; }
+    .route-stop:nth-of-type(2) { left: 30%; top: 27%; }
+    .route-stop:nth-of-type(3) { left: 50%; top: 64%; }
+    .route-stop:nth-of-type(4) { left: 70%; top: 27%; }
+    .route-stop:nth-of-type(5) { left: 90%; top: 64%; }
+    .stop-dot { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid #dfd7ce; border-radius: 50%; color: #988f85; background: #fbf8f3; transition: color .35s ease, border-color .35s ease, background .35s ease, box-shadow .35s ease; }
+    .stop-dot svg { width: 17px; height: 17px; }
+    .stop-copy { position: absolute; top: 50px; left: 50%; width: 145px; padding: 2px 4px; color: var(--muted); text-align: center; transform: translateX(-50%); }
+    .stop-copy b { display: block; color: #8a8178; font-size: 12px; font-weight: 600; line-height: 1.35; transition: color .35s ease; }
+    .stop-copy span { display: block; margin-top: 4px; color: #aaa198; font-size: 10px; line-height: 1.3; }
+    .route-stop.is-done, .route-stop.is-current { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    .route-stop.is-done .stop-dot { border-color: var(--accent); color: white; background: var(--accent); }
+    .route-stop.is-done .stop-copy b, .route-stop.is-current .stop-copy b { color: var(--ink); }
+    .route-stop.is-current .stop-dot { border-color: var(--accent); color: white; background: var(--accent); box-shadow: 0 0 0 7px rgba(122, 51, 48, .12), 0 7px 18px rgba(122, 51, 48, .22); animation: pin-pulse 2.4s ease-in-out infinite; }
+    .journey-map.is-cancelled .route-stop .stop-dot { border-color: #d5c6c0; color: #a47870; background: #f5e9e5; box-shadow: none; animation: none; }
+    .map-caption { position: absolute; right: 10px; bottom: 5px; left: 10px; display: flex; justify-content: space-between; color: #a0988f; font-size: 10px; letter-spacing: .05em; }
+    .order-details { min-height: 76px; padding: 18px 27px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px 24px; border-top: 1px solid var(--line); background: rgba(248, 245, 240, .58); }
+    .item-info { min-width: 0; }
+    .item-info b { display: block; overflow: hidden; font-size: 14px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+    .item-info span { display: block; margin-top: 3px; color: var(--muted); font-size: 12px; }
+    .order-updated { color: var(--muted); font-size: 11px; text-align: right; }
+    .help-note { width: min(1000px, 100%); margin: 22px auto 0; padding: 19px 22px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border: 1px solid rgba(128, 111, 96, .16); border-radius: 16px; background: rgba(255, 252, 248, .55); }
+    .help-note p { margin: 0; color: var(--muted); font-size: 13px; }
+    .help-note a { flex: 0 0 auto; color: var(--accent); font-size: 13px; font-weight: 650; }
+    .help-note a:hover { text-decoration: underline; text-underline-offset: 4px; }
+    footer { padding: 23px 0 30px; border-top: 1px solid rgba(133, 119, 103, .2); color: #8a8178; font-size: 12px; }
+    footer .wrap { display: flex; justify-content: space-between; gap: 16px; }
+    .loading .lookup-button svg { animation: spin .9s linear infinite; }
+    @keyframes intro-in { from { opacity: 0; translate: 0 22px; } to { opacity: 1; translate: 0 0; } }
+    @keyframes result-in { from { opacity: 0; translate: 0 24px; } to { opacity: 1; translate: 0 0; } }
+    @keyframes pin-pulse { 0%, 100% { box-shadow: 0 0 0 6px rgba(122, 51, 48, .11), 0 7px 18px rgba(122, 51, 48, .2); } 50% { box-shadow: 0 0 0 11px rgba(122, 51, 48, .025), 0 7px 18px rgba(122, 51, 48, .16); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 700px) {
+      .wrap { width: min(100% - 28px, 600px); }
+      .site-header { height: 66px; }
+      .intro { margin: 53px auto 28px; }
+      h1 { max-width: 480px; font-size: clamp(41px, 11vw, 61px); }
+      .intro-copy { max-width: 380px; font-size: 14px; }
+      .lookup-card { gap: 4px; padding: 7px; border-radius: 15px; }
+      .lookup-icon { width: 34px; }
+      .lookup-field label { font-size: 10px; }
+      .lookup-field input { font-size: 15px; }
+      .lookup-button { min-height: 45px; padding: 0 13px; font-size: 13px; }
+      .result { margin: 27px auto 54px; }
+      .result-top { align-items: flex-start; }
+      .result-top p { max-width: 215px; }
+      .order-code { padding: 7px 9px; font-size: 10px; }
+      .journey-card { border-radius: 19px; }
+      .journey-head { min-height: 76px; padding: 16px 17px; }
+      .journey-head h3 { font-size: 14px; }
+      .journey-head p { max-width: 210px; font-size: 11px; }
+      .status-pill { max-width: 130px; padding: 7px 10px; font-size: 10px; }
+      .journey-map { height: 730px; margin: 0 7px; }
+      .route-desktop { display: none; }
+      .route-mobile { display: block; }
+      .route-stop:nth-of-type(1) { left: 31%; top: 9%; }
+      .route-stop:nth-of-type(2) { left: 70%; top: 29.5%; }
+      .route-stop:nth-of-type(3) { left: 31%; top: 50%; }
+      .route-stop:nth-of-type(4) { left: 70%; top: 70.5%; }
+      .route-stop:nth-of-type(5) { left: 31%; top: 91%; }
+      .route-stop { width: 48px; height: 48px; }
+      .stop-dot { width: 36px; height: 36px; }
+      .stop-copy { top: 50%; width: 130px; padding: 0; transform: translateY(-50%); }
+      .route-stop:nth-of-type(odd) .stop-copy { left: 42px; text-align: left; }
+      .route-stop:nth-of-type(even) .stop-copy { right: 42px; left: auto; text-align: right; }
+      .stop-copy b { font-size: 11px; }
+      .stop-copy span { font-size: 9px; }
+      .map-caption { bottom: 4px; font-size: 8px; }
+      .order-details { padding: 15px 17px; grid-template-columns: 1fr; gap: 8px; }
+      .order-updated { text-align: left; }
+      .help-note { align-items: flex-start; flex-direction: column; gap: 10px; padding: 17px; }
+      footer .wrap { flex-direction: column; gap: 3px; }
+    }
+    @media (max-width: 390px) {
+      .wrap { width: calc(100% - 22px); }
+      .lookup-icon { display: none; }
+      .lookup-button { padding: 0 10px; }
+      .journey-head { align-items: flex-start; }
+      .status-pill { max-width: 112px; }
+      .route-stop:nth-of-type(odd) { left: 28%; }
+      .route-stop:nth-of-type(even) { left: 73%; }
+      .stop-copy { width: 118px; }
+      .route-stop:nth-of-type(odd) .stop-copy { left: 39px; }
+      .route-stop:nth-of-type(even) .stop-copy { right: 39px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap site-header">
+    <a class="wordmark" href="./" aria-label="GO’EL — главная">GO’EL</a>
+    <div style="display:flex;align-items:center;gap:22px">
+      <a class="back-link" href="./"><span aria-hidden="true">←</span><span data-i18n="back">В каталог</span></a>
+      <select class="language-select" id="language-select" aria-label="Язык">
+        <option value="ru">RUS</option><option value="be">BEL</option><option value="uk">UKR</option><option value="en">ENG</option>
+      </select>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow" data-i18n="eyebrow">Путь твоего заказа</p>
+      <h1 id="page-title" data-i18n="title">Каждый шаг — уже ближе.</h1>
+      <p class="intro-copy" data-i18n="intro">Введи код заказа, чтобы увидеть, где он сейчас и что будет дальше.</p>
+      <form class="lookup-card" id="tracking-form">
+        <span class="lookup-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8.8 10.7V7.8a3.2 3.2 0 0 1 6.4 0v2.9M6.2 10.2h11.6l1 10H5.2l1-10Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.5 14.1h.01m5 0h.01" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span>
+        <div class="lookup-field">
+          <label for="tracking-code" data-i18n="codeLabel">Код заказа</label>
+          <input id="tracking-code" name="code" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" maxlength="14" placeholder="GOEL-ABCD-EFGH" aria-describedby="lookup-hint lookup-message" required>
+        </div>
+        <button class="lookup-button" id="lookup-button" type="submit"><span data-i18n="check">Проверить</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </form>
+      <p class="lookup-hint" id="lookup-hint" data-i18n="hint">Код появится после оформления заявки и придёт вместе с подтверждением.</p>
+      <p class="lookup-message" id="lookup-message" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="result" id="result" aria-live="polite" hidden>
+      <div class="result-top">
+        <div><h2 data-i18n="yourOrder">Твой заказ</h2><p data-i18n="mapIntro">Мы покажем только актуальный этап — детали пути сложатся в одну историю.</p></div>
+        <span class="order-code" id="result-code"></span>
+      </div>
+      <article class="journey-card">
+        <div class="journey-head">
+          <div class="journey-head-label"><span class="live-mark" aria-hidden="true"></span><div><h3 data-i18n="journeyTitle">Путешествие заказа</h3><p id="status-description"></p></div></div>
+          <span class="status-pill" id="status-pill"></span>
+        </div>
+        <div class="journey-map" id="journey-map" aria-label="Карта этапов заказа">
+          <svg class="route-svg route-desktop" viewBox="0 0 1000 320" preserveAspectRatio="none" aria-hidden="true">
+            <defs><linearGradient id="routeGradientDesktop" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#ad7b60"/><stop offset=".55" stop-color="#7a3330"/><stop offset="1" stop-color="#506d55"/></linearGradient></defs>
+            <path class="journey-route journey-route-base" d="M100 205 C190 205 195 86 300 86 C405 86 410 205 500 205 C590 205 595 86 700 86 C805 86 810 205 900 205"/>
+            <path class="journey-route journey-route-progress" id="route-progress-desktop" stroke="url(#routeGradientDesktop)" d="M100 205 C190 205 195 86 300 86 C405 86 410 205 500 205 C590 205 595 86 700 86 C805 86 810 205 900 205"/>
+          </svg>
+          <svg class="route-svg route-mobile" viewBox="0 0 360 760" preserveAspectRatio="none" aria-hidden="true">
+            <defs><linearGradient id="routeGradientMobile" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ad7b60"/><stop offset=".55" stop-color="#7a3330"/><stop offset="1" stop-color="#506d55"/></linearGradient></defs>
+            <path class="journey-route journey-route-base" d="M112 68 C112 148 252 145 252 224 C252 303 112 302 112 380 C112 458 252 457 252 536 C252 615 112 612 112 692"/>
+            <path class="journey-route journey-route-progress" id="route-progress-mobile" stroke="url(#routeGradientMobile)" d="M112 68 C112 148 252 145 252 224 C252 303 112 302 112 380 C112 458 252 457 252 536 C252 615 112 612 112 692"/>
+          </svg>
+          <div class="route-stop" data-stage="0"><span class="stop-dot"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.3 8 14l8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="stop-copy"><b data-i18n="stageReceived">Заявка получена</b><span data-i18n="stageReceivedHint">Начало пути</span></span></div>
+          <div class="route-stop" data-stage="1"><span class="stop-dot"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.3 8 14l8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="stop-copy"><b data-i18n="stageConfirmed">Подтверждён</b><span data-i18n="stageConfirmedHint">Всё согласовано</span></span></div>
+          <div class="route-stop" data-stage="2"><span class="stop-dot"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.3 8 14l8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="stop-copy"><b data-i18n="stagePreparing">Собираем</b><span data-i18n="stagePreparingHint">Готовим к отправке</span></span></div>
+          <div class="route-stop" data-stage="3"><span class="stop-dot"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.3 8 14l8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="stop-copy"><b data-i18n="stageShipped">Уже в пути</b><span data-i18n="stageShippedHint">Передан в доставку</span></span></div>
+          <div class="route-stop" data-stage="4"><span class="stop-dot"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.3 8 14l8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="stop-copy"><b data-i18n="stageDelivered">У тебя!</b><span data-i18n="stageDeliveredHint">Путешествие завершено</span></span></div>
+          <div class="map-caption"><span data-i18n="mapStart">ТВОЙ ЗАКАЗ</span><span data-i18n="mapEnd">СКОРО У ТЕБЯ</span></div>
+        </div>
+        <div class="order-details">
+          <div class="item-info"><b id="item-title"></b><span id="item-variant"></span></div>
+          <div class="order-updated" id="updated-at"></div>
+        </div>
+      </article>
+      <aside class="help-note"><p data-i18n="help">Если нужна помощь, напиши нам — подскажем, что происходит с заказом.</p><a href="https://t.me/JHVHGOeL" target="_blank" rel="noopener noreferrer" data-i18n="contact">Написать GO’EL ↗</a></aside>
+    </section>
+  </main>
+  <footer><div class="wrap"><span>GO’EL · <span data-i18n="footer">одежда со смыслом</span></span><span data-i18n="footerLine">Собрано с верой. Носится каждый день.</span></div></footer>
+  <script>
+    const translations = {
+      ru: { back: "В каталог", eyebrow: "Путь твоего заказа", title: "Каждый шаг — уже ближе.", intro: "Введи код заказа, чтобы увидеть, где он сейчас и что будет дальше.", codeLabel: "Код заказа", check: "Проверить", hint: "Код появится после оформления заявки и придёт вместе с подтверждением.", yourOrder: "Твой заказ", mapIntro: "Мы покажем только актуальный этап — детали пути сложатся в одну историю.", journeyTitle: "Путешествие заказа", stageReceived: "Заявка получена", stageReceivedHint: "Начало пути", stageConfirmed: "Подтверждён", stageConfirmedHint: "Всё согласовано", stagePreparing: "Собираем", stagePreparingHint: "Готовим к отправке", stageShipped: "Уже в пути", stageShippedHint: "Передан в доставку", stageDelivered: "У тебя!", stageDeliveredHint: "Путешествие завершено", mapStart: "ТВОЙ ЗАКАЗ", mapEnd: "СКОРО У ТЕБЯ", help: "Если нужна помощь, напиши нам — подскажем, что происходит с заказом.", contact: "Написать GO’EL ↗", footer: "одежда со смыслом", footerLine: "Собрано с верой. Носится каждый день.", writeCode: "Введи код отслеживания заказа.", notFound: "Не нашли заказ с таким кодом. Проверь символы и попробуй ещё раз.", serverError: "Не удалось проверить статус. Попробуй ещё раз чуть позже.", loading: "Ищем заказ…", statusReceived: "Заявка получена", statusConfirmed: "Заказ подтверждён", statusPreparing: "Готовим к отправке", statusShipped: "Передан в доставку", statusDelivered: "Заказ доставлен", statusCancelled: "Заказ отменён", descReceived: "Мы получили твою заявку и скоро свяжемся для подтверждения.", descConfirmed: "Заказ подтверждён — скоро начнём его собирать.", descPreparing: "Мы готовим заказ к отправке.", descShipped: "Заказ передан в доставку.", descDelivered: "Заказ доставлен. Спасибо, что выбрал GO’EL!", descCancelled: "Напиши нам, если нужна помощь с этим заказом.", updated: "Обновлено", quantity: "Количество", unknownItem: "Заказ GO’EL", mapLabel: "Карта этапов заказа" },
+      be: { back: "У каталог", eyebrow: "Шлях тваёй замовы", title: "Кожны крок — бліжэй.", intro: "Увядзі код замовы, каб убачыць яе актуальны статус.", codeLabel: "Код замовы", check: "Праверыць", hint: "Код з’явіцца пасля афармлення заяўкі і прыйдзе разам з пацвярджэннем.", yourOrder: "Твая замова", mapIntro: "Пакажам актуальны этап тваёй замовы.", journeyTitle: "Шлях замовы", stageReceived: "Заяўку атрымалі", stageReceivedHint: "Пачатак шляху", stageConfirmed: "Пацверджана", stageConfirmedHint: "Усё ўзгоднена", stagePreparing: "Збіраем", stagePreparingHint: "Рыхтуем да адпраўкі", stageShipped: "У дарозе", stageShippedHint: "Перададзена ў дастаўку", stageDelivered: "У цябе!", stageDeliveredHint: "Шлях завершаны", mapStart: "ТВАЯ ЗАМОВА", mapEnd: "ХУТКА Ў ЦЯБЕ", help: "Калі патрэбна дапамога, напішы нам — падкажам пра замову.", contact: "Напісаць GO’EL ↗", footer: "адзенне са сэнсам", footerLine: "Створана з верай. Носіцца кожны дзень.", writeCode: "Увядзі код адсочвання замовы.", notFound: "Не знайшлі замову з такім кодам. Правер сімвалы і паспрабуй яшчэ раз.", serverError: "Не атрымалася праверыць статус. Паспрабуй пазней.", loading: "Шукаем замову…", statusReceived: "Заяўку атрымалі", statusConfirmed: "Замову пацвердзілі", statusPreparing: "Рыхтуем да адпраўкі", statusShipped: "Перададзена ў дастаўку", statusDelivered: "Замову даставілі", statusCancelled: "Замову скасавалі", descReceived: "Мы атрымалі заяўку і хутка звяжамся, каб пацвердзіць замову.", descConfirmed: "Замову пацвердзілі — хутка пачнём збіраць.", descPreparing: "Рыхтуем замову да адпраўкі.", descShipped: "Замову перадалі ў дастаўку.", descDelivered: "Замова дастаўлена. Дзякуй, што абраў GO’EL!", descCancelled: "Напішы нам, калі патрэбна дапамога.", updated: "Абноўлена", quantity: "Колькасць", unknownItem: "Замова GO’EL", mapLabel: "Карта этапаў замовы" },
+      uk: { back: "До каталогу", eyebrow: "Шлях твого замовлення", title: "Кожен крок — ближче.", intro: "Введи код замовлення, щоб побачити актуальний статус.", codeLabel: "Код замовлення", check: "Перевірити", hint: "Код з’явиться після оформлення заявки та надійде разом із підтвердженням.", yourOrder: "Твоє замовлення", mapIntro: "Покажемо актуальний етап твого замовлення.", journeyTitle: "Шлях замовлення", stageReceived: "Заявку отримано", stageReceivedHint: "Початок шляху", stageConfirmed: "Підтверджено", stageConfirmedHint: "Усе узгоджено", stagePreparing: "Збираємо", stagePreparingHint: "Готуємо до відправлення", stageShipped: "У дорозі", stageShippedHint: "Передано в доставку", stageDelivered: "У тебе!", stageDeliveredHint: "Шлях завершено", mapStart: "ТВОЄ ЗАМОВЛЕННЯ", mapEnd: "СКОРО В ТЕБЕ", help: "Якщо потрібна допомога, напиши нам — підкажемо щодо замовлення.", contact: "Написати GO’EL ↗", footer: "одяг зі змістом", footerLine: "Створено з вірою. Носиться щодня.", writeCode: "Введи код відстеження замовлення.", notFound: "Не знайшли замовлення з таким кодом. Перевір символи та спробуй ще раз.", serverError: "Не вдалося перевірити статус. Спробуй трохи пізніше.", loading: "Шукаємо замовлення…", statusReceived: "Заявку отримано", statusConfirmed: "Замовлення підтверджено", statusPreparing: "Готуємо до відправлення", statusShipped: "Передано в доставку", statusDelivered: "Замовлення доставлено", statusCancelled: "Замовлення скасовано", descReceived: "Ми отримали заявку і скоро зв’яжемося для підтвердження.", descConfirmed: "Замовлення підтверджено — скоро почнемо збирати.", descPreparing: "Готуємо замовлення до відправлення.", descShipped: "Замовлення передано в доставку.", descDelivered: "Замовлення доставлено. Дякуємо, що обрав GO’EL!", descCancelled: "Напиши нам, якщо потрібна допомога.", updated: "Оновлено", quantity: "Кількість", unknownItem: "Замовлення GO’EL", mapLabel: "Карта етапів замовлення" },
+      en: { back: "Catalog", eyebrow: "Your order journey", title: "Every step brings it closer.", intro: "Enter your order code to see where it is and what comes next.", codeLabel: "Order code", check: "Track order", hint: "Your code is shown after submitting an order request.", yourOrder: "Your order", mapIntro: "See the latest milestone on your order’s journey.", journeyTitle: "Order journey", stageReceived: "Request received", stageReceivedHint: "The journey begins", stageConfirmed: "Confirmed", stageConfirmedHint: "Everything agreed", stagePreparing: "Being prepared", stagePreparingHint: "Getting ready to ship", stageShipped: "On its way", stageShippedHint: "Handed to delivery", stageDelivered: "Delivered!", stageDeliveredHint: "Journey complete", mapStart: "YOUR ORDER", mapEnd: "ALMOST THERE", help: "Need help? Message us and we’ll share an update on your order.", contact: "Message GO’EL ↗", footer: "clothing with meaning", footerLine: "Made with faith. Worn every day.", writeCode: "Enter your order tracking code.", notFound: "We couldn’t find an order with that code. Check it and try again.", serverError: "Couldn’t check the status. Please try again shortly.", loading: "Finding your order…", statusReceived: "Request received", statusConfirmed: "Order confirmed", statusPreparing: "Preparing for dispatch", statusShipped: "Handed to delivery", statusDelivered: "Order delivered", statusCancelled: "Order cancelled", descReceived: "We received your request and will contact you soon to confirm it.", descConfirmed: "Your order is confirmed — we’ll start preparing it soon.", descPreparing: "We’re getting your order ready for dispatch.", descShipped: "Your order has been handed to the delivery service.", descDelivered: "Your order has arrived. Thank you for choosing GO’EL!", descCancelled: "Message us if you need help with this order.", updated: "Updated", quantity: "Quantity", unknownItem: "GO’EL order", mapLabel: "Order journey map" }
+    };
+    let language = "ru";
+    try {
+      const saved = localStorage.getItem("goel-language");
+      if (saved && translations[saved]) language = saved;
+    } catch (error) {}
+    const form = document.getElementById("tracking-form");
+    const input = document.getElementById("tracking-code");
+    const button = document.getElementById("lookup-button");
+    const message = document.getElementById("lookup-message");
+    const resultPanel = document.getElementById("result");
+    const API_URL = "https://goel-order-api.o-el.workers.dev/track";
+    const statusStages = ["received", "confirmed", "preparing", "shipped", "delivered"];
+    const statusLabels = { received: "statusReceived", confirmed: "statusConfirmed", preparing: "statusPreparing", shipped: "statusShipped", delivered: "statusDelivered", cancelled: "statusCancelled" };
+    const statusDescriptions = { received: "descReceived", confirmed: "descConfirmed", preparing: "descPreparing", shipped: "descShipped", delivered: "descDelivered", cancelled: "descCancelled" };
+    const stages = Array.from(document.querySelectorAll(".route-stop"));
+    let requestNumber = 0;
+    let currentOrder = null;
+
+    function tr(key) { return translations[language]?.[key] || translations.ru[key] || key; }
+    function applyLanguage() {
+      document.documentElement.lang = language;
+      document.title = `${tr("yourOrder")} — GO’EL`;
+      document.querySelectorAll("[data-i18n]").forEach((element) => { element.textContent = tr(element.dataset.i18n); });
+      document.getElementById("journey-map").setAttribute("aria-label", tr("mapLabel"));
+      document.getElementById("language-select").value = language;
+      if (currentOrder) showOrder(currentOrder);
+    }
+    function normalizeCode(value) {
+      const compact = value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 12);
+      if (compact.length <= 4) return compact;
+      if (compact.length <= 8) return `${compact.slice(0, 4)}-${compact.slice(4)}`;
+      return `${compact.slice(0, 4)}-${compact.slice(4, 8)}-${compact.slice(8)}`;
+    }
+    function updateRoute(step) {
+      const map = document.getElementById("journey-map");
+      map.classList.toggle("is-cancelled", step < 0);
+      stages.forEach((stop, index) => {
+        stop.classList.toggle("is-done", step >= 0 && index < step);
+        stop.classList.toggle("is-current", step >= 0 && index === step);
+        stop.style.transitionDelay = `${index * 75}ms`;
+      });
+      ["route-progress-desktop", "route-progress-mobile"].forEach((id) => {
+        const path = document.getElementById(id);
+        const length = path.getTotalLength();
+        path.style.strokeDasharray = `${length}`;
+        path.style.strokeDashoffset = `${length}`;
+        requestAnimationFrame(() => {
+          path.style.strokeDashoffset = step < 0 ? `${length}` : `${length * (1 - step / (statusStages.length - 1))}`;
+        });
+      });
+    }
+    function formatDate(value) {
+      const date = new Date(value);
+      if (!Number.isFinite(date.getTime())) return "";
+      return new Intl.DateTimeFormat(language, { dateStyle: "medium", timeStyle: "short" }).format(date);
+    }
+    function showOrder(order) {
+      currentOrder = order;
+      const step = statusStages.indexOf(order.status);
+      const currentStep = order.status === "cancelled" ? -1 : Math.max(0, step);
+      document.getElementById("result-code").textContent = order.code;
+      document.getElementById("status-pill").textContent = tr(statusLabels[order.status] || "statusReceived");
+      document.getElementById("status-description").textContent = tr(statusDescriptions[order.status] || "descReceived");
+      document.getElementById("item-title").textContent = [order.brand, order.product].filter(Boolean).join(" · ") || tr("unknownItem");
+      const itemDetails = Array.isArray(order.items) ? order.items.map((item) => [item.product, item.model, item.color, item.size, item.quantity > 1 ? `×${item.quantity}` : ""].filter(Boolean).join(" · ")).join(" / ") : "";
+      document.getElementById("item-variant").textContent = itemDetails || [order.model, order.color, order.size, order.quantity > 1 ? `${tr("quantity")}: ${order.quantity}` : ""].filter(Boolean).join(" · ");
+      const updated = formatDate(order.updatedAt || order.createdAt);
+      document.getElementById("updated-at").textContent = updated ? `${tr("updated")}: ${updated}` : "";
+      resultPanel.hidden = false;
+      updateRoute(currentStep);
+    }
+    input.addEventListener("input", () => { input.value = normalizeCode(input.value); });
+    document.getElementById("language-select").addEventListener("change", (event) => {
+      language = event.target.value;
+      try { localStorage.setItem("goel-language", language); } catch (error) {}
+      applyLanguage();
+    });
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const code = normalizeCode(input.value);
+      input.value = code;
+      const compact = code.replace(/-/g, "");
+      if (compact.length !== 12 || !compact.startsWith("GOEL")) {
+        resultPanel.hidden = true;
+        message.textContent = tr("writeCode");
+        message.className = "lookup-message";
+        input.focus();
+        return;
+      }
+      const currentRequest = ++requestNumber;
+      button.disabled = true;
+      form.classList.add("loading");
+      message.textContent = tr("loading");
+      message.className = "lookup-message";
+      try {
+        const response = await fetch(`${API_URL}?code=${encodeURIComponent(code)}`, { cache: "no-store" });
+        const data = await response.json().catch(() => null);
+        if (currentRequest !== requestNumber) return;
+        if (!response.ok) {
+          resultPanel.hidden = true;
+          message.textContent = response.status === 404 || response.status === 400 ? tr("notFound") : tr("serverError");
+          message.className = "lookup-message";
+          return;
+        }
+        showOrder(data.order);
+        message.textContent = "";
+        message.className = "lookup-message success";
+        if (window.matchMedia("(max-width: 700px)").matches) resultPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+      } catch (error) {
+        if (currentRequest !== requestNumber) return;
+        resultPanel.hidden = true;
+        message.textContent = tr("serverError");
+        message.className = "lookup-message";
+      } finally {
+        if (currentRequest === requestNumber) {
+          button.disabled = false;
+          form.classList.remove("loading");
+        }
+      }
+    });
+    applyLanguage();
+    const initialCode = new URLSearchParams(location.search).get("code");
+    if (initialCode) {
+      input.value = normalizeCode(initialCode);
+      form.requestSubmit();
+    }
+  </script>
+</body>
+</html>
