@@ -850,7 +850,7 @@
       inset: 0;
       overflow: hidden;
       opacity: 0;
-      transition: opacity 900ms ease;
+      transition: opacity 1.6s cubic-bezier(0.4, 0, 0.2, 1);
       pointer-events: none;
     }
     #home .hero-slide.is-active { opacity: 1; }
@@ -862,7 +862,7 @@
       object-position: center 42%;
       filter: saturate(.94) contrast(.98) brightness(.94);
       transform: scale(1.005);
-      transition: transform 8s ease;
+      transition: transform 10s cubic-bezier(0.22, 0.61, 0.36, 1);
     }
     #home .hero-slide.is-active img { transform: scale(1.035); }
     #home .hero::after {
@@ -2458,7 +2458,7 @@
         heroAutoplayTimer = null;
         if (heroSlides.length < 2 || scrollMotionPreference.matches || document.visibilityState !== "visible" ||
           !home.classList.contains("on") || !heroInViewport) return;
-        heroAutoplayTimer = window.setInterval(() => showHeroSlide(activeHeroSlide + 1), 6200);
+        heroAutoplayTimer = window.setInterval(() => showHeroSlide(activeHeroSlide + 1), 10000);
       }
 
       document.addEventListener("visibilitychange", syncHeroAutoplay);
