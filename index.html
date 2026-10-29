@@ -714,7 +714,7 @@
     body { background: var(--bg); color: var(--ink); }
     body::before { filter: blur(28px) saturate(.55); opacity: .22; }
     body::after { background: linear-gradient(180deg, rgba(42, 33, 29, .74), rgba(42, 33, 29, .94)); }
-    .wrap { width: min(1200px, calc(100% - 56px)); }
+    .wrap { width: 100%; max-width: none; padding-inline: clamp(16px, 3.5vw, 56px); }
     header {
       position: sticky;
       top: 0;
@@ -766,16 +766,17 @@
       grid-template-columns: minmax(0, 1.2fr) minmax(300px, .8fr);
       grid-template-rows: auto;
       align-content: center;
-      align-items: center;
-      gap: clamp(28px, 6vw, 78px);
-      min-height: clamp(470px, 54vw, 650px);
-      padding: clamp(44px, 7vw, 88px) 0 clamp(56px, 8vw, 96px);
+      align-items: end;
+      gap: clamp(24px, 4vw, 64px);
+      min-height: 0;
+      padding: clamp(40px, 5vw, 68px) 0 22px;
     }
     #home .hero-copy {
       grid-column: 1;
       grid-row: 1;
       position: relative;
       z-index: 1;
+      align-self: end;
     }
     #home .hero-kicker {
       margin: 0 0 18px;
@@ -832,7 +833,7 @@
       grid-column: 2;
       grid-row: 1;
       position: relative;
-      min-height: clamp(360px, 42vw, 520px);
+      min-height: clamp(420px, 48vw, 620px);
       overflow: hidden;
       border-radius: 220px 220px 24px 24px;
       background: var(--forest);
@@ -891,7 +892,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
       gap: 12px;
-      margin-top: 28px;
+      margin-top: 18px;
     }
     #home > [data-country-group] h2 {
       grid-column: 1 / -1;
@@ -1036,15 +1037,16 @@
     .lightbox-close { border-radius: 50%; }
     .lightbox-count { color: var(--ink); }
     @media (max-width: 920px) {
-      .wrap { width: min(calc(100% - 40px), 760px); }
+      .wrap { width: 100%; max-width: none; padding-inline: clamp(20px, 4vw, 40px); }
       .items { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
       #home .hero { grid-template-columns: minmax(0, 1fr) minmax(250px, .88fr); gap: 28px; }
       #home .hero-visual { min-height: 390px; }
     }
     @media (max-width: 700px) {
       header { flex-wrap: wrap; gap: 12px 16px; }
-      #home .hero { grid-template-columns: 1fr; grid-template-rows: auto auto; gap: 28px; min-height: 0; padding: 48px 0 58px; }
+      #home .hero { grid-template-columns: 1fr; grid-template-rows: auto auto; align-items: start; gap: 22px; min-height: 0; padding: 40px 0 16px; }
       #home .hero-copy { grid-column: 1; grid-row: 1; }
+      #home .hero-copy { align-self: auto; }
       #home .hero-copy h1 { font-size: clamp(48px, 12vw, 72px); }
       #home .hero-visual { grid-column: 1; grid-row: 2; min-height: min(92vw, 420px); border-radius: 180px 180px 20px 20px; }
       #home .hero-stamp { width: 76px; height: 76px; right: 12%; font-size: 8px; }
@@ -1053,7 +1055,7 @@
       .product-cloth { width: 100%; }
     }
     @media (max-width: 560px) {
-      .wrap { width: calc(100% - 28px); }
+      .wrap { width: 100%; max-width: none; padding-inline: 14px; }
       header { top: 0; gap: 10px 12px; padding: 10px 0; }
       .mark { font-size: 19px; }
       .site-menu-toggle { min-height: 36px; padding: 6px 9px; font-size: 12px; }
@@ -1072,6 +1074,7 @@
       .cart-footer { align-items: stretch; flex-direction: column; }
       .cart-checkout { width: 100%; }
       .filters .filter-toggle, .filters .filter-reset { min-height: 40px; padding: 7px 11px; }
+      #home > [data-country-group] { margin-top: 16px; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
@@ -1302,7 +1305,7 @@
       ru: {
         pageTitle: "GO'EL — христианские бренды одежды", countries: "Страны", countriesTitle: "Страны", mobileMenu: "Меню", belarus: "Беларусь", catalogMenu: "Каталог",
         all: "Всё", unisex: "Унисекс", women: "Женское", men: "Мужское", tshirts: "Футболки", sweatshirts: "Свитшоты", longSleeves: "Лонгсливы", halfZips: "Полузипы", caps: "Кепки", categoryFilter: "Категория одежды", filters: "Фильтры", clearFilters: "Сбросить", selectedCount: "Выбрано: {{count}}", removeFilter: "Убрать фильтр «{{category}}»", languageLabel: "Язык", socialNetworks: "Социальные сети",
-        heroKicker: "Независимые бренды · одна витрина", heroLine1: "Носи то,", heroLine2: "во что веришь.", exploreCatalog: "Исследовать каталог", verseLine1: "Искупитель наш — Господь Саваоф", verseLine2: "имя Ему, Святый Израилев.",
+        heroKicker: "Independent brands · one storefront", heroLine1: "Wear what", heroLine2: "you believe in.", exploreCatalog: "Explore the catalog", verseLine1: "Искупитель наш — Господь Саваоф", verseLine2: "имя Ему, Святый Израилев.",
         allBrands: "Все бренды", view: "Смотреть", chooseItemHint: "Выберите вещь и вариант — заявку можно будет оставить прямо на сайте.", cart: "Корзина", cartTitle: "Корзина", cartCount: "Корзина, товаров: {{count}}", cartEmpty: "Корзина пока пуста. Добавьте товары из каталога.", continueShopping: "Продолжить покупки", addToCart: "В корзину", addedToCart: "Добавлено в корзину.", cartCheckout: "Оформить заявку", cartTotal: "Итого: {{total}}", cartTotalOnRequest: "Итого: стоимость уточняется", cartUnavailable: "Этот вариант больше недоступен. Удалите его из корзины, чтобы продолжить.", removeCartItem: "Удалить товар", decreaseQuantity: "Уменьшить количество", increaseQuantity: "Увеличить количество", checkoutTitle: "Контактные данные",
         cartLimit: "В корзине может быть не больше 25 разных товаров.",
         cartInsufficientStock: "В наличии меньше выбранного количества. Уменьшите количество.",
