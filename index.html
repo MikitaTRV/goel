@@ -843,7 +843,7 @@
       color: #fffaf4;
       font-size: 16px;
     }
-    #home .hero-cta:focus-visible, #home .hero-arrow:focus-visible, #home .hero-dot:focus-visible { outline: 2px solid #f2b494; outline-offset: 4px; }
+    #home .hero-cta:focus-visible { outline: 2px solid #f2b494; outline-offset: 4px; }
     #home .hero-slide {
       position: absolute;
       z-index: 0;
@@ -908,7 +908,7 @@
       background: rgba(255, 250, 244, .55);
       transition: width 220ms ease, background-color 220ms ease;
     }
-    #home .hero-dot[aria-current="true"] { width: 26px; background: #fffaf4; }
+    #home .hero-dot.is-active { width: 26px; background: #fffaf4; }
     #home .hero-count { min-width: 38px; color: rgba(255, 250, 244, .76); font-size: 12px; font-variant-numeric: tabular-nums; letter-spacing: .08em; text-align: right; }
     @media (max-width: 700px) {
       #home .hero { min-height: min(720px, max(620px, 78svh)); margin-bottom: 38px; }
@@ -1191,27 +1191,25 @@
           <a class="hero-cta" href="?catalog"><span data-i18n="exploreCatalog">Исследовать каталог</span><span aria-hidden="true">↗</span></a>
         </div>
         <div class="hero-slide is-active" data-hero-slide aria-hidden="false">
-          <img src="img/fami/put-02.jpg" alt="" fetchpriority="high">
+          <img src="img/godderob/godderob-bog-love.jpg" alt="" fetchpriority="high">
         </div>
         <div class="hero-slide" data-hero-slide aria-hidden="true">
-          <img src="img/godderob/godderob-bog-love.jpg" alt="" loading="lazy">
+          <img src="img/godderob/godderob-saved.jpg" alt="" loading="lazy">
         </div>
         <div class="hero-slide" data-hero-slide aria-hidden="true">
-          <img src="img/poputi/jesus-saves-milk-02.jpg" alt="" loading="lazy">
+          <img src="img/godderob/godderob-shepherd.jpg" alt="" loading="lazy">
         </div>
         <div class="hero-slide" data-hero-slide aria-hidden="true">
-          <img src="img/sola/made-for-more-01.jpg" alt="" loading="lazy">
+          <img src="img/godderob/godderob-child.jpg" alt="" loading="lazy">
         </div>
-        <div class="hero-controls" role="group" aria-label="Carousel controls">
-          <button class="hero-arrow" type="button" data-hero-prev aria-label="Previous photo">‹</button>
-          <div class="hero-dots" role="group" aria-label="Choose a photo">
-            <button class="hero-dot" type="button" data-hero-dot aria-label="Show photo 1" aria-current="true"></button>
-            <button class="hero-dot" type="button" data-hero-dot aria-label="Show photo 2" aria-current="false"></button>
-            <button class="hero-dot" type="button" data-hero-dot aria-label="Show photo 3" aria-current="false"></button>
-            <button class="hero-dot" type="button" data-hero-dot aria-label="Show photo 4" aria-current="false"></button>
+        <div class="hero-controls" aria-hidden="true">
+          <div class="hero-dots">
+            <span class="hero-dot is-active" data-hero-dot></span>
+            <span class="hero-dot" data-hero-dot></span>
+            <span class="hero-dot" data-hero-dot></span>
+            <span class="hero-dot" data-hero-dot></span>
           </div>
-          <span class="hero-count" data-hero-count aria-hidden="true">01 / 04</span>
-          <button class="hero-arrow" type="button" data-hero-next aria-label="Next photo">›</button>
+          <span class="hero-count" data-hero-count>01 / 04</span>
         </div>
       </div>
       <div class="crumbs" id="home-crumbs" hidden>
@@ -2440,8 +2438,6 @@
       const heroCount = heroCarousel.querySelector("[data-hero-count]");
       let activeHeroSlide = 0;
       let heroAutoplayTimer = null;
-      let heroHovered = false;
-      let heroFocused = false;
       let heroInViewport = true;
 
       function showHeroSlide(index) {
@@ -2452,7 +2448,7 @@
           slide.setAttribute("aria-hidden", String(!isActive));
         });
         heroDots.forEach((dot, dotIndex) => {
-          dot.setAttribute("aria-current", String(dotIndex === activeHeroSlide));
+          dot.classList.toggle("is-active", dotIndex === activeHeroSlide);
         });
         if (heroCount) heroCount.textContent = `${String(activeHeroSlide + 1).padStart(2, "0")} / ${String(heroSlides.length).padStart(2, "0")}`;
       }
@@ -2461,40 +2457,10 @@
         window.clearInterval(heroAutoplayTimer);
         heroAutoplayTimer = null;
         if (heroSlides.length < 2 || scrollMotionPreference.matches || document.visibilityState !== "visible" ||
-          !home.classList.contains("on") || !heroInViewport || heroHovered || heroFocused) return;
+          !home.classList.contains("on") || !heroInViewport) return;
         heroAutoplayTimer = window.setInterval(() => showHeroSlide(activeHeroSlide + 1), 6200);
       }
 
-      heroCarousel.querySelector("[data-hero-prev]").addEventListener("click", () => {
-        showHeroSlide(activeHeroSlide - 1);
-        syncHeroAutoplay();
-      });
-      heroCarousel.querySelector("[data-hero-next]").addEventListener("click", () => {
-        showHeroSlide(activeHeroSlide + 1);
-        syncHeroAutoplay();
-      });
-      heroDots.forEach((dot, index) => dot.addEventListener("click", () => {
-        showHeroSlide(index);
-        syncHeroAutoplay();
-      }));
-      heroCarousel.addEventListener("mouseenter", () => {
-        heroHovered = true;
-        syncHeroAutoplay();
-      });
-      heroCarousel.addEventListener("mouseleave", () => {
-        heroHovered = false;
-        syncHeroAutoplay();
-      });
-      heroCarousel.addEventListener("focusin", () => {
-        heroFocused = true;
-        syncHeroAutoplay();
-      });
-      heroCarousel.addEventListener("focusout", () => {
-        window.setTimeout(() => {
-          heroFocused = heroCarousel.contains(document.activeElement);
-          syncHeroAutoplay();
-        }, 0);
-      });
       document.addEventListener("visibilitychange", syncHeroAutoplay);
       new MutationObserver(syncHeroAutoplay).observe(home, { attributes: true, attributeFilter: ["class"] });
       if ("IntersectionObserver" in window) {
