@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "index.html"
+      - "tracking.html"
       - "img/**"
       - "scripts/**"
       - "data/**"
@@ -43,6 +44,7 @@ jobs:
         run: |
           mkdir -p _site/data
           cp index.html _site/index.html
+          cp tracking.html _site/tracking.html
           cp -R img _site/img
           python scripts/sync_godderob_stock.py --output _site/data/godderob-availability.json
 
