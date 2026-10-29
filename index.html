@@ -777,9 +777,16 @@
       position: relative;
       z-index: 1;
     }
+    #home .hero-kicker {
+      margin: 0 0 18px;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
     #home .hero-copy h1 {
-      grid-column: 1;
-      grid-row: 1;
       max-width: 680px;
       margin: 0;
       font-family: Georgia, "Times New Roman", serif;
@@ -797,6 +804,30 @@
       line-height: 1.65;
     }
     #home .verse-reference { margin-top: 12px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+    #home .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 26px;
+      margin-top: 30px;
+      padding: 13px 15px 13px 20px;
+      border-radius: 999px;
+      background: var(--forest);
+      color: #fffefa;
+      font-size: 14px;
+      font-weight: 600;
+      transition: transform 180ms ease, background-color 180ms ease;
+    }
+    #home .hero-cta:hover { transform: translateY(-2px); background: #5a4033; }
+    #home .hero-cta > span[aria-hidden="true"] {
+      display: grid;
+      width: 30px;
+      height: 30px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--lime);
+      color: var(--forest);
+      font-size: 16px;
+    }
     #home .hero-visual {
       grid-column: 2;
       grid-row: 1;
@@ -1017,6 +1048,7 @@
       #home .hero-copy h1 { font-size: clamp(48px, 12vw, 72px); }
       #home .hero-visual { grid-column: 1; grid-row: 2; min-height: min(92vw, 420px); border-radius: 180px 180px 20px 20px; }
       #home .hero-stamp { width: 76px; height: 76px; right: 12%; font-size: 8px; }
+      #home .hero-cta { margin-top: 24px; }
       .product { grid-template-columns: 1fr; }
       .product-cloth { width: 100%; }
     }
@@ -1056,7 +1088,7 @@
       .motion-ready #cart .cart-line.is-visible,
       .motion-ready #cart .checkout-form.is-visible { animation: none !important; }
       .scroll-reveal { opacity: 1; translate: none; }
-      #home .brand:hover { transform: none; }
+      #home .brand:hover, #home .hero-cta:hover { transform: none; }
     }
     </style>  </style>  </style>
 </head>
@@ -1105,8 +1137,10 @@
     <section id="home" class="view on">
       <div class="hero">
         <div class="hero-copy">
-          <h1><span data-i18n="heroLine1">Христианские бренды</span><br><span data-i18n="heroLine2">одежды в одном месте</span></h1>
+          <p class="hero-kicker" data-i18n="heroKicker">Независимые бренды · одна витрина</p>
+          <h1><span data-i18n="heroLine1">Носи то,</span><br><span data-i18n="heroLine2">во что веришь.</span></h1>
           <p class="verse"><span class="verse-text">«<span data-i18n="verseLine1">Искупитель наш — Господь Саваоф</span><br><span data-i18n="verseLine2">имя Ему, Святый Израилев.</span>»</span><span class="verse-reference">Isa 47:4</span></p>
+          <a class="hero-cta" href="?catalog"><span data-i18n="exploreCatalog">Исследовать каталог</span><span aria-hidden="true">↗</span></a>
         </div>
         <div class="hero-visual" aria-hidden="true">
           <img class="hero-photo main" src="img/godderob/godderob-oduv-pink.jpg" alt="" fetchpriority="high">
@@ -1268,7 +1302,7 @@
       ru: {
         pageTitle: "GO'EL — христианские бренды одежды", countries: "Страны", countriesTitle: "Страны", mobileMenu: "Меню", belarus: "Беларусь", catalogMenu: "Каталог",
         all: "Всё", unisex: "Унисекс", women: "Женское", men: "Мужское", tshirts: "Футболки", sweatshirts: "Свитшоты", longSleeves: "Лонгсливы", halfZips: "Полузипы", caps: "Кепки", categoryFilter: "Категория одежды", filters: "Фильтры", clearFilters: "Сбросить", selectedCount: "Выбрано: {{count}}", removeFilter: "Убрать фильтр «{{category}}»", languageLabel: "Язык", socialNetworks: "Социальные сети",
-        heroLine1: "Христианские бренды", heroLine2: "одежды в одном месте", verseLine1: "Искупитель наш — Господь Саваоф", verseLine2: "имя Ему, Святый Израилев.",
+        heroKicker: "Независимые бренды · одна витрина", heroLine1: "Носи то,", heroLine2: "во что веришь.", exploreCatalog: "Исследовать каталог", verseLine1: "Искупитель наш — Господь Саваоф", verseLine2: "имя Ему, Святый Израилев.",
         allBrands: "Все бренды", view: "Смотреть", chooseItemHint: "Выберите вещь и вариант — заявку можно будет оставить прямо на сайте.", cart: "Корзина", cartTitle: "Корзина", cartCount: "Корзина, товаров: {{count}}", cartEmpty: "Корзина пока пуста. Добавьте товары из каталога.", continueShopping: "Продолжить покупки", addToCart: "В корзину", addedToCart: "Добавлено в корзину.", cartCheckout: "Оформить заявку", cartTotal: "Итого: {{total}}", cartTotalOnRequest: "Итого: стоимость уточняется", cartUnavailable: "Этот вариант больше недоступен. Удалите его из корзины, чтобы продолжить.", removeCartItem: "Удалить товар", decreaseQuantity: "Уменьшить количество", increaseQuantity: "Увеличить количество", checkoutTitle: "Контактные данные",
         cartLimit: "В корзине может быть не больше 25 разных товаров.",
         cartInsufficientStock: "В наличии меньше выбранного количества. Уменьшите количество.",
@@ -1294,7 +1328,7 @@
       be: {
         pageTitle: "GO'EL — хрысціянскія брэнды адзення", countries: "Краіны", countriesTitle: "Краіны", mobileMenu: "Меню", belarus: "Беларусь", catalogMenu: "Каталог",
         all: "Усё", unisex: "Унісекс", women: "Жаночае", men: "Мужчынскае", tshirts: "Футболкі", sweatshirts: "Світшоты", longSleeves: "Лонгслівы", halfZips: "Паўзіпы", caps: "Кепкі", categoryFilter: "Катэгорыя адзення", filters: "Фільтры", clearFilters: "Скінуць", selectedCount: "Выбрана: {{count}}", removeFilter: "Выдаліць фільтр «{{category}}»", languageLabel: "Мова", socialNetworks: "Сацыяльныя сеткі",
-        heroLine1: "Хрысціянскія брэнды", heroLine2: "адзення ў адным месцы", verseLine1: "Збаўца наш — Гасподзь Саваоф", verseLine2: "імя Яму — Святы Ізраілеў.",
+        heroKicker: "Незалежныя брэнды · адна вітрына", heroLine1: "Насі тое,", heroLine2: "у што верыш.", exploreCatalog: "Даследаваць каталог", verseLine1: "Збаўца наш — Гасподзь Саваоф", verseLine2: "імя Яму — Святы Ізраілеў.",
         allBrands: "Усе брэнды", view: "Глядзець", chooseItemHint: "Выберыце рэч і варыянт — заяўку можна будзе пакінуць проста на сайце.", cart: "Кошык", cartTitle: "Кошык", cartCount: "Кошык, тавараў: {{count}}", cartEmpty: "Кошык пакуль пусты. Дадайце тавары з каталога.", continueShopping: "Працягнуць пакупкі", addToCart: "У кошык", addedToCart: "Дададзена ў кошык.", cartCheckout: "Аформіць заяўку", cartTotal: "Разам: {{total}}", cartTotalOnRequest: "Разам: кошт удакладняецца", cartUnavailable: "Гэты варыянт больш недаступны. Выдаліце яго з кошыка, каб працягнуць.", removeCartItem: "Выдаліць тавар", decreaseQuantity: "Паменшыць колькасць", increaseQuantity: "Павялічыць колькасць", checkoutTitle: "Кантактныя даныя",
         cartLimit: "У кошыку можа быць не больш за 25 розных тавараў.",
         cartInsufficientStock: "У наяўнасці менш выбранай колькасці. Паменшыце колькасць.",
@@ -1320,7 +1354,7 @@
       uk: {
         pageTitle: "GO'EL — християнські бренди одягу", countries: "Країни", countriesTitle: "Країни", mobileMenu: "Меню", belarus: "Білорусь", catalogMenu: "Каталог",
         all: "Усе", unisex: "Унісекс", women: "Жіноче", men: "Чоловіче", tshirts: "Футболки", sweatshirts: "Світшоти", longSleeves: "Лонгсліви", halfZips: "Півзіпи", caps: "Кепки", categoryFilter: "Категорія одягу", filters: "Фільтри", clearFilters: "Скинути", selectedCount: "Обрано: {{count}}", removeFilter: "Видалити фільтр «{{category}}»", languageLabel: "Мова", socialNetworks: "Соціальні мережі",
-        heroLine1: "Християнські бренди", heroLine2: "одягу в одному місці", verseLine1: "Викупитель наш — Господь Саваот", verseLine2: "ім’я Йому — Святий Ізраїлів.",
+        heroKicker: "Незалежні бренди · одна вітрина", heroLine1: "Носи те,", heroLine2: "у що віриш.", exploreCatalog: "Дослідити каталог", verseLine1: "Викупитель наш — Господь Саваот", verseLine2: "ім’я Йому — Святий Ізраїлів.",
         allBrands: "Усі бренди", view: "Переглянути", chooseItemHint: "Оберіть річ і варіант — заявку можна буде залишити просто на сайті.", cart: "Кошик", cartTitle: "Кошик", cartCount: "Кошик, товарів: {{count}}", cartEmpty: "Кошик поки порожній. Додайте товари з каталогу.", continueShopping: "Продовжити покупки", addToCart: "До кошика", addedToCart: "Додано до кошика.", cartCheckout: "Оформити заявку", cartTotal: "Разом: {{total}}", cartTotalOnRequest: "Разом: вартість уточнюється", cartUnavailable: "Цей варіант більше недоступний. Видаліть його з кошика, щоб продовжити.", removeCartItem: "Видалити товар", decreaseQuantity: "Зменшити кількість", increaseQuantity: "Збільшити кількість", checkoutTitle: "Контактні дані",
         cartLimit: "У кошику може бути не більше 25 різних товарів.",
         cartInsufficientStock: "У наявності менше вибраної кількості. Зменште кількість.",
@@ -1346,7 +1380,7 @@
       en: {
         pageTitle: "GO'EL — Christian clothing brands", countries: "Countries", countriesTitle: "Countries", mobileMenu: "Menu", belarus: "Belarus", catalogMenu: "Catalog",
         all: "All", unisex: "Unisex", women: "Women", men: "Men", tshirts: "T-shirts", sweatshirts: "Sweatshirts", longSleeves: "Long sleeves", halfZips: "Half-zips", caps: "Caps", categoryFilter: "Clothing type", filters: "Filters", clearFilters: "Clear", selectedCount: "Selected: {{count}}", removeFilter: "Remove {{category}} filter", languageLabel: "Language", socialNetworks: "Social media",
-        heroLine1: "Christian clothing brands", heroLine2: "all in one place", verseLine1: "Our Redeemer is the Lord of hosts", verseLine2: "is His name, the Holy One of Israel.",
+        heroKicker: "Independent brands · one storefront", heroLine1: "Wear what", heroLine2: "you believe in.", exploreCatalog: "Explore the catalog", verseLine1: "Our Redeemer is the Lord of hosts", verseLine2: "is His name, the Holy One of Israel.",
         allBrands: "All brands", view: "Browse", chooseItemHint: "Choose an item and a variant — you can submit a request right here on the site.", cart: "Cart", cartTitle: "Your cart", cartCount: "Cart, items: {{count}}", cartEmpty: "Your cart is empty. Add items from the catalog.", continueShopping: "Continue shopping", addToCart: "Add to cart", addedToCart: "Added to cart.", cartCheckout: "Submit request", cartTotal: "Total: {{total}}", cartTotalOnRequest: "Total: price to be confirmed", cartUnavailable: "This option is no longer available. Remove it from your cart to continue.", removeCartItem: "Remove item", decreaseQuantity: "Decrease quantity", increaseQuantity: "Increase quantity", checkoutTitle: "Contact details",
         cartLimit: "Your cart can contain up to 25 different items.",
         cartInsufficientStock: "There aren’t enough items in stock. Reduce the quantity.",
