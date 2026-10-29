@@ -9,10 +9,10 @@
     :root {
       color-scheme: dark;
       --bg: #2a211d;
-      --paper: #392e28;
+      --paper: #40332c;
       --ink: #f4e9dc;
       --muted: #c8b6a6;
-      --line: #58453a;
+      --line: #685344;
       --accent: #e7a47c;
       --accent-soft: #47332a;
       --green: #f0cba5;
@@ -63,7 +63,7 @@
     .result[hidden] { display: none; }
     .result-top { margin-bottom: 11px; padding: 0 4px; display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; }
     .result-top h2 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: clamp(24px, 3vw, 32px); font-weight: 400; letter-spacing: -.035em; }
-    .result-top p { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
+    .result-top p { display: none; }
     .order-code { flex: 0 0 auto; padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--accent); background: rgba(57, 46, 40, .72); font-size: 12px; font-weight: 700; letter-spacing: .07em; }
     .journey-card { overflow: hidden; border: 1px solid rgba(244, 233, 220, .16); border-radius: 22px; background: var(--paper); box-shadow: var(--shadow); }
     .journey-head { min-height: 66px; padding: 13px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--line); }
@@ -82,27 +82,27 @@
     .route-desktop .journey-route-progress { stroke: url(#routeGradientDesktop); }
     .route-mobile .journey-route-progress { stroke: url(#routeGradientMobile); }
     .journey-map.is-cancelled .journey-route-progress { stroke: #bd8068; }
-    .route-stop { position: absolute; z-index: 1; width: 54px; height: 54px; padding: 6px; display: grid; place-items: center; border-radius: 50%; background: var(--paper); transform: translate(-50%, -50%) scale(.88); opacity: .55; transition: opacity .55s ease, transform .65s cubic-bezier(.2,.75,.25,1); }
-    .route-stop:nth-of-type(1) { left: 10%; top: 64%; }
-    .route-stop:nth-of-type(2) { left: 30%; top: 27%; }
-    .route-stop:nth-of-type(3) { left: 50%; top: 64%; }
-    .route-stop:nth-of-type(4) { left: 70%; top: 27%; }
-    .route-stop:nth-of-type(5) { left: 90%; top: 64%; }
+    .route-stop { --arrival-opacity: .55; position: absolute; z-index: 1; width: 54px; height: 54px; padding: 6px; display: grid; place-items: center; border-radius: 50%; background: var(--paper); transform: translate(-50%, -50%) scale(.88); opacity: .55; transition: opacity .55s ease, transform .65s cubic-bezier(.2,.75,.25,1); }
+    .route-stop:nth-of-type(1) { left: 8.5%; top: 65%; --arrival-x: -26px; --arrival-y: 18px; }
+    .route-stop:nth-of-type(2) { left: 30%; top: 35%; --arrival-x: -22px; --arrival-y: 26px; }
+    .route-stop:nth-of-type(3) { left: 51%; top: 61%; --arrival-x: 24px; --arrival-y: -22px; }
+    .route-stop:nth-of-type(4) { left: 71%; top: 27%; --arrival-x: -25px; --arrival-y: -16px; }
+    .route-stop:nth-of-type(5) { left: 91%; top: 40%; --arrival-x: 28px; --arrival-y: -12px; }
     .stop-dot { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid #70594a; border-radius: 50%; color: #b9a391; background: #302722; transition: color .35s ease, border-color .35s ease, background .35s ease, box-shadow .35s ease; }
     .stop-dot svg { width: 17px; height: 17px; }
-    .stop-copy { position: absolute; top: 50px; left: 50%; width: 145px; padding: 2px 4px; color: var(--muted); text-align: center; transform: translateX(-50%); }
-    .stop-copy b { display: block; color: #a99584; font-size: 12px; font-weight: 600; line-height: 1.35; transition: color .35s ease; }
-    .stop-copy span { display: block; margin-top: 4px; color: #897565; font-size: 10px; line-height: 1.3; }
-    .route-stop.is-done, .route-stop.is-current { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    .stop-copy { position: absolute; top: 44px; left: 50%; width: 145px; padding: 2px 4px; color: var(--muted); text-align: center; transform: translateX(-50%); }
+    .stop-copy b { display: block; color: #c3ad99; font-size: 14px; font-weight: 600; line-height: 1.35; transition: color .35s ease; }
+    .stop-copy span, .map-caption, .journey-card.is-preview .journey-head p { display: none; }
+    .route-stop.is-done, .route-stop.is-current { --arrival-opacity: 1; opacity: 1; transform: translate(-50%, -50%) scale(1); }
     .route-stop.is-done .stop-dot { border-color: var(--accent); color: white; background: var(--accent); }
     .route-stop.is-done .stop-copy b, .route-stop.is-current .stop-copy b { color: var(--ink); }
     .route-stop.is-current .stop-dot { border-color: var(--accent); color: #211c19; background: var(--accent); box-shadow: 0 0 0 7px rgba(231, 164, 124, .14), 0 7px 18px rgba(0, 0, 0, .24); animation: pin-pulse 2.4s ease-in-out infinite; }
-    .journey-map.is-preview .route-stop { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    .journey-map.is-preview .route-stop { --arrival-opacity: 1; opacity: 1; transform: translate(-50%, -50%) scale(1); }
     .journey-map.is-preview .stop-dot { border-color: rgba(231, 164, 124, .48); color: var(--accent); background: #302722; }
     .journey-map.is-preview .stop-copy b { color: var(--ink); }
     .journey-map.is-preview .journey-route-progress { animation: route-glow 3.2s ease-in-out 1.8s infinite; }
+    .journey-map.is-arriving .route-stop { animation: stop-arrive 660ms cubic-bezier(.18,.8,.2,1) both; animation-delay: var(--arrival-delay, 0ms); }
     .journey-map.is-cancelled .route-stop .stop-dot { border-color: #70594a; color: #bd8068; background: #302722; box-shadow: none; animation: none; }
-    .map-caption { position: absolute; right: 10px; bottom: 5px; left: 10px; display: flex; justify-content: space-between; color: #a99584; font-size: 10px; letter-spacing: .08em; }
     .order-details { min-height: 72px; padding: 16px 24px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px 24px; border-top: 1px solid var(--line); background: rgba(42, 33, 29, .46); }
     .order-details[hidden], .help-note[hidden] { display: none; }
     .item-info { min-width: 0; }
@@ -120,6 +120,10 @@
     @keyframes result-in { from { opacity: 0; translate: 0 24px; } to { opacity: 1; translate: 0 0; } }
     @keyframes pin-pulse { 0%, 100% { box-shadow: 0 0 0 6px rgba(231, 164, 124, .13), 0 7px 18px rgba(0, 0, 0, .22); } 50% { box-shadow: 0 0 0 11px rgba(231, 164, 124, .025), 0 7px 18px rgba(0, 0, 0, .18); } }
     @keyframes route-glow { 0%, 100% { filter: drop-shadow(0 2px 6px rgba(231, 164, 124, .25)); } 50% { filter: drop-shadow(0 2px 13px rgba(231, 164, 124, .6)); } }
+    @keyframes stop-arrive {
+      from { opacity: 0; transform: translate(calc(-50% + var(--arrival-x, 0px)), calc(-50% + var(--arrival-y, 18px))) scale(.58); filter: blur(2px); }
+      to { opacity: var(--arrival-opacity, .55); transform: translate(-50%, -50%) scale(1); filter: blur(0); }
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
     @media (max-width: 700px) {
       .wrap { width: min(100% - 28px, 600px); }
@@ -144,23 +148,36 @@
       .journey-map { height: 620px; margin: 0 7px; }
       .route-desktop { display: none; }
       .route-mobile { display: block; }
-      .route-stop:nth-of-type(1) { left: 31%; top: 9%; }
-      .route-stop:nth-of-type(2) { left: 70%; top: 29.5%; }
-      .route-stop:nth-of-type(3) { left: 31%; top: 50%; }
-      .route-stop:nth-of-type(4) { left: 70%; top: 70.5%; }
-      .route-stop:nth-of-type(5) { left: 31%; top: 91%; }
+      .route-stop:nth-of-type(1) { left: 31%; top: 9%; --arrival-x: -22px; --arrival-y: 18px; }
+      .route-stop:nth-of-type(2) { left: 70%; top: 29.5%; --arrival-x: -24px; --arrival-y: 20px; }
+      .route-stop:nth-of-type(3) { left: 31%; top: 50%; --arrival-x: 22px; --arrival-y: -20px; }
+      .route-stop:nth-of-type(4) { left: 70%; top: 70.5%; --arrival-x: -22px; --arrival-y: -16px; }
+      .route-stop:nth-of-type(5) { left: 31%; top: 91%; --arrival-x: 26px; --arrival-y: -10px; }
       .route-stop { width: 48px; height: 48px; }
       .stop-dot { width: 36px; height: 36px; }
       .stop-copy { top: 50%; width: 130px; padding: 0; transform: translateY(-50%); }
       .route-stop:nth-of-type(odd) .stop-copy { left: 42px; text-align: left; }
       .route-stop:nth-of-type(even) .stop-copy { right: 42px; left: auto; text-align: right; }
-      .stop-copy b { font-size: 11px; }
-      .stop-copy span { font-size: 9px; }
-      .map-caption { bottom: 4px; font-size: 8px; }
+      .stop-copy b { font-size: 12px; }
       .order-details { padding: 15px 17px; grid-template-columns: 1fr; gap: 8px; }
       .order-updated { text-align: left; }
       .help-note { align-items: flex-start; flex-direction: column; gap: 10px; padding: 17px; }
       footer .wrap { flex-direction: column; gap: 3px; }
+    }
+    @media (min-width: 701px) and (max-width: 933px) {
+      .journey-map { height: 520px; margin: 0 12px; }
+      .route-desktop { display: none; }
+      .route-mobile { display: block; }
+      .route-stop:nth-of-type(1) { left: 31%; top: 9%; --arrival-x: -22px; --arrival-y: 18px; }
+      .route-stop:nth-of-type(2) { left: 70%; top: 29.5%; --arrival-x: -24px; --arrival-y: 20px; }
+      .route-stop:nth-of-type(3) { left: 31%; top: 50%; --arrival-x: 22px; --arrival-y: -20px; }
+      .route-stop:nth-of-type(4) { left: 70%; top: 70.5%; --arrival-x: -22px; --arrival-y: -16px; }
+      .route-stop:nth-of-type(5) { left: 31%; top: 91%; --arrival-x: 26px; --arrival-y: -10px; }
+      .route-stop { width: 48px; height: 48px; }
+      .stop-dot { width: 36px; height: 36px; }
+      .stop-copy { top: 50%; width: 145px; padding: 0; transform: translateY(-50%); }
+      .route-stop:nth-of-type(odd) .stop-copy { left: 42px; text-align: left; }
+      .route-stop:nth-of-type(even) .stop-copy { right: 42px; left: auto; text-align: right; }
     }
     @media (max-width: 390px) {
       .wrap { width: calc(100% - 22px); }
@@ -168,14 +185,12 @@
       .lookup-button { padding: 0 10px; }
       .journey-head { align-items: flex-start; }
       .status-pill { max-width: 112px; }
-      .route-stop:nth-of-type(odd) { left: 28%; }
-      .route-stop:nth-of-type(even) { left: 73%; }
       .stop-copy { width: 118px; }
       .route-stop:nth-of-type(odd) .stop-copy { left: 39px; }
       .route-stop:nth-of-type(even) .stop-copy { right: 39px; }
     }
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
 </head>
@@ -211,21 +226,21 @@
         <div><h2 id="result-heading" data-i18n="previewTitle">Путь заказа</h2><p id="result-intro" data-i18n="previewIntro">Так проходит заказ: от заявки до доставки. Введи код, чтобы увидеть его текущий этап.</p></div>
         <span class="order-code" id="result-code" hidden></span>
       </div>
-      <article class="journey-card">
+      <article class="journey-card is-preview" id="journey-card">
         <div class="journey-head">
           <div class="journey-head-label"><span class="live-mark" aria-hidden="true"></span><div><h3 data-i18n="journeyTitle">Путешествие заказа</h3><p id="status-description" data-i18n="previewStatusDescription">Карта показывает этапы, которые проходит заказ.</p></div></div>
           <span class="status-pill preview-status" id="status-pill" data-i18n="previewStatus">Пример маршрута</span>
         </div>
         <div class="journey-map is-preview" id="journey-map" aria-label="Карта этапов заказа">
-          <svg class="route-svg route-desktop" viewBox="0 0 1000 320" preserveAspectRatio="none" aria-hidden="true">
+          <svg class="route-svg route-desktop" viewBox="0 0 1000 260" preserveAspectRatio="none" aria-hidden="true">
             <defs><linearGradient id="routeGradientDesktop" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#ad7b60"/><stop offset=".55" stop-color="#e7a47c"/><stop offset="1" stop-color="#f0cba5"/></linearGradient></defs>
-            <path class="journey-route journey-route-base" d="M100 205 C190 205 195 86 300 86 C405 86 410 205 500 205 C590 205 595 86 700 86 C805 86 810 205 900 205"/>
-            <path class="journey-route journey-route-progress" id="route-progress-desktop" stroke="url(#routeGradientDesktop)" d="M100 205 C190 205 195 86 300 86 C405 86 410 205 500 205 C590 205 595 86 700 86 C805 86 810 205 900 205"/>
+            <path class="journey-route journey-route-base" d="M85 169 C130 195 160 146 204 164 C245 181 255 92 300 91 C348 90 365 130 407 139 C450 148 462 166 510 158 C554 151 564 175 606 150 C650 124 663 60 710 70 C753 80 768 119 811 108 C855 97 870 123 910 104"/>
+            <path class="journey-route journey-route-progress" id="route-progress-desktop" stroke="url(#routeGradientDesktop)" d="M85 169 C130 195 160 146 204 164 C245 181 255 92 300 91 C348 90 365 130 407 139 C450 148 462 166 510 158 C554 151 564 175 606 150 C650 124 663 60 710 70 C753 80 768 119 811 108 C855 97 870 123 910 104"/>
           </svg>
-          <svg class="route-svg route-mobile" viewBox="0 0 360 760" preserveAspectRatio="none" aria-hidden="true">
+          <svg class="route-svg route-mobile" viewBox="0 0 360 620" preserveAspectRatio="none" aria-hidden="true">
             <defs><linearGradient id="routeGradientMobile" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ad7b60"/><stop offset=".55" stop-color="#e7a47c"/><stop offset="1" stop-color="#f0cba5"/></linearGradient></defs>
-            <path class="journey-route journey-route-base" d="M112 68 C112 148 252 145 252 224 C252 303 112 302 112 380 C112 458 252 457 252 536 C252 615 112 612 112 692"/>
-            <path class="journey-route journey-route-progress" id="route-progress-mobile" stroke="url(#routeGradientMobile)" d="M112 68 C112 148 252 145 252 224 C252 303 112 302 112 380 C112 458 252 457 252 536 C252 615 112 612 112 692"/>
+            <path class="journey-route journey-route-base" d="M112 56 C128 88 274 95 252 183 C238 229 151 214 112 310 C83 381 191 391 252 437 C312 482 178 502 112 564"/>
+            <path class="journey-route journey-route-progress" id="route-progress-mobile" stroke="url(#routeGradientMobile)" d="M112 56 C128 88 274 95 252 183 C238 229 151 214 112 310 C83 381 191 391 252 437 C312 482 178 502 112 564"/>
           </svg>
           <div class="route-stop" data-stage="0"><span class="stop-dot"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.3 8 14l8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="stop-copy"><b data-i18n="stageReceived">Заявка получена</b><span data-i18n="stageReceivedHint">Начало пути</span></span></div>
           <div class="route-stop" data-stage="1"><span class="stop-dot"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.3 8 14l8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="stop-copy"><b data-i18n="stageConfirmed">Подтверждён</b><span data-i18n="stageConfirmedHint">Всё согласовано</span></span></div>
@@ -294,8 +309,11 @@
       stages.forEach((stop, index) => {
         stop.classList.toggle("is-done", !preview && step >= 0 && index < step);
         stop.classList.toggle("is-current", !preview && step >= 0 && index === step);
-        stop.style.transitionDelay = `${index * 75}ms`;
+        stop.style.setProperty("--arrival-delay", `${120 + index * 170}ms`);
       });
+      map.classList.remove("is-arriving");
+      void map.offsetWidth;
+      map.classList.add("is-arriving");
       ["route-progress-desktop", "route-progress-mobile"].forEach((id) => {
         const path = document.getElementById(id);
         const length = path.getTotalLength();
@@ -309,6 +327,7 @@
     function showPreview() {
       currentOrder = null;
       resultPanel.hidden = false;
+      document.getElementById("journey-card").classList.add("is-preview");
       document.getElementById("result-heading").textContent = tr("previewTitle");
       document.getElementById("result-intro").textContent = tr("previewIntro");
       document.getElementById("result-code").hidden = true;
@@ -330,6 +349,7 @@
       const currentStep = order.status === "cancelled" ? -1 : Math.max(0, step);
       document.getElementById("result-heading").textContent = tr("yourOrder");
       document.getElementById("result-intro").textContent = tr("mapIntro");
+      document.getElementById("journey-card").classList.remove("is-preview");
       document.getElementById("result-code").textContent = order.code;
       document.getElementById("result-code").hidden = false;
       document.getElementById("status-pill").textContent = tr(statusLabels[order.status] || "statusReceived");
