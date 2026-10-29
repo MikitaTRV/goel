@@ -860,16 +860,17 @@
       height: 100%;
       object-fit: cover;
       object-position: center 42%;
-      transform: scale(1.015);
+      filter: saturate(.94) contrast(.98) brightness(.94);
+      transform: scale(1.005);
       transition: transform 8s ease;
     }
-    #home .hero-slide.is-active img { transform: scale(1.07); }
+    #home .hero-slide.is-active img { transform: scale(1.035); }
     #home .hero::after {
       content: "";
       position: absolute;
       z-index: 1;
       inset: 0;
-      background: linear-gradient(90deg, rgba(13, 12, 11, .38), rgba(13, 12, 11, .08) 68%), linear-gradient(0deg, rgba(13, 12, 11, .38), transparent 34%);
+      background: linear-gradient(90deg, rgba(13, 12, 11, .38), rgba(13, 12, 11, .08) 68%), linear-gradient(0deg, rgba(13, 12, 11, .38), transparent 34%), rgba(235, 227, 215, .05);
       pointer-events: none;
     }
     #home .hero-controls {
@@ -912,16 +913,16 @@
     @media (max-width: 700px) {
       #home .hero { min-height: min(720px, max(620px, 78svh)); margin-bottom: 38px; }
       #home .hero-copy {
-        top: auto;
-        bottom: 88px;
+        top: 18px;
+        bottom: auto;
         left: 14px;
         width: calc(100% - 28px);
         padding: 26px 24px 28px;
         transform: none;
         border-radius: 20px;
-        background: rgba(20, 18, 17, .62);
-        -webkit-backdrop-filter: blur(14px) saturate(1.15);
-        backdrop-filter: blur(14px) saturate(1.15);
+        background: rgba(20, 18, 17, .48);
+        -webkit-backdrop-filter: blur(16px) saturate(1.15);
+        backdrop-filter: blur(16px) saturate(1.15);
       }
       #home .hero-copy h1 { font-size: clamp(46px, 11vw, 64px); }
       #home .hero-copy .verse { margin-top: 18px; font-size: 14px; }
@@ -1190,16 +1191,16 @@
           <a class="hero-cta" href="?catalog"><span data-i18n="exploreCatalog">Исследовать каталог</span><span aria-hidden="true">↗</span></a>
         </div>
         <div class="hero-slide is-active" data-hero-slide aria-hidden="false">
-          <img src="img/godderob/godderob-oduv-pink.jpg" alt="" fetchpriority="high">
+          <img src="img/fami/put-02.jpg" alt="" fetchpriority="high">
+        </div>
+        <div class="hero-slide" data-hero-slide aria-hidden="true">
+          <img src="img/godderob/godderob-bog-love.jpg" alt="" loading="lazy">
+        </div>
+        <div class="hero-slide" data-hero-slide aria-hidden="true">
+          <img src="img/poputi/jesus-saves-milk-02.jpg" alt="" loading="lazy">
         </div>
         <div class="hero-slide" data-hero-slide aria-hidden="true">
           <img src="img/sola/made-for-more-01.jpg" alt="" loading="lazy">
-        </div>
-        <div class="hero-slide" data-hero-slide aria-hidden="true">
-          <img src="img/fami/lev.jpg" alt="" loading="lazy">
-        </div>
-        <div class="hero-slide" data-hero-slide aria-hidden="true">
-          <img src="img/poputi/child-of-god-01.jpg" alt="" loading="lazy">
         </div>
         <div class="hero-controls" role="group" aria-label="Carousel controls">
           <button class="hero-arrow" type="button" data-hero-prev aria-label="Previous photo">‹</button>
