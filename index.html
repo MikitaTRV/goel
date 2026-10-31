@@ -2663,7 +2663,7 @@
 
     async function loadAvailabilityFeed() {
       try {
-        const response = await fetch("data/godderob-availability.json", { cache: "no-store" });
+        const response = await fetch("https://goel-order-api.o-el.workers.dev/stock", { cache: "no-store" });
         if (!response.ok) throw new Error(`Availability feed returned ${response.status}`);
         const feed = await response.json();
         if (![1, 2].includes(feed.schemaVersion) || !Array.isArray(feed.managedVariants)) {
