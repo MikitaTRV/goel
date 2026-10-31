@@ -644,6 +644,7 @@
     .order-form input:focus, .order-form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
     .order-consent { grid-template-columns: 18px 1fr; align-items: start; gap: 9px !important; color: var(--muted); }
     .order-consent input { margin: 4px 0 0; accent-color: var(--accent); }
+    .order-turnstile { min-height: 65px; }
     .order-submit { width: 100%; margin: 0; text-align: center; }
     .order-submit:disabled { opacity: 0.55; cursor: not-allowed; }
     .order-status { min-height: 1.5em; margin: 0; color: var(--muted); font-size: 14px; }
@@ -1346,6 +1347,7 @@
         <label class="order-honeypot" aria-hidden="true" tabindex="-1"><span data-i18n="honeypot">Не заполняйте это поле</span>
           <input name="website" autocomplete="off" tabindex="-1">
         </label>
+        <div class="order-turnstile" id="order-turnstile"></div>
         <button class="buy order-submit" id="order-submit" type="submit" disabled data-i18n="submitOrder">Отправить заявку</button>
         <p class="order-status" id="order-status" role="status" aria-live="polite"></p>
       </form>
@@ -1377,6 +1379,8 @@
         honeypot: "Не заполняйте это поле", submitOrder: "Отправить заявку", sendingOrder: "Отправляем…", orderSent: "Заявка отправлена",
         formNotReady: "Форма пока не подключена к Telegram. Заявка не отправлена.", waitBeforeResend: "Подождите секунду и попробуйте отправить заявку ещё раз.",
         orderSuccess: "Заявка отправлена! Мы свяжемся с вами для подтверждения заказа.", orderFailure: "Не удалось отправить заявку. Проверьте интернет и попробуйте ещё раз.",
+        humanVerificationFailed: "Не удалось подтвердить проверку. Попробуйте ещё раз.", humanVerificationUnavailable: "Проверка временно недоступна. Попробуйте позже.",
+        rateLimited: "Слишком много попыток. Подождите минуту и попробуйте снова.", requestInProgress: "Заявка уже обрабатывается. Подождите немного.",
         chooseSize: "Выберите размер, затем добавьте вещь в корзину.", pressOrderToRequest: "Добавьте вещь в корзину, чтобы продолжить.", chooseSizeBeforeOrder: "Выберите размер перед добавлением в корзину.",
         selectedSizeMessage: "Выбран размер {{size}}. Добавьте вещь в корзину.", firstChooseSize: "Сначала выберите размер.",
         unavailable: "Нет в наличии", nowUnavailable: "Сейчас нет в наличии", sizeRange: "Размеры {{size}}", singleSize: "Размер {{size}}",
@@ -1403,6 +1407,8 @@
         honeypot: "Не запаўняйце гэтае поле", submitOrder: "Адправіць заяўку", sendingOrder: "Адпраўляем…", orderSent: "Заяўка адпраўлена",
         formNotReady: "Форма пакуль не падключана да Telegram. Заяўка не адпраўлена.", waitBeforeResend: "Пачакайце секунду і паспрабуйце адправіць заяўку яшчэ раз.",
         orderSuccess: "Заяўка адпраўлена! Мы звяжамся з вамі, каб пацвердзіць замову.", orderFailure: "Не ўдалося адправіць заяўку. Праверце інтэрнэт і паспрабуйце яшчэ раз.",
+        humanVerificationFailed: "Не ўдалося прайсці праверку. Паспрабуйце яшчэ раз.", humanVerificationUnavailable: "Праверка часова недаступная. Паспрабуйце пазней.",
+        rateLimited: "Занадта шмат спроб. Пачакайце хвіліну і паспрабуйце зноў.", requestInProgress: "Заяўка ўжо апрацоўваецца. Пачакайце крыху.",
         chooseSize: "Выберыце памер, затым дадайце рэч у кошык.", pressOrderToRequest: "Дадайце рэч у кошык, каб працягнуць.", chooseSizeBeforeOrder: "Выберыце памер перад даданнем у кошык.",
         selectedSizeMessage: "Выбраны памер {{size}}. Дадайце рэч у кошык.", firstChooseSize: "Спачатку выберыце памер.",
         unavailable: "Няма ў наяўнасці", nowUnavailable: "Зараз няма ў наяўнасці", sizeRange: "Памеры {{size}}", singleSize: "Памер {{size}}",
@@ -1429,6 +1435,8 @@
         honeypot: "Не заповнюйте це поле", submitOrder: "Надіслати заявку", sendingOrder: "Надсилаємо…", orderSent: "Заявку надіслано",
         formNotReady: "Форму ще не підключено до Telegram. Заявку не надіслано.", waitBeforeResend: "Зачекайте секунду й спробуйте надіслати заявку ще раз.",
         orderSuccess: "Заявку надіслано! Ми зв’яжемося з вами для підтвердження замовлення.", orderFailure: "Не вдалося надіслати заявку. Перевірте інтернет і спробуйте ще раз.",
+        humanVerificationFailed: "Не вдалося пройти перевірку. Спробуйте ще раз.", humanVerificationUnavailable: "Перевірка тимчасово недоступна. Спробуйте пізніше.",
+        rateLimited: "Забагато спроб. Зачекайте хвилину й спробуйте знову.", requestInProgress: "Заявка вже обробляється. Зачекайте трохи.",
         chooseSize: "Оберіть розмір, а потім додайте річ до кошика.", pressOrderToRequest: "Додайте річ до кошика, щоб продовжити.", chooseSizeBeforeOrder: "Оберіть розмір перед додаванням до кошика.",
         selectedSizeMessage: "Обраний розмір {{size}}. Додайте річ до кошика.", firstChooseSize: "Спочатку оберіть розмір.",
         unavailable: "Немає в наявності", nowUnavailable: "Зараз немає в наявності", sizeRange: "Розміри {{size}}", singleSize: "Розмір {{size}}",
@@ -1455,6 +1463,8 @@
         honeypot: "Leave this field empty", submitOrder: "Submit request", sendingOrder: "Sending…", orderSent: "Request sent",
         formNotReady: "The form is not connected to Telegram yet. Your request was not sent.", waitBeforeResend: "Please wait a moment and try submitting your request again.",
         orderSuccess: "Request sent! We’ll contact you to confirm your order.", orderFailure: "Could not send your request. Check your internet connection and try again.",
+        humanVerificationFailed: "Could not verify the check. Please try again.", humanVerificationUnavailable: "Verification is temporarily unavailable. Please try again later.",
+        rateLimited: "Too many attempts. Wait a minute and try again.", requestInProgress: "Your request is already being processed. Please wait.",
         chooseSize: "Choose a size, then add the item to your cart.", pressOrderToRequest: "Add the item to your cart to continue.", chooseSizeBeforeOrder: "Choose a size before adding the item to your cart.",
         selectedSizeMessage: "Size {{size}} selected. Add the item to your cart.", firstChooseSize: "Choose a size first.",
         unavailable: "Out of stock", nowUnavailable: "Currently out of stock", sizeRange: "Sizes {{size}}", singleSize: "Size {{size}}",
@@ -2405,18 +2415,120 @@
     let brandCategoryFilters = [];
     let brandColorFilters = [];
     const CART_STORAGE_KEY = "goel-cart-v1";
+    const ORDER_IDEMPOTENCY_STORAGE_KEY = "goel-order-request-v1";
     const ORDER_API_URL = "https://goel-order-api.o-el.workers.dev/order";
+    const TURNSTILE_SITE_KEY = "0x4AAAAAAFtznztfpcACEgpO";
     const orderForm = document.getElementById("order-form");
     const orderSubmit = document.getElementById("order-submit");
     const orderStatus = document.getElementById("order-status");
     const orderSetupNote = document.getElementById("order-setup-note");
+    const orderTurnstileContainer = document.getElementById("order-turnstile");
     let orderStartedAt = 0;
+    let orderTurnstileWidgetId = null;
+    let orderTurnstileToken = "";
+    let orderTurnstileLoadPromise = null;
+    let orderIdempotencyKey = "";
+    let orderRequestSignature = "";
+    let orderSubmissionInProgress = false;
     let cartLines = loadCart();
     let checkoutVisible = false;
     let cartSuccessVisible = false;
     const orderApiConfigured = /^https:\/\//.test(ORDER_API_URL) && !ORDER_API_URL.includes("YOUR-");
-    orderSubmit.disabled = !orderApiConfigured;
+    orderSubmit.disabled = true;
     orderSetupNote.textContent = t(orderApiConfigured ? "orderSetupConnected" : "orderSetupDisabled");
+    function updateOrderSubmitState() {
+      orderSubmit.disabled = !orderApiConfigured || !orderTurnstileToken || !cartLines.length;
+    }
+    function loadTurnstileApi() {
+      if (window.turnstile) return Promise.resolve(window.turnstile);
+      if (!orderTurnstileLoadPromise) {
+        orderTurnstileLoadPromise = new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+          script.async = true;
+          script.onload = () => window.turnstile ? resolve(window.turnstile) : reject(new Error("Turnstile did not load"));
+          script.onerror = () => reject(new Error("Turnstile failed to load"));
+          document.head.append(script);
+        }).catch((error) => {
+          orderTurnstileLoadPromise = null;
+          throw error;
+        });
+      }
+      return orderTurnstileLoadPromise;
+    }
+    function resetOrderTurnstile() {
+      orderTurnstileToken = "";
+      if (window.turnstile && orderTurnstileWidgetId !== null) window.turnstile.reset(orderTurnstileWidgetId);
+      updateOrderSubmitState();
+    }
+    async function activateOrderTurnstile() {
+      try {
+        const turnstile = await loadTurnstileApi();
+        if (orderTurnstileWidgetId !== null) {
+          resetOrderTurnstile();
+          return;
+        }
+        orderTurnstileWidgetId = turnstile.render(orderTurnstileContainer, {
+          sitekey: TURNSTILE_SITE_KEY,
+          action: "order",
+          theme: "light",
+          callback: (token) => {
+            orderTurnstileToken = token;
+            updateOrderSubmitState();
+          },
+          "expired-callback": resetOrderTurnstile,
+          "error-callback": () => {
+            resetOrderTurnstile();
+            orderStatus.textContent = t("humanVerificationUnavailable");
+            orderStatus.className = "order-status error";
+          }
+        });
+      } catch (error) {
+        orderStatus.textContent = t("humanVerificationUnavailable");
+        orderStatus.className = "order-status error";
+      }
+    }
+    async function getOrderIdempotencyKey(payload) {
+      const { startedAt, page, website, turnstileToken, idempotencyKey, ...stablePayload } = payload;
+      const serialized = JSON.stringify(stablePayload);
+      let signature = "";
+      let canPersist = false;
+      try {
+        const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(serialized));
+        signature = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+        canPersist = true;
+      } catch (error) {
+        signature = serialized;
+      }
+      if (signature === orderRequestSignature && orderIdempotencyKey) return orderIdempotencyKey;
+
+      if (canPersist) {
+        try {
+          const saved = JSON.parse(sessionStorage.getItem(ORDER_IDEMPOTENCY_STORAGE_KEY) || "null");
+          if (saved?.signature === signature && /^[0-9a-f-]{36}$/i.test(saved.key || "")) {
+            orderRequestSignature = signature;
+            orderIdempotencyKey = saved.key;
+            return orderIdempotencyKey;
+          }
+        } catch (error) {}
+      }
+
+      orderRequestSignature = signature;
+      orderIdempotencyKey = crypto.randomUUID();
+      if (canPersist) {
+        try {
+          sessionStorage.setItem(ORDER_IDEMPOTENCY_STORAGE_KEY, JSON.stringify({ signature, key: orderIdempotencyKey }));
+        } catch (error) {}
+      }
+      return orderIdempotencyKey;
+    }
+    function clearOrderIdempotencyKey() {
+      orderIdempotencyKey = "";
+      orderRequestSignature = "";
+      try {
+        sessionStorage.removeItem(ORDER_IDEMPOTENCY_STORAGE_KEY);
+      } catch (error) {}
+    }
     const stage = document.getElementById("stage");
     const scrollMotionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
     const scrollRevealObserver = "IntersectionObserver" in window && !scrollMotionPreference.matches
@@ -3060,20 +3172,28 @@
       cartSuccessVisible = false;
       orderForm.reset();
       orderStartedAt = Date.now();
+      orderTurnstileToken = "";
       orderStatus.textContent = "";
       orderStatus.className = "order-status";
       orderSubmit.textContent = t("submitOrder");
-      orderSubmit.disabled = !orderApiConfigured;
+      orderSubmit.disabled = true;
       renderCartContents();
+      void activateOrderTurnstile();
       orderForm.scrollIntoView({ behavior: "smooth", block: "start" });
       orderForm.elements.customerName.focus({ preventScroll: true });
     });
 
     orderForm.addEventListener("submit", async (event) => {
       event.preventDefault();
+      if (orderSubmissionInProgress) return;
       const details = cartLines.map(resolveCartLine);
       if (!orderApiConfigured || !details.length || details.some((detail) => !detail?.available)) {
         orderStatus.textContent = t("formNotReady");
+        orderStatus.className = "order-status error";
+        return;
+      }
+      if (!orderTurnstileToken) {
+        orderStatus.textContent = t("humanVerificationFailed");
         orderStatus.className = "order-status error";
         return;
       }
@@ -3106,11 +3226,14 @@
         startedAt: orderStartedAt,
         page: location.href
       };
+      orderSubmissionInProgress = true;
       orderSubmit.disabled = true;
       orderSubmit.textContent = t("sendingOrder");
       orderStatus.textContent = "";
       orderStatus.className = "order-status";
       try {
+        payload.idempotencyKey = await getOrderIdempotencyKey(payload);
+        payload.turnstileToken = orderTurnstileToken;
         const response = await fetch(ORDER_API_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -3118,10 +3241,7 @@
         });
         const result = await response.json().catch(() => null);
         if (!response.ok) {
-          if (response.status === 409 && result?.error === "insufficient_stock") {
-            throw new Error("insufficient_stock");
-          }
-          throw new Error("Order submission failed");
+          throw new Error(result?.error || "Order submission failed");
         }
         cartLines = [];
         saveCart();
@@ -3137,13 +3257,24 @@
           cartSuccess.append(document.createElement("br"), trackingLink);
         }
         orderForm.reset();
+        clearOrderIdempotencyKey();
         orderStatus.textContent = "";
         renderCartContents();
       } catch (error) {
-        orderStatus.textContent = error.message === "insufficient_stock" ? t("cartInsufficientStock") : t("orderFailure");
+        const errorMessage = {
+          insufficient_stock: "cartInsufficientStock",
+          item_unavailable: "cartInsufficientStock",
+          human_verification_failed: "humanVerificationFailed",
+          human_verification_required: "humanVerificationFailed",
+          human_verification_unavailable: "humanVerificationUnavailable",
+          rate_limited: "rateLimited",
+          request_in_progress: "requestInProgress"
+        }[error.message];
+        orderStatus.textContent = t(errorMessage || "orderFailure");
         orderStatus.className = "order-status error";
       } finally {
-        orderSubmit.disabled = !orderApiConfigured || !cartLines.length;
+        orderSubmissionInProgress = false;
+        resetOrderTurnstile();
         if (cartLines.length) orderSubmit.textContent = t("submitOrder");
       }
     });
