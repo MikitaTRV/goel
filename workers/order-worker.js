@@ -38,6 +38,8 @@ const orderStatusLabels = {
   cancelled: "Заказ отменён"
 };
 const orderRetentionSeconds = 60 * 60 * 24 * 180;
+const idempotencyRetentionSeconds = 60 * 60 * 24;
+const idempotencyPendingSeconds = 60 * 10;
 const trackingAlphabet = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
 
 function trackingKey(code) {
@@ -59,6 +61,47 @@ async function readJson(request, maxLength = 12000) {
   } catch {
     throw new Error("Invalid request");
   }
+}
+
+function idempotencyStorageKey(key) {
+  return `submission:${key}`;
+}
+
+async function fingerprintOrder(order) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(order)));
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+async function verifyTurnstile(request, token, idempotencyKey, env) {
+  const form = new URLSearchParams({
+    secret: env.TURNSTILE_SECRET_KEY,
+    response: token,
+    idempotency_key: idempotencyKey
+  });
+  const clientIp = request.headers.get("CF-Connecting-IP");
+  if (clientIp) form.set("remoteip", clientIp);
+
+  let response;
+  try {
+    response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: form
+    });
+  } catch {
+    return { ok: false, unavailable: true };
+  }
+  if (!response.ok) return { ok: false, unavailable: true };
+
+  const result = await response.json().catch(() => null);
+  let expectedHostname = "";
+  try {
+    expectedHostname = new URL(env.ALLOWED_ORIGIN).hostname;
+  } catch {}
+  return {
+    ok: Boolean(result?.success && result.action === "order" && result.hostname === expectedHostname),
+    unavailable: false
+  };
 }
 
 function publicOrder(order) {
@@ -225,12 +268,31 @@ function stockSize(value) {
     .replace(/XXL/g, "2XL");
 }
 
-async function checkStock(body, env) {
-  const slug = text(body.inventorySlug, 100);
-  const tone = text(body.inventoryTone, 100);
-  const quantity = Number(body.quantity ?? 1);
-  const isGodderob = text(body.brand, 100).toLowerCase() === "godderob";
-  if (!slug || !tone) return isGodderob || quantity > 1 ? "unavailable" : "available";
+async function checkStock(items, env) {
+  const requestedItems = new Map();
+  for (const item of items) {
+    const slug = text(item.inventorySlug, 100);
+    const tone = text(item.inventoryTone, 100);
+    const quantity = Number(item.quantity ?? 1);
+    const isManagedGodderob = item.inventoryBrandId.toLowerCase() === "godderob" || item.brand.toLowerCase() === "godderob";
+    if (!isManagedGodderob && !slug && !tone) continue;
+    if (!slug || !tone) {
+      if (isManagedGodderob || quantity > 1) return "unavailable";
+      continue;
+    }
+
+    const normalizedTone = stockToken(tone);
+    const size = stockSize(item.size);
+    const key = JSON.stringify([slug, normalizedTone, size]);
+    const current = requestedItems.get(key);
+    requestedItems.set(key, {
+      slug,
+      tone: normalizedTone,
+      size,
+      quantity: (current?.quantity || 0) + quantity
+    });
+  }
+  if (!requestedItems.size) return "available";
 
   const feedUrl = env.STOCK_FEED_URL || "https://mikitatrv.github.io/goel/data/godderob-availability.json";
   const response = await fetch(feedUrl, {
@@ -246,22 +308,29 @@ async function checkStock(body, env) {
     throw new Error("Availability feed has no order limits");
   }
 
-  const normalizedTone = stockToken(tone);
-  const managedKey = `${slug}|${normalizedTone}`;
-  if (!feed.managedVariants.includes(managedKey)) return quantity === 1 ? "available" : "unavailable";
+  for (const item of requestedItems.values()) {
+    const managedKey = `${item.slug}|${item.tone}`;
+    if (!feed.managedVariants.includes(managedKey)) {
+      if (item.quantity > 1) return "unavailable";
+      continue;
+    }
 
-  const sizesByTone = feed.availableSizes[slug] || {};
-  const matchedTone = Object.entries(sizesByTone).find(([feedTone]) => stockToken(feedTone) === normalizedTone);
-  const availableSizes = matchedTone?.[1] || [];
-  const requestedSize = stockSize(body.size);
-  if (!Array.isArray(availableSizes) || !availableSizes.some((size) => stockSize(size) === requestedSize)) {
-    return "unavailable";
+    const sizesByTone = feed.availableSizes[item.slug] || {};
+    const matchedTone = Object.entries(sizesByTone).find(([feedTone]) => stockToken(feedTone) === item.tone);
+    const availableSizes = matchedTone?.[1] || [];
+    if (!Array.isArray(availableSizes) || !availableSizes.some((size) => stockSize(size) === item.size)) {
+      return "unavailable";
+    }
+    if (feed.schemaVersion === 1) {
+      if (item.quantity > 1) return "unavailable";
+      continue;
+    }
+
+    const maxOrderable = Object.entries(feed.maxOrderable[item.slug]?.[matchedTone[0]] || {})
+      .find(([size]) => stockSize(size) === item.size)?.[1];
+    if (!Number.isInteger(maxOrderable) || item.quantity > maxOrderable) return "unavailable";
   }
-  if (feed.schemaVersion === 1) return quantity === 1 ? "available" : "unavailable";
-
-  const maxOrderable = Object.entries(feed.maxOrderable[slug]?.[matchedTone[0]] || {})
-    .find(([size]) => stockSize(size) === requestedSize)?.[1];
-  return Number.isInteger(maxOrderable) && maxOrderable >= quantity ? "available" : "unavailable";
+  return "available";
 }
 
 export default {
@@ -333,10 +402,22 @@ export default {
     if (!request.headers.get("Content-Type")?.toLowerCase().includes("application/json")) {
       return jsonResponse({ error: "JSON required" }, 415, corsHeaders);
     }
+    if (!env.ORDER_RATE_LIMITER) return jsonResponse({ error: "Order protection is not configured" }, 503, corsHeaders);
+    let rateLimit;
+    try {
+      rateLimit = await env.ORDER_RATE_LIMITER.limit({ key: request.headers.get("CF-Connecting-IP") || "unknown" });
+    } catch (error) {
+      console.error("Could not check order rate limit", error);
+      return jsonResponse({ error: "Order protection is temporarily unavailable" }, 503, corsHeaders);
+    }
+    if (!rateLimit.success) {
+      return jsonResponse({ error: "rate_limited" }, 429, { ...corsHeaders, "Retry-After": "60" });
+    }
     if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) {
       return jsonResponse({ error: "Order notifications are not configured" }, 503, corsHeaders);
     }
     if (!env.ORDER_TRACKING) return jsonResponse({ error: "Order tracking is not configured" }, 503, corsHeaders);
+    if (!env.TURNSTILE_SECRET_KEY) return jsonResponse({ error: "Human verification is not configured" }, 503, corsHeaders);
 
     let body;
     try {
@@ -355,6 +436,12 @@ export default {
     if (!Number.isFinite(startedAt) || Date.now() - startedAt < 1000 || Date.now() - startedAt > 60 * 60 * 1000) {
       return jsonResponse({ error: "Invalid submission time" }, 400, corsHeaders);
     }
+    const idempotencyKey = text(body.idempotencyKey, 64);
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(idempotencyKey)) {
+      return jsonResponse({ error: "invalid_idempotency_key" }, 400, corsHeaders);
+    }
+    const turnstileToken = text(body.turnstileToken, 2048);
+    if (!turnstileToken) return jsonResponse({ error: "human_verification_required" }, 400, corsHeaders);
 
     const isCartOrder = Array.isArray(body.items);
     const sourceItems = isCartOrder ? body.items : [body];
@@ -402,22 +489,61 @@ export default {
     order.quantity = items.reduce((total, item) => total + item.quantity, 0);
     if (order.quantity > 99) return jsonResponse({ error: "Invalid order quantity" }, 400, corsHeaders);
 
+    let turnstileResult;
     try {
-      for (const item of items) {
-        const isManagedGodderob = item.inventoryBrandId.toLowerCase() === "godderob" || item.brand.toLowerCase() === "godderob";
-        if (!isManagedGodderob && !item.inventorySlug && !item.inventoryTone) continue;
-        const stockStatus = await checkStock({
-          brand: isManagedGodderob ? "godderob" : item.brand,
-          inventorySlug: item.inventorySlug,
-          inventoryTone: item.inventoryTone,
-          size: item.size,
-          quantity: item.quantity
-        }, env);
-        if (stockStatus === "unavailable") {
-          return jsonResponse({ error: isCartOrder ? "insufficient_stock" : "item_unavailable" }, 409, corsHeaders);
-        }
+      turnstileResult = await verifyTurnstile(request, turnstileToken, idempotencyKey, env);
+    } catch (error) {
+      console.error("Could not verify order challenge", error);
+      return jsonResponse({ error: "human_verification_unavailable" }, 503, corsHeaders);
+    }
+    if (turnstileResult.unavailable) {
+      return jsonResponse({ error: "human_verification_unavailable" }, 503, corsHeaders);
+    }
+    if (!turnstileResult.ok) return jsonResponse({ error: "human_verification_failed" }, 403, corsHeaders);
+
+    let requestFingerprint;
+    try {
+      requestFingerprint = await fingerprintOrder(order);
+    } catch (error) {
+      console.error("Could not fingerprint order request", error);
+      return jsonResponse({ error: "Order submission is temporarily unavailable" }, 503, corsHeaders);
+    }
+    const idempotencyRecordKey = idempotencyStorageKey(idempotencyKey);
+    let previousSubmission;
+    try {
+      previousSubmission = await env.ORDER_TRACKING.get(idempotencyRecordKey, "json");
+    } catch (error) {
+      console.error("Could not read order idempotency record", error);
+      return jsonResponse({ error: "Order submission is temporarily unavailable" }, 503, corsHeaders);
+    }
+    if (previousSubmission) {
+      if (previousSubmission.fingerprint !== requestFingerprint) {
+        return jsonResponse({ error: "idempotency_conflict" }, 409, corsHeaders);
+      }
+      if (previousSubmission.response) {
+        return jsonResponse(previousSubmission.response.body, previousSubmission.response.status, corsHeaders);
+      }
+      return jsonResponse({ error: "request_in_progress" }, 409, corsHeaders);
+    }
+
+    try {
+      await env.ORDER_TRACKING.put(idempotencyRecordKey, JSON.stringify({ fingerprint: requestFingerprint, status: "processing" }), {
+        expirationTtl: idempotencyPendingSeconds
+      });
+    } catch (error) {
+      console.error("Could not reserve order idempotency key", error);
+      return jsonResponse({ error: "Order submission is temporarily unavailable" }, 503, corsHeaders);
+    }
+    const clearIdempotencyRecord = () => env.ORDER_TRACKING.delete(idempotencyRecordKey).catch(() => {});
+
+    try {
+      const stockStatus = await checkStock(items, env);
+      if (stockStatus === "unavailable") {
+        await clearIdempotencyRecord();
+        return jsonResponse({ error: isCartOrder ? "insufficient_stock" : "item_unavailable" }, 409, corsHeaders);
       }
     } catch (error) {
+      await clearIdempotencyRecord();
       console.error("Could not verify order stock", error);
       return jsonResponse({ error: "Stock verification unavailable" }, 503, corsHeaders);
     }
@@ -441,6 +567,7 @@ export default {
     try {
       await env.ORDER_TRACKING.put(trackingKey(code), JSON.stringify(trackingRecord), { expirationTtl: orderRetentionSeconds });
     } catch (error) {
+      await clearIdempotencyRecord();
       console.error("Could not save order tracking record", error);
       return jsonResponse({ error: "Order tracking is temporarily unavailable" }, 503, corsHeaders);
     }
@@ -468,6 +595,7 @@ export default {
     const telegramText = lines.join("\n");
     if (telegramText.length > 3900) {
       await env.ORDER_TRACKING.delete(trackingKey(code)).catch(() => {});
+      await clearIdempotencyRecord();
       return jsonResponse({ error: "Order details are too long" }, 413, corsHeaders);
     }
 
@@ -486,6 +614,7 @@ export default {
       });
     } catch {
       await env.ORDER_TRACKING.delete(trackingKey(code)).catch(() => {});
+      await clearIdempotencyRecord();
       return jsonResponse({ error: "Notification service unavailable" }, 502, corsHeaders);
     }
 
@@ -498,8 +627,18 @@ export default {
     if (!telegramResponse.ok || !telegramResult?.ok) {
       console.error("Telegram sendMessage failed", telegramResponse.status, telegramResult?.description || "unknown error");
       await env.ORDER_TRACKING.delete(trackingKey(code)).catch(() => {});
+      await clearIdempotencyRecord();
       return jsonResponse({ error: "Could not send order notification" }, 502, corsHeaders);
     }
-    return jsonResponse({ ok: true, trackingCode: code }, 200, corsHeaders);
+    const successBody = { ok: true, trackingCode: code };
+    try {
+      await env.ORDER_TRACKING.put(idempotencyRecordKey, JSON.stringify({
+        fingerprint: requestFingerprint,
+        response: { status: 200, body: successBody }
+      }), { expirationTtl: idempotencyRetentionSeconds });
+    } catch (error) {
+      console.error("Could not finalize order idempotency record", error);
+    }
+    return jsonResponse(successBody, 200, corsHeaders);
   }
 };
