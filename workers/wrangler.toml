@@ -5,3 +5,7 @@ workers_dev = true
 
 [vars]
 ALLOWED_ORIGIN = "https://mikitatrv.github.io"
+
+[[kv_namespaces]]
+binding = "ORDER_TRACKING"
+id = "2cbefdcb67a1454daa59f74fe9205c66"
