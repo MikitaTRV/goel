@@ -6,6 +6,7 @@ on:
     paths:
       - "index.html"
       - "tracking.html"
+      - "privacy.html"
       - "img/**"
       - ".github/workflows/publish-site.yml"
   workflow_dispatch:
@@ -34,6 +35,7 @@ jobs:
           mkdir -p _site
           cp index.html _site/index.html
           cp tracking.html _site/tracking.html
+          cp privacy.html _site/privacy.html
           cp -R img _site/img
 
       - name: Configure GitHub Pages

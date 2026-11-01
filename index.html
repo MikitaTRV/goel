@@ -3,6 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2a211d">
+  <meta name="description" content="Христианские бренды одежды в одной витрине. Выберите вещь и отправьте заявку на заказ онлайн.">
+  <link rel="canonical" href="https://mikitatrv.github.io/goel/">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="GO’EL">
+  <meta property="og:url" content="https://mikitatrv.github.io/goel/">
+  <meta property="og:title" content="GO’EL — христианские бренды одежды">
+  <meta property="og:description" content="Христианские бренды одежды в одной витрине. Выберите вещь и отправьте заявку на заказ онлайн.">
+  <meta name="twitter:card" content="summary">
   <title data-i18n="pageTitle">GO'EL — христианские бренды одежды</title>
   <style>
     :root {
@@ -644,6 +654,10 @@
     .order-form input:focus, .order-form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
     .order-consent { grid-template-columns: 18px 1fr; align-items: start; gap: 9px !important; color: var(--muted); }
     .order-consent input { margin: 4px 0 0; accent-color: var(--accent); }
+    .order-consent a, .site-footer a { color: var(--accent); text-underline-offset: 3px; }
+    .order-process-note { margin: 0; padding: 11px 13px; border-left: 2px solid var(--accent); background: rgba(231, 164, 124, .08); color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .site-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 20px; margin-top: 40px; padding: 18px 0 28px; border-top: 1px solid rgba(244, 233, 220, .12); color: var(--muted); font-size: 13px; }
+    .site-footer nav { display: flex; flex-wrap: wrap; gap: 16px; }
     .order-turnstile { min-height: 65px; }
     .order-submit { width: 100%; margin: 0; text-align: center; }
     .order-submit:disabled { opacity: 0.55; cursor: not-allowed; }
@@ -1313,6 +1327,7 @@
           </div>
         </div>
         <p class="checkout-summary" id="order-summary"></p>
+        <p class="order-process-note" data-i18n="orderProcessNote">Это заявка, а не оплата. Мы свяжемся с вами, подтвердим наличие и согласуем дальнейшие условия заказа.</p>
         <label><span data-i18n="customerName">Имя</span>
           <input name="customerName" autocomplete="name" maxlength="80" required>
         </label>
@@ -1327,7 +1342,7 @@
         </label>
         <label class="order-consent">
           <input name="consent" type="checkbox" required>
-          <span data-i18n="consent">Согласен(на), что GO’EL использует мои данные, чтобы связаться со мной по поводу этого заказа.</span>
+          <span><span data-i18n="consent">Согласен(на), что GO’EL использует мои данные, чтобы связаться со мной по поводу этого заказа.</span> <a href="privacy.html" target="_blank" rel="noopener noreferrer" data-i18n="privacyLink">Политика обработки данных</a></span>
         </label>
         <label class="order-honeypot" aria-hidden="true" tabindex="-1"><span data-i18n="honeypot">Не заполняйте это поле</span>
           <input name="website" autocomplete="off" tabindex="-1">
@@ -1338,6 +1353,7 @@
       </form>
     </section>
     </div>
+    <footer class="site-footer"><span>GO’EL</span><nav aria-label="Информация" data-i18n-aria="footerNavigation"><a href="privacy.html" data-i18n="privacyLink">Политика обработки данных</a><a href="tracking.html" data-i18n="trackOrder">Отследить заказ</a></nav></footer>
   </div>
   <div class="lightbox" id="lightbox" hidden>
     <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Закрыть" data-i18n-aria="close">×</button>
@@ -1461,6 +1477,35 @@
         beige: "beige", red: "red", coffee: "coffee", emerald: "emerald", milk: "milk", sand: "sand", ginger: "ginger", darkGreen: "dark green"
       }
     };
+
+    Object.assign(translations.ru, {
+      pageDescription: "Христианские бренды одежды в одной витрине. Выберите вещь и отправьте заявку на заказ онлайн.",
+      footerNavigation: "Информация", privacyLink: "Политика обработки данных",
+      orderProcessNote: "Это заявка, а не оплата. Мы свяжемся с вами, подтвердим наличие и согласуем дальнейшие условия заказа.",
+      tshirtType: "Футболка", sweatshirtType: "Свитшот", longsleeveType: "Лонгслив", halfzipType: "Полузип", capType: "Кепка", hoodieType: "Худи",
+      light: "светлый", dark: "тёмный", green: "зелёный", sky: "голубой", gray: "серый", whiteBurgundy: "белый и бордовый", whiteSky: "белый и голубой", whiteSand: "белый и песочный", milkBrown: "молочный и коричневый", grayWhite: "серый и белый", grayYellow: "серый и жёлтый", grayPink: "серый и розовый", blackWhite: "чёрный и белый", coffee: "кофейный", emerald: "изумрудный"
+    });
+    Object.assign(translations.be, {
+      pageDescription: "Хрысціянскія брэнды адзення ў адной вітрыне. Выберыце рэч і адпраўце заяўку на заказ анлайн.",
+      footerNavigation: "Інфармацыя", privacyLink: "Палітыка апрацоўкі даных",
+      orderProcessNote: "Гэта заяўка, а не аплата. Мы звяжамся з вамі, пацвердзім наяўнасць і ўзгоднім далейшыя ўмовы замовы.",
+      tshirtType: "Футболка", sweatshirtType: "Світашот", longsleeveType: "Лонгсліў", halfzipType: "Паўзіп", capType: "Кепка", hoodieType: "Худи",
+      light: "светлы", dark: "цёмны", green: "зялёны", sky: "блакітны", gray: "шэры", whiteBurgundy: "белы і бардовы", whiteSky: "белы і блакітны", whiteSand: "белы і пясочны", milkBrown: "малочны і карычневы", grayWhite: "шэры і белы", grayYellow: "шэры і жоўты", grayPink: "шэры і ружовы", blackWhite: "чорны і белы", coffee: "кававы", emerald: "смарагдавы"
+    });
+    Object.assign(translations.uk, {
+      pageDescription: "Християнські бренди одягу в одній вітрині. Оберіть річ і надішліть заявку на замовлення онлайн.",
+      footerNavigation: "Інформація", privacyLink: "Політика обробки даних",
+      orderProcessNote: "Це заявка, а не оплата. Ми зв’яжемося з вами, підтвердимо наявність і погодимо подальші умови замовлення.",
+      tshirtType: "Футболка", sweatshirtType: "Світшот", longsleeveType: "Лонгслів", halfzipType: "Напівзип", capType: "Кепка", hoodieType: "Худі",
+      light: "світлий", dark: "темний", green: "зелений", sky: "блакитний", gray: "сірий", whiteBurgundy: "білий і бордовий", whiteSky: "білий і блакитний", whiteSand: "білий і пісочний", milkBrown: "молочний і коричневий", grayWhite: "сірий і білий", grayYellow: "сірий і жовтий", grayPink: "сірий і рожевий", blackWhite: "чорний і білий", coffee: "кавовий", emerald: "смарагдовий"
+    });
+    Object.assign(translations.en, {
+      pageDescription: "Christian clothing brands in one storefront. Browse the collection and send an order request online.",
+      footerNavigation: "Information", privacyLink: "Privacy notice",
+      orderProcessNote: "This is an order request, not a payment. We’ll contact you to confirm availability and agree on the next steps.",
+      tshirtType: "T-shirt", sweatshirtType: "Sweatshirt", longsleeveType: "Long-sleeve top", halfzipType: "Half-zip", capType: "Cap", hoodieType: "Hoodie",
+      light: "light", dark: "dark", green: "green", sky: "sky blue", gray: "gray", whiteBurgundy: "white / burgundy", whiteSky: "white / blue", whiteSand: "white / sand", milkBrown: "cream / brown", grayWhite: "gray / white", grayYellow: "gray / yellow", grayPink: "gray / pink", blackWhite: "black / white", coffee: "coffee brown", emerald: "emerald", milk: "milky"
+    });
     let currentLanguage = "ru";
     try {
       const savedLanguage = localStorage.getItem("goel-language");
@@ -1477,12 +1522,42 @@
       "синий": "blue", "чёрный": "black", "бежевый": "beige", "красный": "red", "кофе": "coffee", "изумруд": "emerald",
       "молочный": "milk", "песочный": "sand", "рыжий": "ginger", "тёмно-зелёный": "darkGreen"
     };
+    Object.assign(toneTranslationKeys, {
+      "светлый": "light", "тёмный": "dark", "зелёный": "green", "голубой": "sky", "серый": "gray",
+      "белый-бордо": "whiteBurgundy", "белый-голубой": "whiteSky", "белый-песок": "whiteSand", "молоко-коричневый": "milkBrown",
+      "серый-белый": "grayWhite", "серый-жёлтый": "grayYellow", "серый-розовый": "grayPink", "чёрный-белый": "blackWhite"
+    });
     function localizedTone(tone) { return toneTranslationKeys[tone] ? t(toneTranslationKeys[tone]) : tone; }
+    const garmentTypeTranslation = { "футболка": "tshirtType", "свитшот": "sweatshirtType", "лонгслив": "longsleeveType", "полузип": "halfzipType", "кепка": "capType", "худи": "hoodieType", "лонг": "longsleeveType" };
+    const englishItemTitle = {
+      "бог есть любовь": "GOD IS LOVE", "всегда радуйтесь": "ALWAYS REJOICE", "зажги своё сердце": "SET YOUR HEART ABLAZE",
+      "любовь это": "LOVE IS", "мир меняется твоим примером": "THE WORLD CHANGES THROUGH YOUR EXAMPLE", "то, что ты хочешь зажечь": "WHAT YOU WANT TO IGNITE",
+      "чистое сердце": "PURE HEART", "доверяй богу": "TRUST GOD", "дитя царя": "CHILD OF THE KING", "оставил 99": "LEFT THE 99", "радуйтесь": "REJOICE",
+      "лев и агнец": "THE LION AND THE LAMB", "иисус — путь, истина, жизнь": "JESUS — THE WAY, THE TRUTH, AND THE LIFE",
+      "бог спустился, чтобы поднялись мы": "GOD CAME DOWN SO WE COULD RISE", "спасибо богу": "THANK GOD", "сори, я в другой системе ценностей": "SORRY, I'M IN A DIFFERENT VALUE SYSTEM",
+      "лилии": "LILIES", "иисус мой друг": "JESUS IS MY FRIEND", "я верю в чудеса": "I BELIEVE IN MIRACLES", "свети там, где ты есть": "SHINE WHERE YOU ARE",
+      "божий цветочек": "GOD'S LITTLE FLOWER", "из божьего сада": "FROM GOD'S GARDEN", "сосуды": "VESSELS", "плоды духа": "FRUIT OF THE SPIRIT",
+      "будьте как дети": "BE LIKE CHILDREN", "jesus (леопард)": "JESUS (LEOPARD)"
+    };
+    function localizedGarmentType(type) {
+      const key = String(type || "").trim().toLocaleLowerCase("ru");
+      return garmentTypeTranslation[key] ? t(garmentTypeTranslation[key]) : type;
+    }
+    function localizedItemName(name) {
+      const sourceName = String(name || "").trim();
+      const match = sourceName.match(/^(Футболка|Свитшот|Лонгслив|Полузип|Кепка|Худи)(?=\s|$)(.*)$/i);
+      const rawModel = (match ? match[2] : sourceName).trim().replace(/^«(.+)»$/, "$1");
+      const model = englishItemTitle[rawModel.toLocaleLowerCase("ru")] || rawModel;
+      return match ? `${localizedGarmentType(match[1])}${model ? ` ${model}` : ""}` : model;
+    }
     function localizedCountry(country) { return country === "Беларусь" ? t("belarus") : country; }
     function localizedPrice(price) { return price === "Уточняется" ? t("pricePending") : price; }
     function applyStaticTranslations() {
       document.documentElement.lang = currentLanguage;
       document.title = t("pageTitle");
+      document.querySelector('meta[name="description"]')?.setAttribute("content", t("pageDescription"));
+      document.querySelector('meta[property="og:title"]')?.setAttribute("content", t("pageTitle"));
+      document.querySelector('meta[property="og:description"]')?.setAttribute("content", t("pageDescription"));
       document.querySelectorAll("[data-i18n]").forEach((element) => { element.textContent = t(element.dataset.i18n); });
       document.querySelectorAll("[data-i18n-aria]").forEach((element) => { element.setAttribute("aria-label", t(element.dataset.i18nAria)); });
       document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => { element.placeholder = t(element.dataset.i18nPlaceholder); });
@@ -2763,7 +2838,7 @@
       const nextIndex = (index + currentPhotos.length) % currentPhotos.length;
       const src = currentPhotos[nextIndex];
       const alt = currentItem
-        ? `${currentItem.name}${currentItem.variants[currentTone]?.tone ? ", " + localizedTone(currentItem.variants[currentTone].tone) : ""}`
+        ? `${localizedItemName(currentItem.name)}${currentItem.variants[currentTone]?.tone ? ", " + localizedTone(currentItem.variants[currentTone].tone) : ""}`
         : "";
       const animate = opts.animate && currentPhotos.length > 1 && photoEl.src && !photoEl.hidden;
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -2872,6 +2947,7 @@
       const categories = [
         [/^футболка(?:\s|$)/i, "tshirts"],
         [/^свитшот(?:\s|$)/i, "sweatshirts"],
+        [/^худи(?:\s|$)/i, "sweatshirts"],
         [/^лонгслив(?:\s|$)/i, "longSleeves"],
         [/^полузип(?:\s|$)/i, "halfZips"],
         [/^кепка(?:\s|$)/i, "caps"]
@@ -3021,8 +3097,8 @@
         inventorySlug: line.brand === "godderob" ? (variant.stockSlug || item.slug) : "",
         inventoryTone: line.brand === "godderob" ? (variant.tone || "") : "",
         inventorySize: line.brand === "godderob" ? selectedSize : "",
-        product: item.name,
-        model: variant.cut || "",
+        product: localizedItemName(item.name),
+        model: variant.cut ? localizedGarmentType(variant.cut) : "",
         tone: variant.tone || "",
         color: variant.tone ? localizedTone(variant.tone) : t("colorUnknown"),
         size: displaySize,
@@ -3306,12 +3382,12 @@
       const galleryClass = cardPhotos.length > 1 ? " has-gallery" : "";
       const galleryData = cardPhotos.length > 1 ? ` data-gallery-photos="${encodeURIComponent(JSON.stringify(cardPhotos))}" data-photo-index="0"` : "";
       const photoTag = photo
-        ? `<img src="${photo}" alt="${item.name}" loading="lazy" decoding="async">`
+        ? `<img src="${photo}" alt="${localizedItemName(item.name)}" loading="lazy" decoding="async">`
         : "";
       const galleryDots = cardPhotos.length > 1
         ? `<div class="item-gallery-dots" aria-hidden="true">${cardPhotos.map((_, index) => `<span class="${index === 0 ? "on" : ""}"></span>`).join("")}</div>`
         : "";
-      return `<a class="item" href="?${id}/${item.slug}" data-brand="${id}" data-slug="${item.slug}" style="${cardStyle}"><div class="cloth${photoClass}${galleryClass}" style="${clothStyle}"${galleryData}>${photoTag}${galleryDots}<span class="ph">${t("photoPlaceholder")}</span></div><span class="body"><b>${item.name}</b>${price ? `<span class="price">${price}</span>` : ""}</span></a>`;
+      return `<a class="item" href="?${id}/${item.slug}" data-brand="${id}" data-slug="${item.slug}" style="${cardStyle}"><div class="cloth${photoClass}${galleryClass}" style="${clothStyle}"${galleryData}>${photoTag}${galleryDots}<span class="ph">${t("photoPlaceholder")}</span></div><span class="body"><b>${localizedItemName(item.name)}</b>${price ? `<span class="price">${price}</span>` : ""}</span></a>`;
     }
 
     function renderBrandFilters(data) {
@@ -3616,7 +3692,7 @@
       cutsEl.hidden = cuts.length < 2;
       document.getElementById("cut-options").innerHTML = cuts.length > 1
         ? cuts.map((cut) =>
-            `<button type="button" class="cut${cut === variant.cut ? " on" : ""}" data-cut="${cut}">${cut}</button>`
+            `<button type="button" class="cut${cut === variant.cut ? " on" : ""}" data-cut="${cut}">${localizedGarmentType(cut)}</button>`
           ).join("")
         : "";
       const colorPool = variantsForCut(item, variant.cut);
@@ -3663,8 +3739,8 @@
       reveal(() => {
         document.getElementById("product-country").textContent = localizedCountry(data.country);
         document.getElementById("product-brand").textContent = data.title;
-        document.getElementById("product-crumb").textContent = item.name;
-        document.getElementById("product-title").textContent = item.name;
+        document.getElementById("product-crumb").textContent = localizedItemName(item.name);
+        document.getElementById("product-title").textContent = localizedItemName(item.name);
         const availableIndex = item.variants.findIndex(variantInStock);
         fillVariant(data, item, availableIndex < 0 ? 0 : availableIndex);
         home.classList.remove("on");

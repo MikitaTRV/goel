@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2a211d">
+  <meta name="description" content="Какие данные обрабатывает GO’EL при отправке заявки на заказ и как связаться по вопросам их обработки.">
+  <link rel="canonical" href="https://mikitatrv.github.io/goel/privacy.html">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="GO’EL">
+  <meta property="og:url" content="https://mikitatrv.github.io/goel/privacy.html">
+  <meta property="og:title" content="Политика обработки данных — GO’EL">
+  <meta property="og:description" content="Какие данные обрабатывает GO’EL при отправке заявки на заказ и как связаться по вопросам их обработки.">
+  <meta name="twitter:card" content="summary">
+  <title>Политика обработки данных — GO’EL</title>
+  <style>
+    :root { color-scheme: dark; --bg: #2a211d; --paper: #40332c; --ink: #f4e9dc; --muted: #c8b6a6; --line: #685344; --accent: #e7a47c; }
+    * { box-sizing: border-box; }
+    html { min-width: 320px; background: var(--bg); }
+    body { margin: 0; color: var(--ink); background: radial-gradient(ellipse at 8% 14%, rgba(111,72,52,.28), transparent 38rem), var(--bg); font-family: "Avenir Next", "Helvetica Neue", sans-serif; line-height: 1.6; }
+    a { color: var(--accent); text-underline-offset: 3px; }
+    .wrap { width: min(760px, calc(100% - 40px)); margin: 0 auto; }
+    header { min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid rgba(244,233,220,.12); }
+    .wordmark { color: var(--ink); font-size: 20px; font-weight: 700; letter-spacing: .08em; text-decoration: none; }
+    .header-actions { display: flex; align-items: center; gap: 18px; }
+    .language { border: 0; background: transparent; color: var(--muted); font: inherit; cursor: pointer; }
+    main { padding: 42px 0 58px; }
+    h1, h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; line-height: 1.2; }
+    h1 { margin: 0 0 12px; font-size: clamp(34px, 7vw, 48px); }
+    .intro { margin: 0 0 30px; color: var(--muted); }
+    article { padding: clamp(20px, 5vw, 34px); border: 1px solid rgba(244,233,220,.12); border-radius: 20px; background: rgba(57,46,40,.7); }
+    section + section { margin-top: 25px; }
+    h2 { margin: 0 0 8px; font-size: 23px; }
+    section p { margin: 0; color: var(--muted); }
+    .contact { margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--line); }
+    footer { padding: 18px 0 26px; border-top: 1px solid rgba(244,233,220,.12); color: var(--muted); font-size: 13px; }
+    @media (max-width: 520px) { .wrap { width: min(100% - 28px, 760px); } header { min-height: 60px; } .header-actions { gap: 12px; } main { padding-top: 30px; } article { border-radius: 16px; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <header class="wrap">
+    <a class="wordmark" href="./" aria-label="GO’EL — главная">GO’EL</a>
+    <div class="header-actions">
+      <a href="./" data-i18n="back">В каталог</a>
+      <select class="language" id="language-select" aria-label="Язык">
+        <option value="ru">RUS</option><option value="be">BEL</option><option value="uk">UKR</option><option value="en">ENG</option>
+      </select>
+    </div>
+  </header>
+  <main class="wrap">
+    <h1 data-i18n="title">Политика обработки данных</h1>
+    <p class="intro" data-i18n="intro">Здесь объясняется, какие данные получает GO’EL при отправке заявки на заказ и как они используются.</p>
+    <article>
+      <section><h2 data-i18n="dataTitle">Какие данные вы отправляете</h2><p data-i18n="dataBody">Форма запрашивает имя, телефон, город и адрес или пункт выдачи; комментарий можно не заполнять. Вместе с заявкой передаются выбранные товары, цвет, размер, количество, цена и адрес страницы заказа.</p></section>
+      <section><h2 data-i18n="purposeTitle">Зачем они нужны</h2><p data-i18n="purposeBody">GO’EL использует эти сведения, чтобы получить заявку, связаться с вами, подтвердить детали и организовать выполнение заказа. Отправка заявки не является оплатой: сайт не запрашивает банковские реквизиты и не принимает платежи.</p></section>
+      <section><h2 data-i18n="sharingTitle">Кто получает данные</h2><p data-i18n="sharingBody">Заявка проходит через Cloudflare Worker и отправляется в настроенный закрытый Telegram-чат GO’EL. Для подтверждения и выполнения заказа необходимые сведения могут быть переданы выбранному бренду или продавцу и службе доставки. Telegram и Cloudflare обрабатывают данные по собственным правилам конфиденциальности.</p></section>
+      <section><h2 data-i18n="storageTitle">Хранение и сроки</h2><p data-i18n="storageBody">Имя, телефон, адрес и комментарий не сохраняются в базе отслеживания GO’EL: они доставляются администратору заявки в Telegram. Для проверки статуса Cloudflare KV хранит код заказа, состав заказа и этап обработки без контактных данных; запись автоматически удаляется через 180 дней после последнего обновления. Данные заявки в Telegram используются, пока нужны для её обработки и поддержки.</p></section>
+      <section><h2 data-i18n="browserTitle">Настройки браузера</h2><p data-i18n="browserBody">Сайт сохраняет выбранный язык в локальном хранилище браузера. Контактные данные из формы там не сохраняются.</p></section>
+      <section><h2 data-i18n="rightsTitle">Ваши запросы</h2><p data-i18n="rightsBody">Чтобы запросить доступ к данным заявки, исправить их или попросить удалить, напишите GO’EL в Telegram. Укажите код заказа, если он у вас есть. Контактные данные не показываются на странице отслеживания заказа.</p></section>
+      <section class="contact"><h2 data-i18n="contactTitle">Связаться с GO’EL</h2><p><a href="https://t.me/JHVHGOeL" target="_blank" rel="noopener noreferrer" data-i18n="contactLink">Написать в Telegram</a></p></section>
+    </article>
+  </main>
+  <footer><div class="wrap">GO’EL</div></footer>
+  <script>
+    const translations = {
+      ru: {
+        pageTitle: "Политика обработки данных — GO’EL", description: "Какие данные обрабатывает GO’EL при отправке заявки на заказ и как связаться по вопросам их обработки.", back: "В каталог", title: "Политика обработки данных", intro: "Здесь объясняется, какие данные получает GO’EL при отправке заявки на заказ и как они используются.", dataTitle: "Какие данные вы отправляете", dataBody: "Форма запрашивает имя, телефон, город и адрес или пункт выдачи; комментарий можно не заполнять. Вместе с заявкой передаются выбранные товары, цвет, размер, количество, цена и адрес страницы заказа.", purposeTitle: "Зачем они нужны", purposeBody: "GO’EL использует эти сведения, чтобы получить заявку, связаться с вами, подтвердить детали и организовать выполнение заказа. Отправка заявки не является оплатой: сайт не запрашивает банковские реквизиты и не принимает платежи.", sharingTitle: "Кто получает данные", sharingBody: "Заявка проходит через Cloudflare Worker и отправляется в настроенный закрытый Telegram-чат GO’EL. Для подтверждения и выполнения заказа необходимые сведения могут быть переданы выбранному бренду или продавцу и службе доставки. Telegram и Cloudflare обрабатывают данные по собственным правилам конфиденциальности.", storageTitle: "Хранение и сроки", storageBody: "Имя, телефон, адрес и комментарий не сохраняются в базе отслеживания GO’EL: они доставляются администратору заявки в Telegram. Для проверки статуса Cloudflare KV хранит код заказа, состав заказа и этап обработки без контактных данных; запись автоматически удаляется через 180 дней после последнего обновления. Данные заявки в Telegram используются, пока нужны для её обработки и поддержки.", rightsTitle: "Ваши запросы", rightsBody: "Чтобы запросить доступ к данным заявки, исправить их или попросить удалить, напишите GO’EL в Telegram. Укажите код заказа, если он у вас есть. Контактные данные не показываются на странице отслеживания заказа.", contactTitle: "Связаться с GO’EL", contactLink: "Написать в Telegram"
+      },
+      be: {
+        pageTitle: "Палітыка апрацоўкі даных — GO’EL", description: "Якія даныя GO’EL апрацоўвае пры атрыманні заяўкі на замову і як звязацца з намі з гэтай нагоды.", back: "У каталог", title: "Палітыка апрацоўкі даных", intro: "Тут апісана, якія даныя атрымлівае GO’EL пры адпраўцы заяўкі на замову і як яны выкарыстоўваюцца.", dataTitle: "Якія даныя вы адпраўляеце", dataBody: "Форма просіць імя, тэлефон, горад і адрас або пункт выдачы; каментарый можна не запаўняць. Разам з заяўкай перадаюцца выбраныя тавары, колер, памер, колькасць, цана і адрас старонкі замовы.", purposeTitle: "Навошта яны патрэбныя", purposeBody: "GO’EL выкарыстоўвае гэтыя звесткі, каб атрымаць заяўку, звязацца з вамі, пацвердзіць дэталі і арганізаваць выкананне замовы. Адпраўка заяўкі не з’яўляецца аплатай: сайт не запытвае банкаўскія рэквізіты і не прымае плацяжы.", sharingTitle: "Хто атрымлівае даныя", sharingBody: "Заяўка праходзіць праз Cloudflare Worker і адпраўляецца ў наладжаны закрыты Telegram-чат GO’EL. Для пацвярджэння і выканання замовы неабходныя звесткі могуць быць перададзены выбранаму брэнду або прадаўцу і службе дастаўкі. Telegram і Cloudflare апрацоўваюць даныя паводле ўласных правіл прыватнасці.", storageTitle: "Захоўванне і тэрміны", storageBody: "Імя, тэлефон, адрас і каментарый не захоўваюцца ў базе адсочвання GO’EL: яны дастаўляюцца адміністратару заяўкі ў Telegram. Для праверкі статусу Cloudflare KV захоўвае код замовы, склад замовы і этап апрацоўкі без кантактных даных; запіс аўтаматычна выдаляецца праз 180 дзён пасля апошняга абнаўлення. Даныя заяўкі ў Telegram выкарыстоўваюцца, пакуль патрэбныя для яе апрацоўкі і падтрымкі.", rightsTitle: "Вашы запыты", rightsBody: "Каб запытаць доступ да даных заяўкі, выправіць іх або папрасіць выдаліць, напішыце GO’EL у Telegram. Калі ёсць код замовы, укажыце яго. Кантактныя даныя не паказваюцца на старонцы адсочвання.", contactTitle: "Звязацца з GO’EL", contactLink: "Напісаць у Telegram"
+      },
+      uk: {
+        pageTitle: "Політика обробки даних — GO’EL", description: "Які дані GO’EL обробляє під час отримання заявки на замовлення та як зв’язатися з нами з цього питання.", back: "До каталогу", title: "Політика обробки даних", intro: "Тут пояснено, які дані отримує GO’EL після надсилання заявки на замовлення та як їх використовує.", dataTitle: "Які дані ви надсилаєте", dataBody: "Форма запитує ім’я, телефон, місто й адресу або пункт видачі; коментар можна не заповнювати. Разом із заявкою передаються обрані товари, колір, розмір, кількість, ціна та адреса сторінки замовлення.", purposeTitle: "Для чого вони потрібні", purposeBody: "GO’EL використовує ці відомості, щоб отримати заявку, зв’язатися з вами, підтвердити деталі й організувати виконання замовлення. Надсилання заявки не є оплатою: сайт не запитує банківські реквізити та не приймає платежі.", sharingTitle: "Хто отримує дані", sharingBody: "Заявка проходить через Cloudflare Worker і надсилається до налаштованого закритого Telegram-чату GO’EL. Для підтвердження та виконання замовлення необхідні відомості можуть бути передані обраному бренду або продавцю та службі доставки. Telegram і Cloudflare обробляють дані за власними правилами конфіденційності.", storageTitle: "Зберігання та строки", storageBody: "Ім’я, телефон, адреса й коментар не зберігаються в базі відстеження GO’EL: вони надходять адміністратору заявки в Telegram. Для перевірки статусу Cloudflare KV зберігає код замовлення, склад замовлення та етап обробки без контактних даних; запис автоматично видаляється через 180 днів після останнього оновлення. Дані заявки в Telegram використовуються, доки потрібні для її обробки та підтримки.", rightsTitle: "Ваші запити", rightsBody: "Щоб отримати доступ до даних заявки, виправити їх або попросити видалити, напишіть GO’EL у Telegram. Якщо маєте код замовлення, зазначте його. Контактні дані не відображаються на сторінці відстеження замовлення.", contactTitle: "Зв’язатися з GO’EL", contactLink: "Написати в Telegram"
+      },
+      en: {
+        pageTitle: "Privacy notice — GO’EL", description: "What information GO’EL processes when you submit an order request and how to contact us about it.", back: "Catalog", title: "Privacy notice", intro: "This notice explains what information GO’EL receives when you submit an order request and how it is used.", dataTitle: "Information you provide", dataBody: "The form asks for your name, phone number, city and delivery address or pickup point; a comment is optional. The request also includes the selected items, color, size, quantity, price and the order page URL.", purposeTitle: "How it is used", purposeBody: "GO’EL uses this information to receive your request, contact you, confirm its details and arrange fulfilment. Submitting a request is not a payment: the site does not ask for bank details or process payments.", sharingTitle: "Who receives the information", sharingBody: "The request passes through a Cloudflare Worker and is delivered to GO’EL’s configured private Telegram chat. Information needed to confirm and fulfil the order may be shared with the selected brand or seller and delivery service. Telegram and Cloudflare process information under their own privacy terms.", storageTitle: "Storage and retention", storageBody: "Your name, phone number, address and comment are not saved in GO’EL’s order-tracking database; they are delivered to the order administrator in Telegram. Cloudflare KV stores the tracking code, order summary and processing status without contact details; this record is automatically deleted 180 days after its last update. Request details in Telegram are used while needed to handle and support the request.", rightsTitle: "Your requests", rightsBody: "To request access to, correction of or deletion of your order information, message GO’EL on Telegram. Include your order code if you have it. Contact details are not shown on the order-tracking page.", contactTitle: "Contact GO’EL", contactLink: "Message us on Telegram"
+      }
+    };
+    Object.assign(translations.ru, { browserTitle: "Настройки браузера", browserBody: "Сайт сохраняет выбранный язык в локальном хранилище браузера. Контактные данные из формы там не сохраняются." });
+    Object.assign(translations.be, { browserTitle: "Налады браўзера", browserBody: "Сайт захоўвае выбраны язык у лакальным сховішчы браўзера. Кантактныя даныя з формы там не захоўваюцца." });
+    Object.assign(translations.uk, { browserTitle: "Налаштування браузера", browserBody: "Сайт зберігає обрану мову в локальному сховищі браузера. Контактні дані з форми там не зберігаються." });
+    Object.assign(translations.en, { browserTitle: "Browser settings", browserBody: "The site saves your selected language in your browser’s local storage. Contact details entered in the form are not saved there." });
+    Object.assign(translations.ru, { languageLabel: "Язык" });
+    Object.assign(translations.be, { languageLabel: "Мова" });
+    Object.assign(translations.uk, { languageLabel: "Мова" });
+    Object.assign(translations.en, { languageLabel: "Language" });
+    const languageSelect = document.getElementById("language-select");
+    let language = "ru";
+    try { const saved = localStorage.getItem("goel-language"); if (translations[saved]) language = saved; } catch (error) {}
+    function applyLanguage() {
+      document.documentElement.lang = language;
+      document.title = translations[language].pageTitle;
+      document.querySelector('meta[name="description"]')?.setAttribute("content", translations[language].description);
+      document.querySelector('meta[property="og:title"]')?.setAttribute("content", translations[language].pageTitle);
+      document.querySelector('meta[property="og:description"]')?.setAttribute("content", translations[language].description);
+      document.querySelectorAll("[data-i18n]").forEach((element) => { element.textContent = translations[language][element.dataset.i18n]; });
+      languageSelect.setAttribute("aria-label", translations[language].languageLabel);
+      languageSelect.value = language;
+    }
+    languageSelect.addEventListener("change", () => {
+      language = translations[languageSelect.value] ? languageSelect.value : "ru";
+      try { localStorage.setItem("goel-language", language); } catch (error) {}
+      applyLanguage();
+    });
+    applyLanguage();
+  </script>
+</body>
+</html>

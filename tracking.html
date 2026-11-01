@@ -4,6 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#2a211d">
+  <meta name="description" content="Проверьте текущий этап обработки заказа GO’EL по коду отслеживания.">
+  <link rel="canonical" href="https://mikitatrv.github.io/goel/tracking.html">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="GO’EL">
+  <meta property="og:url" content="https://mikitatrv.github.io/goel/tracking.html">
+  <meta property="og:title" content="Статус заказа — GO’EL">
+  <meta property="og:description" content="Проверьте текущий этап обработки заказа GO’EL по коду отслеживания.">
+  <meta name="twitter:card" content="summary">
   <title>Статус заказа — GO’EL</title>
   <style>
     :root {
@@ -256,7 +265,7 @@
       <aside class="help-note" id="help-note" hidden><p data-i18n="help">По вопросам о заказе свяжитесь со службой поддержки.</p><a href="https://t.me/JHVHGOeL" target="_blank" rel="noopener noreferrer" data-i18n="contact">Связаться с GO’EL ↗</a></aside>
     </section>
   </main>
-  <footer><div class="wrap"><span>GO’EL · <span data-i18n="footer">сервис</span></span><span data-i18n="footerLine">Данные обновляются после смены этапа.</span></div></footer>
+  <footer><div class="wrap"><span>GO’EL · <span data-i18n="footer">сервис</span></span><span data-i18n="footerLine">Данные обновляются после смены этапа.</span><a href="privacy.html" data-i18n="privacyLink">Политика обработки данных</a></div></footer>
   <script>
     const translations = {
       ru: { back: "В каталог", eyebrow: "Путь твоего заказа", title: "Каждый шаг — уже ближе.", intro: "Введи код заказа, чтобы увидеть, где он сейчас и что будет дальше.", codeLabel: "Код заказа", check: "Проверить", hint: "Код появится после оформления заявки и придёт вместе с подтверждением.", yourOrder: "Твой заказ", mapIntro: "Мы покажем только актуальный этап — детали пути сложатся в одну историю.", journeyTitle: "Путешествие заказа", stageReceived: "Заявка получена", stageReceivedHint: "Начало пути", stageConfirmed: "Подтверждён", stageConfirmedHint: "Всё согласовано", stagePreparing: "Собираем", stagePreparingHint: "Готовим к отправке", stageShipped: "Уже в пути", stageShippedHint: "Передан в доставку", stageDelivered: "У тебя!", stageDeliveredHint: "Путешествие завершено", mapStart: "ТВОЙ ЗАКАЗ", mapEnd: "СКОРО У ТЕБЯ", help: "Если нужна помощь, напиши нам — подскажем, что происходит с заказом.", contact: "Написать GO’EL ↗", footer: "одежда со смыслом", footerLine: "Собрано с верой. Носится каждый день.", writeCode: "Введи код отслеживания заказа.", notFound: "Не нашли заказ с таким кодом. Проверь символы и попробуй ещё раз.", serverError: "Не удалось проверить статус. Попробуй ещё раз чуть позже.", loading: "Ищем заказ…", statusReceived: "Заявка получена", statusConfirmed: "Заказ подтверждён", statusPreparing: "Готовим к отправке", statusShipped: "Передан в доставку", statusDelivered: "Заказ доставлен", statusCancelled: "Заказ отменён", descReceived: "Мы получили твою заявку и скоро свяжемся для подтверждения.", descConfirmed: "Заказ подтверждён — скоро начнём его собирать.", descPreparing: "Мы готовим заказ к отправке.", descShipped: "Заказ передан в доставку.", descDelivered: "Заказ доставлен. Спасибо, что выбрал GO’EL!", descCancelled: "Напиши нам, если нужна помощь с этим заказом.", updated: "Обновлено", quantity: "Количество", unknownItem: "Заказ GO’EL", mapLabel: "Карта этапов заказа" },
@@ -649,6 +658,11 @@
       previewStatus: "Awaiting code",
       previewStatusDescription: "The current stage will appear after verification."
     });
+
+    Object.assign(translations.ru, { privacyLink: "Политика обработки данных", language: "Язык", pageDescription: "Проверьте текущий этап обработки заказа GO’EL по коду отслеживания." });
+    Object.assign(translations.be, { privacyLink: "Палітыка апрацоўкі даных", language: "Мова", pageDescription: "Праверце актуальны этап апрацоўкі замовы GO’EL паводле кода адсочвання." });
+    Object.assign(translations.uk, { privacyLink: "Політика обробки даних", language: "Мова", pageDescription: "Перевірте поточний етап обробки замовлення GO’EL за кодом відстеження." });
+    Object.assign(translations.en, { privacyLink: "Privacy notice", language: "Language", pageDescription: "Check the current processing stage of your GO’EL order using its tracking code." });
     let language = "ru";
     try {
       const saved = localStorage.getItem("goel-language");
@@ -671,9 +685,13 @@
     function applyLanguage() {
       document.documentElement.lang = language;
       document.title = `${tr("pageTitle")} — GO’EL`;
+      document.querySelector('meta[name="description"]')?.setAttribute("content", tr("pageDescription"));
+      document.querySelector('meta[property="og:title"]')?.setAttribute("content", document.title);
+      document.querySelector('meta[property="og:description"]')?.setAttribute("content", tr("pageDescription"));
       document.querySelectorAll("[data-i18n]").forEach((element) => { element.textContent = tr(element.dataset.i18n); });
       document.getElementById("journey-map").setAttribute("aria-label", tr("mapLabel"));
       document.getElementById("language-select").value = language;
+      document.getElementById("language-select").setAttribute("aria-label", tr("language"));
       if (currentOrder) showOrder(currentOrder);
     }
     function normalizeCode(value) {
