@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#2a211d">
-  <title>Отслеживание заказа — GO’EL</title>
+  <title>Статус заказа — GO’EL</title>
   <style>
     :root {
       color-scheme: dark;
@@ -206,30 +206,29 @@
   </header>
   <main class="wrap">
     <section class="intro" aria-labelledby="page-title">
-      <p class="eyebrow" data-i18n="eyebrow">Отслеживание заказа</p>
       <h1 id="page-title" data-i18n="title">Статус заказа</h1>
-      <p class="intro-copy" data-i18n="intro">Введите код заказа, чтобы узнать его текущий статус.</p>
+      <p class="intro-copy" data-i18n="intro">Введите код и нажмите «Проверить».</p>
       <form class="lookup-card" id="tracking-form">
         <span class="lookup-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8.8 10.7V7.8a3.2 3.2 0 0 1 6.4 0v2.9M6.2 10.2h11.6l1 10H5.2l1-10Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.5 14.1h.01m5 0h.01" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span>
         <div class="lookup-field">
-          <label for="tracking-code" data-i18n="codeLabel">Код заказа</label>
+          <label for="tracking-code" data-i18n="codeLabel">Код отслеживания</label>
           <input id="tracking-code" name="code" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" maxlength="14" placeholder="GOEL-ABCD-EFGH" aria-describedby="lookup-hint lookup-message" required>
         </div>
         <button class="lookup-button" id="lookup-button" type="submit"><span data-i18n="check">Проверить</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       </form>
-      <p class="lookup-hint" id="lookup-hint" data-i18n="hint">Код отслеживания указан в подтверждении заказа.</p>
+      <p class="lookup-hint" id="lookup-hint" data-i18n="hint">Он указан в сообщении с подтверждением.</p>
       <p class="lookup-message" id="lookup-message" role="status" aria-live="polite"></p>
     </section>
 
     <section class="result" id="result" aria-live="polite">
       <div class="result-top">
-        <div><h2 id="result-heading" data-i18n="previewTitle">Статус заказа</h2><p id="result-intro" data-i18n="previewIntro">Введите код отслеживания, чтобы проверить статус и этап обработки заказа.</p></div>
+        <div><h2 id="result-heading" data-i18n="previewTitle">Этапы обработки</h2><p id="result-intro" data-i18n="previewIntro">Введите код, чтобы увидеть статус и сведения о товаре.</p></div>
         <span class="order-code" id="result-code" hidden></span>
       </div>
       <article class="journey-card is-preview" id="journey-card">
         <div class="journey-head">
-          <div class="journey-head-label"><span class="live-mark" aria-hidden="true"></span><div><h3 data-i18n="journeyTitle">Этапы обработки</h3><p id="status-description" data-i18n="previewStatusDescription">После ввода кода здесь отобразятся текущий статус и этап обработки.</p></div></div>
-          <span class="status-pill preview-status" id="status-pill" data-i18n="previewStatus">Введите код заказа</span>
+          <div class="journey-head-label"><span class="live-mark" aria-hidden="true"></span><div><h3 data-i18n="journeyTitle">Текущий этап</h3><p id="status-description" data-i18n="previewStatusDescription">Текущий этап отобразится после проверки.</p></div></div>
+          <span class="status-pill preview-status" id="status-pill" data-i18n="previewStatus">Ожидает кода</span>
         </div>
         <div class="journey-map is-preview" id="journey-map" aria-label="Карта этапов заказа">
           <svg class="route-svg route-desktop" viewBox="0 0 1000 260" preserveAspectRatio="none" aria-hidden="true">
@@ -257,7 +256,7 @@
       <aside class="help-note" id="help-note" hidden><p data-i18n="help">По вопросам о заказе свяжитесь со службой поддержки.</p><a href="https://t.me/JHVHGOeL" target="_blank" rel="noopener noreferrer" data-i18n="contact">Связаться с GO’EL ↗</a></aside>
     </section>
   </main>
-  <footer><div class="wrap"><span>GO’EL · <span data-i18n="footer">статус заказов</span></span><span data-i18n="footerLine">Статус заказа обновляется после каждого этапа обработки.</span></div></footer>
+  <footer><div class="wrap"><span>GO’EL · <span data-i18n="footer">сервис</span></span><span data-i18n="footerLine">Данные обновляются после смены этапа.</span></div></footer>
   <script>
     const translations = {
       ru: { back: "В каталог", eyebrow: "Путь твоего заказа", title: "Каждый шаг — уже ближе.", intro: "Введи код заказа, чтобы увидеть, где он сейчас и что будет дальше.", codeLabel: "Код заказа", check: "Проверить", hint: "Код появится после оформления заявки и придёт вместе с подтверждением.", yourOrder: "Твой заказ", mapIntro: "Мы покажем только актуальный этап — детали пути сложатся в одну историю.", journeyTitle: "Путешествие заказа", stageReceived: "Заявка получена", stageReceivedHint: "Начало пути", stageConfirmed: "Подтверждён", stageConfirmedHint: "Всё согласовано", stagePreparing: "Собираем", stagePreparingHint: "Готовим к отправке", stageShipped: "Уже в пути", stageShippedHint: "Передан в доставку", stageDelivered: "У тебя!", stageDeliveredHint: "Путешествие завершено", mapStart: "ТВОЙ ЗАКАЗ", mapEnd: "СКОРО У ТЕБЯ", help: "Если нужна помощь, напиши нам — подскажем, что происходит с заказом.", contact: "Написать GO’EL ↗", footer: "одежда со смыслом", footerLine: "Собрано с верой. Носится каждый день.", writeCode: "Введи код отслеживания заказа.", notFound: "Не нашли заказ с таким кодом. Проверь символы и попробуй ещё раз.", serverError: "Не удалось проверить статус. Попробуй ещё раз чуть позже.", loading: "Ищем заказ…", statusReceived: "Заявка получена", statusConfirmed: "Заказ подтверждён", statusPreparing: "Готовим к отправке", statusShipped: "Передан в доставку", statusDelivered: "Заказ доставлен", statusCancelled: "Заказ отменён", descReceived: "Мы получили твою заявку и скоро свяжемся для подтверждения.", descConfirmed: "Заказ подтверждён — скоро начнём его собирать.", descPreparing: "Мы готовим заказ к отправке.", descShipped: "Заказ передан в доставку.", descDelivered: "Заказ доставлен. Спасибо, что выбрал GO’EL!", descCancelled: "Напиши нам, если нужна помощь с этим заказом.", updated: "Обновлено", quantity: "Количество", unknownItem: "Заказ GO’EL", mapLabel: "Карта этапов заказа" },
@@ -449,6 +448,207 @@
       previewStatus: "Enter order code",
       previewStatusDescription: "The current status and processing stage will appear here after you enter the code."
     });
+    Object.assign(translations.ru, {
+      pageTitle: "Статус заказа",
+      orderDetailsTitle: "Детали",
+      eyebrow: "",
+      title: "Статус заказа",
+      intro: "Введите код и нажмите «Проверить».",
+      codeLabel: "Код отслеживания",
+      hint: "Он указан в сообщении с подтверждением.",
+      yourOrder: "Сведения",
+      mapIntro: "Текущий этап и информация о товаре.",
+      journeyTitle: "Текущий этап",
+      stageReceivedHint: "Заявка зарегистрирована",
+      stageConfirmed: "Подтверждён",
+      stageConfirmedHint: "Подтверждение получено",
+      stagePreparing: "Комплектуется",
+      stagePreparingHint: "Подготовка к отправке",
+      stageShipped: "Передан в доставку",
+      stageShippedHint: "Принят службой доставки",
+      stageDelivered: "Доставлен",
+      stageDeliveredHint: "Вручение завершено",
+      mapStart: "ПРИНЯТО В РАБОТУ",
+      mapEnd: "ДОСТАВКА",
+      help: "По вопросам свяжитесь со службой поддержки.",
+      contact: "Связаться с GO’EL ↗",
+      footer: "сервис",
+      footerLine: "Данные обновляются после смены этапа.",
+      writeCode: "Введите код отслеживания.",
+      notFound: "По этому коду данные не найдены. Проверьте его и повторите попытку.",
+      serverError: "Не удалось получить данные. Попробуйте позже.",
+      loading: "Проверяем статус…",
+      statusReceived: "Заявка получена",
+      statusConfirmed: "Подтверждён",
+      statusPreparing: "Комплектуется",
+      statusShipped: "Передан в доставку",
+      statusDelivered: "Доставлен",
+      statusCancelled: "Отменён",
+      descReceived: "Заявка зарегистрирована. Ожидается подтверждение.",
+      descConfirmed: "Подтверждение получено. Начинается комплектация.",
+      descPreparing: "Идёт комплектация. После передачи в доставку статус обновится.",
+      descShipped: "Принят службой доставки.",
+      descDelivered: "Вручение завершено. Благодарим за покупку.",
+      descCancelled: "Заявка отменена. По вопросам обратитесь в службу поддержки.",
+      updated: "Обновлено",
+      unknownItem: "Информация о товаре",
+      mapLabel: "Шкала этапов",
+      previewTitle: "Этапы обработки",
+      previewIntro: "После проверки здесь появятся сведения о товаре.",
+      previewStatus: "Ожидает кода",
+      previewStatusDescription: "Введите код, чтобы увидеть текущий этап."
+    });
+    Object.assign(translations.be, {
+      pageTitle: "Статус замовы",
+      orderDetailsTitle: "Падрабязнасці",
+      eyebrow: "",
+      title: "Статус замовы",
+      intro: "Увядзіце код і націсніце «Праверыць».",
+      codeLabel: "Код адсочвання",
+      hint: "Ён пазначаны ў паведамленні з пацвярджэннем.",
+      yourOrder: "Звесткі",
+      mapIntro: "Пасля праверкі тут з’явяцца звесткі пра тавар.",
+      journeyTitle: "Бягучы этап",
+      stageReceivedHint: "Заяўка зарэгістравана",
+      stageConfirmed: "Пацверджана",
+      stageConfirmedHint: "Пацвярджэнне атрымана",
+      stagePreparing: "Камплектуецца",
+      stagePreparingHint: "Падрыхтоўка да адпраўкі",
+      stageShipped: "Перададзена ў дастаўку",
+      stageShippedHint: "Прынята службай дастаўкі",
+      stageDelivered: "Дастаўлена",
+      stageDeliveredHint: "Уручэнне завершана",
+      mapStart: "ПРЫНЯТА Ў АПРАЦОЎКУ",
+      mapEnd: "ДАСТАЎКА",
+      help: "Па пытаннях звяжыцеся са службай падтрымкі.",
+      contact: "Звязацца з GO’EL ↗",
+      footer: "сэрвіс",
+      footerLine: "Даныя абнаўляюцца пасля змены этапу.",
+      writeCode: "Увядзіце код адсочвання.",
+      notFound: "Па гэтым кодзе даныя не знойдзены. Праверце яго і паспрабуйце яшчэ раз.",
+      serverError: "Не атрымалася атрымаць даныя. Паспрабуйце пазней.",
+      loading: "Правяраем статус…",
+      statusReceived: "Заяўка атрымана",
+      statusConfirmed: "Пацверджана",
+      statusPreparing: "Камплектуецца",
+      statusShipped: "Перададзена ў дастаўку",
+      statusDelivered: "Дастаўлена",
+      statusCancelled: "Скасавана",
+      descReceived: "Заяўка зарэгістравана. Чакаецца пацвярджэнне.",
+      descConfirmed: "Пацвярджэнне атрымана. Пачынаецца камплектаванне.",
+      descPreparing: "Ідзе камплектаванне. Статус абновіцца пасля перадачы ў дастаўку.",
+      descShipped: "Прынята службай дастаўкі.",
+      descDelivered: "Уручэнне завершана. Дзякуй за пакупку.",
+      descCancelled: "Заяўка скасавана. Па пытаннях звяжыцеся са службай падтрымкі.",
+      updated: "Абноўлена",
+      unknownItem: "Інфармацыя пра тавар",
+      mapLabel: "Шкала этапаў",
+      previewTitle: "Этапы апрацоўкі",
+      previewIntro: "Увядзіце код, каб убачыць актуальны статус.",
+      previewStatus: "Чакаецца код",
+      previewStatusDescription: "Бягучы этап адлюструецца пасля праверкі."
+    });
+    Object.assign(translations.uk, {
+      pageTitle: "Статус замовлення",
+      orderDetailsTitle: "Деталі",
+      eyebrow: "",
+      title: "Статус замовлення",
+      intro: "Введіть код і натисніть «Перевірити».",
+      codeLabel: "Код відстеження",
+      hint: "Він зазначений у повідомленні з підтвердженням.",
+      yourOrder: "Відомості",
+      mapIntro: "Після перевірки з’являться відомості про товар.",
+      journeyTitle: "Поточний етап",
+      stageReceivedHint: "Заявку зареєстровано",
+      stageConfirmed: "Підтверджено",
+      stageConfirmedHint: "Підтвердження отримано",
+      stagePreparing: "Комплектується",
+      stagePreparingHint: "Підготовка до відправлення",
+      stageShipped: "Передано в доставку",
+      stageShippedHint: "Прийнято службою доставки",
+      stageDelivered: "Доставлено",
+      stageDeliveredHint: "Вручення завершено",
+      mapStart: "ПРИЙНЯТО В РОБОТУ",
+      mapEnd: "ДОСТАВКА",
+      help: "З питань зверніться до служби підтримки.",
+      contact: "Зв’язатися з GO’EL ↗",
+      footer: "сервіс",
+      footerLine: "Дані оновлюються після зміни етапу.",
+      writeCode: "Введіть код відстеження.",
+      notFound: "За цим кодом дані не знайдено. Перевірте його та спробуйте ще раз.",
+      serverError: "Не вдалося отримати дані. Спробуйте пізніше.",
+      loading: "Перевіряємо статус…",
+      statusReceived: "Заявку отримано",
+      statusConfirmed: "Підтверджено",
+      statusPreparing: "Комплектується",
+      statusShipped: "Передано в доставку",
+      statusDelivered: "Доставлено",
+      statusCancelled: "Скасовано",
+      descReceived: "Заявку зареєстровано. Очікується підтвердження.",
+      descConfirmed: "Підтвердження отримано. Починається комплектування.",
+      descPreparing: "Триває комплектування. Статус оновиться після передачі в доставку.",
+      descShipped: "Прийнято службою доставки.",
+      descDelivered: "Вручення завершено. Дякуємо за покупку.",
+      descCancelled: "Заявку скасовано. З питань зверніться до служби підтримки.",
+      updated: "Оновлено",
+      unknownItem: "Інформація про товар",
+      mapLabel: "Шкала етапів",
+      previewTitle: "Етапи обробки",
+      previewIntro: "Введіть код, щоб побачити актуальний статус.",
+      previewStatus: "Очікується код",
+      previewStatusDescription: "Поточний етап відобразиться після перевірки."
+    });
+    Object.assign(translations.en, {
+      pageTitle: "Order status",
+      orderDetailsTitle: "Details",
+      eyebrow: "",
+      title: "Order status",
+      intro: "Enter the code and select “Check”.",
+      codeLabel: "Tracking code",
+      check: "Check",
+      hint: "It is included in the confirmation message.",
+      yourOrder: "Details",
+      mapIntro: "Product details will appear after verification.",
+      journeyTitle: "Current stage",
+      stageReceivedHint: "Request registered",
+      stageConfirmed: "Confirmed",
+      stageConfirmedHint: "Confirmation received",
+      stagePreparing: "Being prepared",
+      stagePreparingHint: "Preparing for dispatch",
+      stageShipped: "Handed to delivery",
+      stageShippedHint: "Accepted by the delivery service",
+      stageDelivered: "Delivered",
+      stageDeliveredHint: "Delivery completed",
+      mapStart: "RECEIVED",
+      mapEnd: "DELIVERY",
+      help: "For assistance, contact customer support.",
+      contact: "Contact GO’EL ↗",
+      footer: "service",
+      footerLine: "Details are updated when a stage changes.",
+      writeCode: "Enter your tracking code.",
+      notFound: "No information was found for this code. Check it and try again.",
+      serverError: "The information could not be retrieved. Please try again later.",
+      loading: "Checking status…",
+      statusReceived: "Request received",
+      statusConfirmed: "Confirmed",
+      statusPreparing: "Being prepared",
+      statusShipped: "Handed to delivery",
+      statusDelivered: "Delivered",
+      statusCancelled: "Cancelled",
+      descReceived: "The request has been registered. Confirmation is pending.",
+      descConfirmed: "Confirmation received. Packing is starting.",
+      descPreparing: "Packing is in progress. The status will update when it is handed to delivery.",
+      descShipped: "Accepted by the delivery service.",
+      descDelivered: "Delivery completed. Thank you for your purchase.",
+      descCancelled: "The request was cancelled. Contact customer support if you have questions.",
+      updated: "Updated",
+      unknownItem: "Product details",
+      mapLabel: "Stage indicator",
+      previewTitle: "Processing stages",
+      previewIntro: "Enter the code to see the current status.",
+      previewStatus: "Awaiting code",
+      previewStatusDescription: "The current stage will appear after verification."
+    });
     let language = "ru";
     try {
       const saved = localStorage.getItem("goel-language");
@@ -470,7 +670,7 @@
     function tr(key) { return translations[language]?.[key] || translations.ru[key] || key; }
     function applyLanguage() {
       document.documentElement.lang = language;
-      document.title = `${tr("yourOrder")} — GO’EL`;
+      document.title = `${tr("pageTitle")} — GO’EL`;
       document.querySelectorAll("[data-i18n]").forEach((element) => { element.textContent = tr(element.dataset.i18n); });
       document.getElementById("journey-map").setAttribute("aria-label", tr("mapLabel"));
       document.getElementById("language-select").value = language;
@@ -527,7 +727,7 @@
       currentOrder = order;
       const step = statusStages.indexOf(order.status);
       const currentStep = order.status === "cancelled" ? -1 : Math.max(0, step);
-      document.getElementById("result-heading").textContent = tr("yourOrder");
+      document.getElementById("result-heading").textContent = tr("orderDetailsTitle");
       document.getElementById("result-intro").textContent = tr("mapIntro");
       document.getElementById("journey-card").classList.remove("is-preview");
       document.getElementById("result-code").textContent = order.code;
