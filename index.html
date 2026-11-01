@@ -248,7 +248,7 @@
       color: var(--ink);
       background: #f3efe8;
     }
-    .category-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; width: 100%; }
+    .category-filter { position: relative; z-index: 31; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; width: 100%; }
     .filter-anchor { position: relative; flex: 0 0 auto; }
     .filters .filter-toggle { display: inline-flex; align-items: center; gap: 9px; min-height: 42px; padding: 8px 13px; border: 1px solid var(--line); border-radius: 3px; background: var(--paper); color: var(--ink); font: inherit; font-size: 14px; cursor: pointer; transition: background .16s ease, border-color .16s ease; }
     .filters .filter-toggle:hover, .filters .filter-toggle[aria-expanded="true"] { border-color: #cfc6bb; background: #f8f5ef; color: var(--ink); }
@@ -992,20 +992,13 @@
     }
     .filters button.on { color: var(--ink); }
     #catalog-filters {
-      flex-wrap: nowrap;
-      gap: 2px;
-      width: fit-content;
-      max-width: 100%;
-      padding: 3px;
-      overflow-x: auto;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(57, 46, 40, .85);
-      scrollbar-width: none;
+      position: relative;
+      z-index: 31;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 26px;
     }
-    #catalog-filters::-webkit-scrollbar { display: none; }
-    #catalog-filters button { flex: 0 0 auto; border: 0; padding: 7px 13px; color: var(--muted); white-space: nowrap; }
-    #catalog-filters button.on { background: var(--accent); color: #2a211d; }
     .filter-popover { border-color: var(--line); border-radius: 14px; background: var(--paper); color: var(--ink); box-shadow: 0 18px 40px rgba(0, 0, 0, .3); }
     .filter-group + .filter-group { border-color: var(--line); }
     .filters .filter-group-toggle { color: var(--ink); }
@@ -1156,9 +1149,6 @@
           <button type="button" class="submenu-toggle" id="catalog-toggle" aria-expanded="false" aria-controls="catalog-submenu"><span data-i18n="catalogMenu">Каталог</span><span aria-hidden="true">▾</span></button>
           <div class="submenu-list" id="catalog-submenu" hidden>
             <button type="button" data-catalog="all" data-i18n="all">Всё</button>
-            <button type="button" data-catalog="unisex" data-i18n="unisex">Унисекс</button>
-            <button type="button" data-catalog="women" data-i18n="women">Женское</button>
-            <button type="button" data-catalog="men" data-i18n="men">Мужское</button>
           </div>
           <button type="button" class="submenu-toggle" id="language-toggle" aria-expanded="false" aria-controls="language-submenu"><span data-i18n="languageLabel">Язык</span><span aria-hidden="true">▾</span></button>
           <div class="submenu-list language-submenu-list" id="language-submenu" role="radiogroup" aria-label="Язык" data-i18n-aria="languageLabel" hidden>
@@ -1254,12 +1244,7 @@
         <h1 id="catalog-title" data-i18n="catalogTitle">Каталог</h1>
         <p class="blurb" id="catalog-blurb" data-i18n="catalogDescription">Одежда всех брендов в одном месте.</p>
       </div>
-    <div class="filters" id="catalog-filters">
-      <button type="button" data-catalog-filter="all" data-i18n="all">Всё</button>
-      <button type="button" data-catalog-filter="unisex" data-i18n="unisex">Унисекс</button>
-      <button type="button" data-catalog-filter="women" data-i18n="women">Женское</button>
-      <button type="button" data-catalog-filter="men" data-i18n="men">Мужское</button>
-      </div>
+    <div class="filters" id="catalog-filters"></div>
       <div id="catalog-body"></div>
     </section>
 
@@ -2414,6 +2399,8 @@
     let productPhotoTransition = null;
     let brandCategoryFilters = [];
     let brandColorFilters = [];
+    let catalogCategoryFilters = [];
+    let catalogColorFilters = [];
     const CART_STORAGE_KEY = "goel-cart-v1";
     const ORDER_IDEMPOTENCY_STORAGE_KEY = "goel-order-request-v1";
     const ORDER_API_URL = "https://goel-order-api.o-el.workers.dev/order";
@@ -2915,16 +2902,16 @@
       return true;
     }
 
-    function countItemsForCategory(data, category) {
+    function countItemsForCategory(data, category, colors = brandColorFilters) {
       return data.items.filter((item) => itemInStock(item)
         && itemCategory(item) === category
-        && (!brandColorFilters.length || item.variants.some((variant) => variantInStock(variant) && brandColorFilters.includes(variant.tone)))
+        && (!colors.length || item.variants.some((variant) => variantInStock(variant) && colors.includes(variant.tone)))
       ).length;
     }
 
-    function countItemsForColor(data, tone) {
+    function countItemsForColor(data, tone, categories = brandCategoryFilters) {
       return data.items.filter((item) => itemInStock(item)
-        && (!brandCategoryFilters.length || brandCategoryFilters.includes(itemCategory(item)))
+        && (!categories.length || categories.includes(itemCategory(item)))
         && item.variants.some((variant) => variantInStock(variant) && variant.tone === tone)
       ).length;
     }
@@ -2937,11 +2924,11 @@
       return list.filter((item) => itemInStock(item) && itemMatchesGender(item, gender));
     }
 
-    function catalogEntries(gender) {
+    function catalogEntries() {
       return Object.entries(brands)
         .map(([id, data]) => {
           const filtered = data.items.filter((item) =>
-            item && item.slug && Array.isArray(item.variants) && itemInStock(item) && itemMatchesGender(item, gender)
+            item && item.slug && Array.isArray(item.variants) && itemInStock(item)
           );
           return filtered.length ? { id, data, items: filtered } : null;
         })
@@ -3455,23 +3442,139 @@
       if (!open && restoreFocus) toggle.focus();
     }
 
-    function paintCatalog(gender, animate) {
-      const g = genderLabel[gender] ? gender : "all";
+    function catalogFilterData() {
+      return {
+        items: Object.values(brands).flatMap((data) => data.items.filter((item) =>
+          item && item.slug && Array.isArray(item.variants)
+        ))
+      };
+    }
+
+    function itemMatchesCatalogFilters(item) {
+      if (!itemInStock(item)) return false;
+      if (catalogCategoryFilters.length && !catalogCategoryFilters.includes(itemCategory(item))) return false;
+      if (catalogColorFilters.length && !item.variants.some((variant) => variantInStock(variant) && catalogColorFilters.includes(variant.tone))) return false;
+      return true;
+    }
+
+    function renderCatalogFilters() {
+      const bar = document.getElementById("catalog-filters");
+      const data = catalogFilterData();
+      const categories = brandCategoryOptions(data);
+      const colors = brandColorOptions(data);
+      if (!categories.length && !colors.length) {
+        bar.hidden = true;
+        bar.innerHTML = "";
+        catalogCategoryFilters = [];
+        catalogColorFilters = [];
+        return;
+      }
+      catalogCategoryFilters = catalogCategoryFilters.filter((category) => categories.includes(category));
+      catalogColorFilters = catalogColorFilters.filter((tone) => colors.some((option) => option.tone === tone));
+      bar.hidden = false;
+      const categoryOptions = categories.map((category) => {
+        const count = countItemsForCategory(data, category, catalogColorFilters);
+        const checked = catalogCategoryFilters.includes(category);
+        return `<label class="filter-option${count ? "" : " is-disabled"}" data-filter-order="${brandCategoryKeys.indexOf(category)}"><input type="checkbox" data-catalog-category="${category}"${checked ? " checked" : ""}${count || checked ? "" : " disabled"}><span>${brandCategoryLabel[category]}</span><span class="filter-option-count">${count}</span></label>`;
+      }).join("");
+      const colorOptions = colors.map(({ tone, color }, index) => {
+        const count = countItemsForColor(data, tone, catalogCategoryFilters);
+        const checked = catalogColorFilters.includes(tone);
+        const label = localizedTone(tone);
+        return `<label class="filter-option filter-color-option${count ? "" : " is-disabled"}" data-filter-order="${index}"><input type="checkbox" data-catalog-color="${tone}"${checked ? " checked" : ""}${count || checked ? "" : " disabled"}><span class="filter-color-swatch" style="--filter-color:${color}" aria-hidden="true"></span><span>${label}</span><span class="filter-option-count">${count}</span></label>`;
+      }).join("");
+      bar.innerHTML = `<div class="category-filter"><div class="filter-anchor"><button type="button" class="filter-toggle" id="catalog-filter-toggle" aria-expanded="false" aria-controls="catalog-filter-panel"><svg class="filter-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5h16l-6.5 7.5v5l-3 1.5v-6.5L4 5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span>${t("filters")}</span><span class="filter-badge" aria-hidden="true" hidden></span></button><div class="filter-popover" id="catalog-filter-panel" hidden><section class="filter-group"><button type="button" class="filter-group-toggle" data-filter-group-toggle="category" aria-expanded="false" aria-controls="catalog-category-submenu"><span>${t("categoryFilter")}</span><span class="filter-group-end"><span class="filter-group-count" data-catalog-filter-group-count="category" hidden></span><span class="filter-group-chevron" aria-hidden="true">›</span></span></button><div class="filter-submenu" id="catalog-category-submenu" hidden><div class="filter-options" role="group" aria-label="${t("categoryFilter")}">${categoryOptions}</div></div></section><section class="filter-group"><button type="button" class="filter-group-toggle" data-filter-group-toggle="color" aria-expanded="false" aria-controls="catalog-color-submenu"><span>${t("color")}</span><span class="filter-group-end"><span class="filter-group-count" data-catalog-filter-group-count="color" hidden></span><span class="filter-group-chevron" aria-hidden="true">›</span></span></button><div class="filter-submenu" id="catalog-color-submenu" hidden><div class="filter-options" role="group" aria-label="${t("color")}">${colorOptions}</div></div></section></div></div><button type="button" class="filter-reset" hidden><span aria-hidden="true">×</span>${t("clearFilters")}</button><div class="filter-active-list" hidden></div></div>`;
+      updateCatalogFilterSummary();
+    }
+
+    function updateCatalogFilterOptionCounts() {
+      const data = catalogFilterData();
+      document.querySelectorAll("#catalog-filter-panel [data-catalog-category]").forEach((input) => {
+        const count = countItemsForCategory(data, input.dataset.catalogCategory, catalogColorFilters);
+        input.closest(".filter-option").querySelector(".filter-option-count").textContent = String(count);
+        input.disabled = count === 0 && !input.checked;
+        input.closest(".filter-option").classList.toggle("is-disabled", count === 0);
+      });
+      document.querySelectorAll("#catalog-filter-panel [data-catalog-color]").forEach((input) => {
+        const count = countItemsForColor(data, input.dataset.catalogColor, catalogCategoryFilters);
+        input.closest(".filter-option").querySelector(".filter-option-count").textContent = String(count);
+        input.disabled = count === 0 && !input.checked;
+        input.closest(".filter-option").classList.toggle("is-disabled", count === 0);
+      });
+      ["#catalog-category-submenu .filter-options", "#catalog-color-submenu .filter-options"].forEach((selector) => {
+        const options = document.querySelector(selector);
+        if (!options) return;
+        [...options.children]
+          .sort((left, right) => {
+            const leftAvailable = Number(left.querySelector(".filter-option-count").textContent) > 0;
+            const rightAvailable = Number(right.querySelector(".filter-option-count").textContent) > 0;
+            return Number(rightAvailable) - Number(leftAvailable)
+              || Number(left.dataset.filterOrder) - Number(right.dataset.filterOrder);
+          })
+          .forEach((option) => options.append(option));
+      });
+    }
+
+    function updateCatalogFilterSummary() {
+      const bar = document.getElementById("catalog-filters");
+      const toggle = bar.querySelector("#catalog-filter-toggle");
+      if (!toggle) return;
+      const count = catalogCategoryFilters.length + catalogColorFilters.length;
+      const badge = bar.querySelector(".filter-badge");
+      const reset = bar.querySelector(".filter-reset");
+      const chips = bar.querySelector(".filter-active-list");
+      badge.textContent = String(count);
+      badge.hidden = count === 0;
+      reset.hidden = count === 0;
+      chips.hidden = count === 0;
+      toggle.classList.toggle("has-selection", count > 0);
+      toggle.setAttribute("aria-label", count ? `${t("filters")}, ${t("selectedCount", { count })}` : t("filters"));
+      bar.querySelector('[data-catalog-filter-group-count="category"]').textContent = String(catalogCategoryFilters.length);
+      bar.querySelector('[data-catalog-filter-group-count="category"]').hidden = catalogCategoryFilters.length === 0;
+      bar.querySelector('[data-catalog-filter-group-count="color"]').textContent = String(catalogColorFilters.length);
+      bar.querySelector('[data-catalog-filter-group-count="color"]').hidden = catalogColorFilters.length === 0;
+      const categoryChips = catalogCategoryFilters.map((category) => {
+        const label = brandCategoryLabel[category];
+        return `<button type="button" class="filter-chip" data-remove-catalog-category="${category}" aria-label="${t("removeFilter", { category: label })}">${label}<span class="filter-chip-x" aria-hidden="true">×</span></button>`;
+      }).join("");
+      const colors = brandColorOptions(catalogFilterData());
+      const colorChips = catalogColorFilters.map((tone) => {
+        const label = localizedTone(tone);
+        const color = colors.find((option) => option.tone === tone)?.color || "#eee";
+        return `<button type="button" class="filter-chip" data-remove-catalog-color="${tone}" aria-label="${t("removeFilter", { category: label })}"><span class="filter-color-swatch" style="--filter-color:${color}" aria-hidden="true"></span>${label}<span class="filter-chip-x" aria-hidden="true">×</span></button>`;
+      }).join("");
+      chips.innerHTML = categoryChips + colorChips;
+      updateCatalogFilterOptionCounts();
+    }
+
+    function setCatalogFilterPanelOpen(open, restoreFocus = false) {
+      const toggle = document.getElementById("catalog-filter-toggle");
+      const panel = document.getElementById("catalog-filter-panel");
+      if (!toggle || !panel) return;
+      panel.hidden = !open;
+      toggle.setAttribute("aria-expanded", String(open));
+      if (!open && restoreFocus) toggle.focus();
+    }
+
+    function renderCatalogBody() {
+      const groups = catalogEntries()
+        .map(({ id, data, items: list }) => ({ id, data, items: list.filter(itemMatchesCatalogFilters) }))
+        .filter(({ items: list }) => list.length);
+      catalogBody.innerHTML = groups.length
+        ? groups.map(({ id, data, items: list }) =>
+            `<div class="catalog-group"><h2>${data.title}</h2><div class="items">${list.map((item) => itemCard(id, item)).join("")}</div></div>`
+          ).join("")
+        : `<p class="blurb">${t("noCatalogItems")}</p>`;
+      window.requestAnimationFrame(() => observeScrollBlocks(catalogBody));
+    }
+
+    function paintCatalog(_gender, animate) {
       reveal(() => {
-        document.getElementById("catalog-crumb").textContent = g === "all" ? t("catalogTitle") : genderLabel[g];
-        document.getElementById("catalog-title").textContent = g === "all" ? t("catalogTitle") : genderLabel[g];
-        document.getElementById("catalog-blurb").textContent = g === "all"
-          ? t("catalogDescription")
-          : t("catalogFilteredDescription", { gender: genderLabel[g] });
-        document.querySelectorAll("#catalog-filters [data-catalog-filter]").forEach((btn) => {
-          btn.classList.toggle("on", btn.dataset.catalogFilter === g);
-        });
-        const groups = catalogEntries(g);
-        catalogBody.innerHTML = groups.length
-          ? groups.map(({ id, data, items: list }) =>
-              `<div class="catalog-group"><h2>${data.title}</h2><div class="items">${list.map((item) => itemCard(id, item)).join("")}</div></div>`
-            ).join("")
-          : `<p class="blurb">${t("noCatalogItems")}</p>`;
+        document.getElementById("catalog-crumb").textContent = t("catalogTitle");
+        document.getElementById("catalog-title").textContent = t("catalogTitle");
+        document.getElementById("catalog-blurb").textContent = t("catalogDescription");
+        renderCatalogFilters();
+        renderCatalogBody();
         home.classList.remove("on");
         brand.classList.remove("on");
         product.classList.remove("on");
@@ -3905,14 +4008,68 @@
       renderBrandItems(currentBrand, brands[currentBrand]);
     });
     document.addEventListener("click", (event) => {
-      const filter = document.querySelector(".category-filter");
-      if (filter && !filter.contains(event.target)) setBrandFilterPanelOpen(false);
+      if (!event.target.closest("#brand-filters .category-filter")) setBrandFilterPanelOpen(false);
+      if (!event.target.closest("#catalog-filters .category-filter")) setCatalogFilterPanelOpen(false);
     });
     document.getElementById("catalog-filters").addEventListener("click", (event) => {
-      const button = event.target.closest("[data-catalog-filter]");
-      if (!button) return;
-      const value = button.dataset.catalogFilter;
-      navigate(value === "all" ? "catalog" : `catalog/${value}`);
+      const toggle = event.target.closest("#catalog-filter-toggle");
+      if (toggle) {
+        setCatalogFilterPanelOpen(toggle.getAttribute("aria-expanded") !== "true");
+        return;
+      }
+      const groupToggle = event.target.closest("[data-filter-group-toggle]");
+      if (groupToggle) {
+        const wasOpen = groupToggle.getAttribute("aria-expanded") === "true";
+        document.querySelectorAll("[data-filter-group-toggle]").forEach((button) => {
+          button.setAttribute("aria-expanded", "false");
+          document.getElementById(button.getAttribute("aria-controls")).hidden = true;
+        });
+        if (!wasOpen) {
+          groupToggle.setAttribute("aria-expanded", "true");
+          document.getElementById(groupToggle.getAttribute("aria-controls")).hidden = false;
+        }
+        return;
+      }
+      const reset = event.target.closest(".filter-reset");
+      if (reset) {
+        catalogCategoryFilters = [];
+        catalogColorFilters = [];
+        document.querySelectorAll("#catalog-filter-panel [data-catalog-category], #catalog-filter-panel [data-catalog-color]").forEach((checkbox) => { checkbox.checked = false; });
+        updateCatalogFilterSummary();
+        renderCatalogBody();
+        return;
+      }
+      const categoryChip = event.target.closest("[data-remove-catalog-category]");
+      if (categoryChip) {
+        const category = categoryChip.dataset.removeCatalogCategory;
+        catalogCategoryFilters = catalogCategoryFilters.filter((selected) => selected !== category);
+        const checkbox = [...document.querySelectorAll("#catalog-filter-panel [data-catalog-category]")]
+          .find((option) => option.dataset.catalogCategory === category);
+        if (checkbox) checkbox.checked = false;
+        updateCatalogFilterSummary();
+        renderCatalogBody();
+        return;
+      }
+      const colorChip = event.target.closest("[data-remove-catalog-color]");
+      if (colorChip) {
+        const color = colorChip.dataset.removeCatalogColor;
+        catalogColorFilters = catalogColorFilters.filter((selected) => selected !== color);
+        const checkbox = [...document.querySelectorAll("#catalog-filter-panel [data-catalog-color]")]
+          .find((option) => option.dataset.catalogColor === color);
+        if (checkbox) checkbox.checked = false;
+        updateCatalogFilterSummary();
+        renderCatalogBody();
+      }
+    });
+    document.getElementById("catalog-filters").addEventListener("change", (event) => {
+      const checkbox = event.target.closest("[data-catalog-category], [data-catalog-color]");
+      if (!checkbox) return;
+      catalogCategoryFilters = [...document.querySelectorAll("#catalog-filter-panel [data-catalog-category]:checked")]
+        .map((option) => option.dataset.catalogCategory);
+      catalogColorFilters = [...document.querySelectorAll("#catalog-filter-panel [data-catalog-color]:checked")]
+        .map((option) => option.dataset.catalogColor);
+      updateCatalogFilterSummary();
+      renderCatalogBody();
     });
     document.getElementById("product-all").addEventListener("click", () => navigate(""));
     document.getElementById("product-country").addEventListener("click", () => {
@@ -4049,8 +4206,11 @@
     });
     lightboxPhoto.addEventListener("click", (event) => event.stopPropagation());
     document.addEventListener("keydown", (event) => {
-      const filterToggle = document.getElementById("brand-filter-toggle");
-      if (event.key === "Escape" && filterToggle?.getAttribute("aria-expanded") === "true") {
+      const filterToggle = [
+        document.getElementById("brand-filter-toggle"),
+        document.getElementById("catalog-filter-toggle")
+      ].find((toggle) => toggle?.getAttribute("aria-expanded") === "true");
+      if (event.key === "Escape" && filterToggle) {
         const openSubmenu = [...document.querySelectorAll('[data-filter-group-toggle][aria-expanded="true"]')].pop();
         if (openSubmenu) {
           openSubmenu.setAttribute("aria-expanded", "false");
@@ -4058,7 +4218,8 @@
           openSubmenu.focus();
           return;
         }
-        setBrandFilterPanelOpen(false, true);
+        if (filterToggle.id === "catalog-filter-toggle") setCatalogFilterPanelOpen(false, true);
+        else setBrandFilterPanelOpen(false, true);
         return;
       }
       if (lightbox.hidden) return;
