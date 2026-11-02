@@ -3367,8 +3367,12 @@
       }, animate);
     }
 
-    function itemCard(id, item) {
-      const first = item.variants.find(variantInStock) || item.variants[0];
+    function itemCard(id, item, preferredColors = []) {
+      const matchingVariant = preferredColors.length
+        ? item.variants.find((variant) => variantInStock(variant) && preferredColors.includes(variant.tone))
+        : null;
+      const first = matchingVariant || item.variants.find(variantInStock) || item.variants[0];
+      const variantIndex = item.variants.indexOf(first);
       const price = cardPrice(item);
       const photos = variantPhotos(first);
       const photo = photos[0] || first.photo || "";
@@ -3387,7 +3391,8 @@
       const galleryDots = cardPhotos.length > 1
         ? `<div class="item-gallery-dots" aria-hidden="true">${cardPhotos.map((_, index) => `<span class="${index === 0 ? "on" : ""}"></span>`).join("")}</div>`
         : "";
-      return `<a class="item" href="?${id}/${item.slug}" data-brand="${id}" data-slug="${item.slug}" style="${cardStyle}"><div class="cloth${photoClass}${galleryClass}" style="${clothStyle}"${galleryData}>${photoTag}${galleryDots}<span class="ph">${t("photoPlaceholder")}</span></div><span class="body"><b>${localizedItemName(item.name)}</b>${price ? `<span class="price">${price}</span>` : ""}</span></a>`;
+      const variantRoute = matchingVariant ? `&variant=${variantIndex}` : "";
+      return `<a class="item" href="?${id}/${item.slug}${variantRoute}" data-brand="${id}" data-slug="${item.slug}" data-variant="${variantIndex}" style="${cardStyle}"><div class="cloth${photoClass}${galleryClass}" style="${clothStyle}"${galleryData}>${photoTag}${galleryDots}<span class="ph">${t("photoPlaceholder")}</span></div><span class="body"><b>${localizedItemName(item.name)}</b>${price ? `<span class="price">${price}</span>` : ""}</span></a>`;
     }
 
     function renderBrandFilters(data) {
@@ -3445,7 +3450,7 @@
     function renderBrandItems(id, data) {
       const list = filterItemsByBrandFilters(data.items, brandCategoryFilters, brandColorFilters);
       items.innerHTML = list.length
-        ? list.map((item) => itemCard(id, item)).join("")
+        ? list.map((item) => itemCard(id, item, brandColorFilters)).join("")
         : `<p class="blurb">${t("noFilterItems")}</p>`;
       window.requestAnimationFrame(() => observeScrollBlocks(items));
     }
@@ -3638,7 +3643,7 @@
         .filter(({ items: list }) => list.length);
       catalogBody.innerHTML = groups.length
         ? groups.map(({ id, data, items: list }) =>
-            `<div class="catalog-group"><h2>${data.title}</h2><div class="items">${list.map((item) => itemCard(id, item)).join("")}</div></div>`
+            `<div class="catalog-group"><h2>${data.title}</h2><div class="items">${list.map((item) => itemCard(id, item, catalogColorFilters)).join("")}</div></div>`
           ).join("")
         : `<p class="blurb">${t("noCatalogItems")}</p>`;
       window.requestAnimationFrame(() => observeScrollBlocks(catalogBody));
@@ -3741,8 +3746,15 @@
         document.getElementById("product-brand").textContent = data.title;
         document.getElementById("product-crumb").textContent = localizedItemName(item.name);
         document.getElementById("product-title").textContent = localizedItemName(item.name);
+        const requestedVariant = new URLSearchParams(location.search).get("variant");
+        const requestedIndex = requestedVariant !== null && /^\d+$/.test(requestedVariant)
+          ? Number(requestedVariant)
+          : -1;
         const availableIndex = item.variants.findIndex(variantInStock);
-        fillVariant(data, item, availableIndex < 0 ? 0 : availableIndex);
+        const initialIndex = requestedIndex >= 0 && requestedIndex < item.variants.length
+          ? requestedIndex
+          : availableIndex < 0 ? 0 : availableIndex;
+        fillVariant(data, item, initialIndex);
         home.classList.remove("on");
         brand.classList.remove("on");
         catalog.classList.remove("on");
@@ -4019,7 +4031,8 @@
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
       event.preventDefault();
       const brandId = card.dataset.brand || currentBrand;
-      navigate(`${brandId}/${card.dataset.slug}`);
+      const variant = card.dataset.variant;
+      navigate(`${brandId}/${card.dataset.slug}${variant === undefined ? "" : `&variant=${variant}`}`);
     }
     items.addEventListener("click", openItemCard);
     catalogBody.addEventListener("click", openItemCard);
