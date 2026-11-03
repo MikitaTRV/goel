@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2a211d">
+  <meta name="description" content="Как подтвердить заказ GO’EL, оплатить банковским переводом и согласовать доставку.">
+  <link rel="canonical" href="https://goel-store.github.io/delivery.html">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="GO’EL">
+  <meta property="og:url" content="https://goel-store.github.io/delivery.html">
+  <meta property="og:title" content="Оплата и доставка — GO’EL">
+  <meta property="og:description" content="Как подтвердить заказ GO’EL, оплатить банковским переводом и согласовать доставку.">
+  <meta name="twitter:card" content="summary">
+  <title>Оплата и доставка — GO’EL</title>
+  <style>
+    :root { color-scheme: dark; --bg: #2a211d; --paper: #40332c; --ink: #f4e9dc; --muted: #c8b6a6; --line: #685344; --accent: #e7a47c; }
+    * { box-sizing: border-box; }
+    html { min-width: 320px; background: var(--bg); }
+    body { margin: 0; color: var(--ink); background: radial-gradient(ellipse at 8% 14%, rgba(111,72,52,.28), transparent 38rem), var(--bg); font-family: "Avenir Next", "Helvetica Neue", sans-serif; line-height: 1.6; }
+    a { color: var(--accent); text-underline-offset: 3px; }
+    .wrap { width: min(760px, calc(100% - 40px)); margin: 0 auto; }
+    header { min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid rgba(244,233,220,.12); }
+    .wordmark { color: var(--ink); font-size: 20px; font-weight: 700; letter-spacing: .08em; text-decoration: none; }
+    .header-actions { display: flex; align-items: center; gap: 18px; }
+    .language { border: 0; background: transparent; color: var(--muted); font: inherit; cursor: pointer; }
+    main { padding: 42px 0 58px; }
+    h1, h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; line-height: 1.2; }
+    h1 { margin: 0 0 12px; font-size: clamp(34px, 7vw, 48px); }
+    .intro { margin: 0 0 30px; color: var(--muted); }
+    article { padding: clamp(20px, 5vw, 34px); border: 1px solid rgba(244,233,220,.12); border-radius: 20px; background: rgba(57,46,40,.7); }
+    section + section { margin-top: 25px; }
+    h2 { margin: 0 0 8px; font-size: 23px; }
+    section p { margin: 0; color: var(--muted); }
+    .contact { margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--line); }
+    footer { padding: 18px 0 26px; border-top: 1px solid rgba(244,233,220,.12); color: var(--muted); font-size: 13px; }
+    @media (max-width: 520px) { .wrap { width: min(100% - 28px, 760px); } header { min-height: 60px; } .header-actions { gap: 12px; } main { padding-top: 30px; } article { border-radius: 16px; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <header class="wrap">
+    <a class="wordmark" href="./" aria-label="GO’EL — главная">GO’EL</a>
+    <div class="header-actions">
+      <a href="./" data-i18n="back">В каталог</a>
+      <select class="language" id="language-select" aria-label="Язык">
+        <option value="ru">RUS</option><option value="be">BEL</option><option value="uk">UKR</option><option value="en">ENG</option>
+      </select>
+    </div>
+  </header>
+  <main class="wrap">
+    <h1 data-i18n="title">Оплата и доставка</h1>
+    <p class="intro" data-i18n="intro">Заявка на сайте не является оплатой. Мы подтвердим детали и итоговую сумму до перевода.</p>
+    <article>
+      <section><h2 data-i18n="confirmationTitle">Подтверждение заказа</h2><p data-i18n="confirmationBody">После получения заявки мы свяжемся с вами, проверим наличие и подтвердим товар, размер и итоговую сумму.</p></section>
+      <section><h2 data-i18n="paymentTitle">Оплата</h2><p data-i18n="paymentBody">Оплата — банковским переводом по реквизитам ООО «КМИТВЭР». После подтверждения заказа мы отправим в чате реквизиты, сумму и назначение платежа. Укажите в назначении номер заказа и GOEL. Переводите деньги после того, как мы подтвердим заказ и сумму.</p></section>
+      <section><h2 data-i18n="deliveryTitle">Доставка</h2><p data-i18n="deliveryBody">Для товаров godderob доступна доставка по всему миру за счёт покупателя. Способ отправки, её стоимость и ориентировочный срок мы согласуем с вами до оплаты. Для товаров других брендов условия доставки подтвердим отдельно.</p></section>
+      <section><h2 data-i18n="returnsTitle">Обмен и возврат</h2><p data-i18n="returnsBody">Условия обмена и возврата уточняются отдельно для каждого заказа. Напишите нам в Telegram до оплаты, если хотите узнать подробности.</p></section>
+      <section class="contact"><h2 data-i18n="contactTitle">Остались вопросы?</h2><p><a href="https://t.me/JHVHGOeL" target="_blank" rel="noopener noreferrer" data-i18n="contactLink">Уточнить заказ в Telegram ↗</a></p></section>
+    </article>
+  </main>
+  <footer><div class="wrap">GO’EL</div></footer>
+  <script>
+    const copy = {
+      ru: {
+        pageTitle: "Оплата и доставка — GO’EL", description: "Как подтвердить заказ GO’EL, оплатить банковским переводом и согласовать доставку.", back: "В каталог", title: "Оплата и доставка", intro: "Заявка на сайте не является оплатой. Мы подтвердим детали и итоговую сумму до перевода.", confirmationTitle: "Подтверждение заказа", confirmationBody: "После получения заявки мы свяжемся с вами, проверим наличие и подтвердим товар, размер и итоговую сумму.", paymentTitle: "Оплата", paymentBody: "Оплата — банковским переводом по реквизитам ООО «КМИТВЭР». После подтверждения заказа мы отправим в чате реквизиты, сумму и назначение платежа. Укажите в назначении номер заказа и GOEL. Переводите деньги после того, как мы подтвердим заказ и сумму.", deliveryTitle: "Доставка", deliveryBody: "Для товаров godderob доступна доставка по всему миру за счёт покупателя. Способ отправки, её стоимость и ориентировочный срок мы согласуем с вами до оплаты. Для товаров других брендов условия доставки подтвердим отдельно.", returnsTitle: "Обмен и возврат", returnsBody: "Условия обмена и возврата уточняются отдельно для каждого заказа. Напишите нам в Telegram до оплаты, если хотите узнать подробности.", contactTitle: "Остались вопросы?", contactLink: "Уточнить заказ в Telegram ↗", languageLabel: "Язык"
+      },
+      be: {
+        pageTitle: "Аплата і дастаўка — GO’EL", description: "Як пацвердзіць замову GO’EL, аплаціць банкаўскім пераводам і ўзгадніць дастаўку.", back: "У каталог", title: "Аплата і дастаўка", intro: "Заяўка на сайце не з'яўляецца аплатай. Мы пацвердзім дэталі і выніковую суму да пераводу.", confirmationTitle: "Пацвярджэнне замовы", confirmationBody: "Пасля атрымання заяўкі мы звяжамся з вамі, праверым наяўнасць і пацвердзім тавар, памер і выніковую суму.", paymentTitle: "Аплата", paymentBody: "Аплата — банкаўскім пераводам па рэквізітах ТАА «КМІТВЭР». Пасля пацвярджэння замовы мы дашлём у чаце рэквізіты, суму і прызначэнне плацяжу. Укажыце ў прызначэнні нумар замовы і GOEL. Пераводзьце грошы пасля таго, як мы пацвердзім замову і суму.", deliveryTitle: "Дастаўка", deliveryBody: "Для тавараў godderob даступная дастаўка па ўсім свеце за кошт пакупніка. Спосаб адпраўкі, яе кошт і арыенціровачны тэрмін мы ўзгоднім з вамі да аплаты. Для тавараў іншых брэндаў умовы дастаўкі пацвердзім асобна.", returnsTitle: "Абмен і вяртанне", returnsBody: "Умовы абмену і вяртання ўдакладняюцца асобна для кожнай замовы. Напішыце нам у Telegram да аплаты, калі хочаце даведацца падрабязнасці.", contactTitle: "Засталіся пытанні?", contactLink: "Удакладніць замову ў Telegram ↗", languageLabel: "Мова"
+      },
+      uk: {
+        pageTitle: "Оплата й доставка — GO’EL", description: "Як підтвердити замовлення GO’EL, оплатити банківським переказом і узгодити доставку.", back: "До каталогу", title: "Оплата й доставка", intro: "Заявка на сайті не є оплатою. Ми підтвердимо деталі та підсумкову суму до переказу.", confirmationTitle: "Підтвердження замовлення", confirmationBody: "Після отримання заявки ми зв’яжемося з вами, перевіримо наявність і підтвердимо товар, розмір та підсумкову суму.", paymentTitle: "Оплата", paymentBody: "Оплата — банківським переказом за реквізитами ТОВ «КМІТВЕР». Після підтвердження замовлення ми надішлемо в чат реквізити, суму та призначення платежу. Укажіть у призначенні номер замовлення та GOEL. Переказуйте кошти після того, як ми підтвердимо замовлення й суму.", deliveryTitle: "Доставка", deliveryBody: "Для товарів godderob доступна доставка по всьому світу коштом покупця. Спосіб відправлення, його вартість та орієнтовний строк ми узгодимо з вами до оплати. Для товарів інших брендів умови доставки підтвердимо окремо.", returnsTitle: "Обмін і повернення", returnsBody: "Умови обміну та повернення уточнюються окремо для кожного замовлення. Напишіть нам у Telegram до оплати, якщо хочете дізнатися подробиці.", contactTitle: "Залишилися запитання?", contactLink: "Уточнити замовлення в Telegram ↗", languageLabel: "Мова"
+      },
+      en: {
+        pageTitle: "Payment & delivery — GO’EL", description: "How to confirm a GO’EL order, pay by bank transfer, and agree delivery details.", back: "Catalog", title: "Payment & delivery", intro: "Submitting a request is not a payment. We confirm the details and final amount before you transfer funds.", confirmationTitle: "Order confirmation", confirmationBody: "After receiving your request, we will contact you, check availability, and confirm the item, size, and final amount.", paymentTitle: "Payment", paymentBody: "Payment is by bank transfer to the account details of LLC KMITVER. After confirming your order, we will send the account details, amount, and payment description in chat. Include your order number and GOEL in the description. Please transfer funds only after we confirm the order and amount.", deliveryTitle: "Delivery", deliveryBody: "godderob items can be shipped worldwide at the buyer’s expense. We will agree the shipping method, cost, and estimated delivery time with you before payment. Delivery terms for other brands will be confirmed separately.", returnsTitle: "Exchanges & returns", returnsBody: "Exchange and return terms are confirmed separately for each order. Message us on Telegram before paying if you would like the details.", contactTitle: "Questions?", contactLink: "Ask us about your order on Telegram ↗", languageLabel: "Language"
+      }
+    };
+    const languageSelect = document.getElementById("language-select");
+    let language = "ru";
+    try { const saved = localStorage.getItem("goel-language"); if (copy[saved]) language = saved; } catch (error) {}
+    function applyLanguage() {
+      const t = copy[language];
+      document.documentElement.lang = language;
+      document.title = t.pageTitle;
+      document.querySelector('meta[name="description"]')?.setAttribute("content", t.description);
+      document.querySelector('meta[property="og:title"]')?.setAttribute("content", t.pageTitle);
+      document.querySelector('meta[property="og:description"]')?.setAttribute("content", t.description);
+      document.querySelectorAll("[data-i18n]").forEach((element) => { element.textContent = t[element.dataset.i18n]; });
+      languageSelect.setAttribute("aria-label", t.languageLabel);
+      languageSelect.value = language;
+    }
+    languageSelect.addEventListener("change", () => {
+      language = copy[languageSelect.value] ? languageSelect.value : "ru";
+      try { localStorage.setItem("goel-language", language); } catch (error) {}
+      applyLanguage();
+    });
+    applyLanguage();
+  </script>
+</body>
+</html>

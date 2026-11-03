@@ -7,6 +7,7 @@ on:
       - "index.html"
       - "tracking.html"
       - "privacy.html"
+      - "delivery.html"
       - "img/**"
       - ".github/workflows/publish-site.yml"
   workflow_dispatch:
@@ -36,6 +37,7 @@ jobs:
           cp index.html _site/index.html
           cp tracking.html _site/tracking.html
           cp privacy.html _site/privacy.html
+          cp delivery.html _site/delivery.html
           cp -R img _site/img
 
       - name: Configure GitHub Pages

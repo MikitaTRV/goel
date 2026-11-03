@@ -259,7 +259,7 @@
       color: var(--ink);
       background: #f3efe8;
     }
-    .category-filter { position: relative; z-index: 31; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; width: 100%; }
+    .category-filter { position: relative; z-index: 10; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; width: 100%; }
     .filter-anchor { position: relative; flex: 0 0 auto; }
     .filters .filter-toggle { display: inline-flex; align-items: center; gap: 9px; min-height: 42px; padding: 8px 13px; border: 1px solid var(--line); border-radius: 3px; background: var(--paper); color: var(--ink); font: inherit; font-size: 14px; cursor: pointer; transition: background .16s ease, border-color .16s ease; }
     .filters .filter-toggle:hover, .filters .filter-toggle[aria-expanded="true"] { border-color: #cfc6bb; background: #f8f5ef; color: var(--ink); }
@@ -1008,7 +1008,7 @@
     .filters button.on { color: var(--ink); }
     #catalog-filters {
       position: relative;
-      z-index: 31;
+      z-index: 10;
       display: flex;
       flex-wrap: wrap;
       gap: 9px;
@@ -1354,7 +1354,7 @@
       </form>
     </section>
     </div>
-    <footer class="site-footer"><span>GO’EL</span><nav aria-label="Информация" data-i18n-aria="footerNavigation"><a href="privacy.html" data-i18n="privacyLink">Политика обработки данных</a><a href="tracking.html" data-i18n="trackOrder">Отследить заказ</a></nav></footer>
+    <footer class="site-footer"><span>GO’EL</span><nav aria-label="Информация" data-i18n-aria="footerNavigation"><a href="privacy.html" data-i18n="privacyLink">Политика обработки данных</a><a href="delivery.html" data-i18n="deliveryPayment">Оплата и доставка</a><a href="tracking.html" data-i18n="trackOrder">Отследить заказ</a></nav></footer>
   </div>
   <div class="lightbox" id="lightbox" hidden>
     <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Закрыть" data-i18n-aria="close">×</button>
@@ -1481,28 +1481,28 @@
 
     Object.assign(translations.ru, {
       pageDescription: "Христианские бренды одежды в одной витрине. Выберите вещь и отправьте заявку на заказ онлайн.",
-      footerNavigation: "Информация", privacyLink: "Политика обработки данных",
+      footerNavigation: "Информация", privacyLink: "Политика обработки данных", deliveryPayment: "Оплата и доставка",
       orderProcessNote: "Это заявка, а не оплата. Мы свяжемся с вами, подтвердим наличие и согласуем дальнейшие условия заказа.",
       tshirtType: "Футболка", sweatshirtType: "Свитшот", longsleeveType: "Лонгслив", halfzipType: "Полузип", capType: "Кепка", hoodieType: "Худи",
       light: "светлый", dark: "тёмный", green: "зелёный", sky: "голубой", gray: "серый", whiteBurgundy: "белый и бордовый", whiteSky: "белый и голубой", whiteSand: "белый и песочный", milkBrown: "молочный и коричневый", grayWhite: "серый и белый", grayYellow: "серый и жёлтый", grayPink: "серый и розовый", blackWhite: "чёрный и белый", coffee: "кофейный", emerald: "изумрудный"
     });
     Object.assign(translations.be, {
       pageDescription: "Хрысціянскія брэнды адзення ў адной вітрыне. Выберыце рэч і адпраўце заяўку на заказ анлайн.",
-      footerNavigation: "Інфармацыя", privacyLink: "Палітыка апрацоўкі даных",
+      footerNavigation: "Інфармацыя", privacyLink: "Палітыка апрацоўкі даных", deliveryPayment: "Аплата і дастаўка",
       orderProcessNote: "Гэта заяўка, а не аплата. Мы звяжамся з вамі, пацвердзім наяўнасць і ўзгоднім далейшыя ўмовы замовы.",
       tshirtType: "Футболка", sweatshirtType: "Світашот", longsleeveType: "Лонгсліў", halfzipType: "Паўзіп", capType: "Кепка", hoodieType: "Худи",
       light: "светлы", dark: "цёмны", green: "зялёны", sky: "блакітны", gray: "шэры", whiteBurgundy: "белы і бардовы", whiteSky: "белы і блакітны", whiteSand: "белы і пясочны", milkBrown: "малочны і карычневы", grayWhite: "шэры і белы", grayYellow: "шэры і жоўты", grayPink: "шэры і ружовы", blackWhite: "чорны і белы", coffee: "кававы", emerald: "смарагдавы"
     });
     Object.assign(translations.uk, {
       pageDescription: "Християнські бренди одягу в одній вітрині. Оберіть річ і надішліть заявку на замовлення онлайн.",
-      footerNavigation: "Інформація", privacyLink: "Політика обробки даних",
+      footerNavigation: "Інформація", privacyLink: "Політика обробки даних", deliveryPayment: "Оплата й доставка",
       orderProcessNote: "Це заявка, а не оплата. Ми зв’яжемося з вами, підтвердимо наявність і погодимо подальші умови замовлення.",
       tshirtType: "Футболка", sweatshirtType: "Світшот", longsleeveType: "Лонгслів", halfzipType: "Напівзип", capType: "Кепка", hoodieType: "Худі",
       light: "світлий", dark: "темний", green: "зелений", sky: "блакитний", gray: "сірий", whiteBurgundy: "білий і бордовий", whiteSky: "білий і блакитний", whiteSand: "білий і пісочний", milkBrown: "молочний і коричневий", grayWhite: "сірий і білий", grayYellow: "сірий і жовтий", grayPink: "сірий і рожевий", blackWhite: "чорний і білий", coffee: "кавовий", emerald: "смарагдовий"
     });
     Object.assign(translations.en, {
       pageDescription: "Christian clothing brands in one storefront. Browse the collection and send an order request online.",
-      footerNavigation: "Information", privacyLink: "Privacy notice",
+      footerNavigation: "Information", privacyLink: "Privacy notice", deliveryPayment: "Payment & delivery",
       orderProcessNote: "This is an order request, not a payment. We’ll contact you to confirm availability and agree on the next steps.",
       tshirtType: "T-shirt", sweatshirtType: "Sweatshirt", longsleeveType: "Long-sleeve top", halfzipType: "Half-zip", capType: "Cap", hoodieType: "Hoodie",
       light: "light", dark: "dark", green: "green", sky: "sky blue", gray: "gray", whiteBurgundy: "white / burgundy", whiteSky: "white / blue", whiteSand: "white / sand", milkBrown: "cream / brown", grayWhite: "gray / white", grayYellow: "gray / yellow", grayPink: "gray / pink", blackWhite: "black / white", coffee: "coffee brown", emerald: "emerald", milk: "milky"
@@ -1600,7 +1600,7 @@
         name: "Полузип BOZHIY ODUVANCHIK",
         slug: "oduvanchik-zip-yellow",
         variants: [
-          { tone: "светло-жёлтый", color: "#e8dfb6", size: "S, M, L", price: "Уточняется", photos: ["img/godderob/godderob-oduv-yellow.jpg"], photo: "img/godderob/godderob-oduv-yellow.jpg" }
+          { tone: "светло-жёлтый", color: "#e8dfb6", size: "S, M, L", price: "184 BYN", photos: ["img/godderob/godderob-oduv-yellow.jpg"], photo: "img/godderob/godderob-oduv-yellow.jpg" }
         ],
         gender: "women"
       },
