@@ -1391,7 +1391,7 @@
         summaryModel: "Модель", summaryColor: "Цвет", summarySize: "Размер", summaryPrice: "Цена",
         darkBlue: "тёмно-синий", pink: "розовый", skyBlue: "небесный", lightYellow: "светло-жёлтый", white: "белый", mustard: "горчичный",
         brown: "коричневый", grassGreen: "травяной", graphite: "графитовый", burgundy: "бордовый", blue: "синий", black: "чёрный",
-        beige: "бежевый", red: "красный", coffee: "кофе", emerald: "изумруд", milk: "молочный", sand: "песочный", ginger: "рыжий", darkGreen: "тёмно-зелёный"
+        beige: "бежевый", red: "красный", coffee: "кофе", emerald: "изумруд", milk: "молочный", sand: "песочный", ginger: "рыжий", darkGreen: "тёмно-зелёный", melange: "меланж", plum: "сливовый"
       },
       be: {
         pageTitle: "GO'EL — хрысціянскія брэнды адзення", countries: "Краіны", countriesTitle: "Краіны", mobileMenu: "Меню", belarus: "Беларусь", catalogMenu: "Каталог",
@@ -1419,7 +1419,7 @@
         summaryModel: "Мадэль", summaryColor: "Колер", summarySize: "Памер", summaryPrice: "Цана",
         darkBlue: "цёмна-сіні", pink: "ружовы", skyBlue: "нябесны", lightYellow: "светла-жоўты", white: "белы", mustard: "гарчычны",
         brown: "карычневы", grassGreen: "травяны", graphite: "графітавы", burgundy: "бардовы", blue: "сіні", black: "чорны",
-        beige: "бэжавы", red: "чырвоны", coffee: "кававы", emerald: "смарагдавы", milk: "малочны", sand: "пясочны", ginger: "рыжы", darkGreen: "цёмна-зялёны"
+        beige: "бэжавы", red: "чырвоны", coffee: "кававы", emerald: "смарагдавы", milk: "малочны", sand: "пясочны", ginger: "рыжы", darkGreen: "цёмна-зялёны", melange: "меланж", plum: "слівавы"
       },
       uk: {
         pageTitle: "GO'EL — християнські бренди одягу", countries: "Країни", countriesTitle: "Країни", mobileMenu: "Меню", belarus: "Білорусь", catalogMenu: "Каталог",
@@ -1447,7 +1447,7 @@
         summaryModel: "Модель", summaryColor: "Колір", summarySize: "Розмір", summaryPrice: "Ціна",
         darkBlue: "темно-синій", pink: "рожевий", skyBlue: "блакитний", lightYellow: "світло-жовтий", white: "білий", mustard: "гірчичний",
         brown: "коричневий", grassGreen: "трав’яний", graphite: "графітовий", burgundy: "бордовий", blue: "синій", black: "чорний",
-        beige: "бежевий", red: "червоний", coffee: "кавовий", emerald: "смарагдовий", milk: "молочний", sand: "пісочний", ginger: "рудий", darkGreen: "темно-зелений"
+        beige: "бежевий", red: "червоний", coffee: "кавовий", emerald: "смарагдовий", milk: "молочний", sand: "пісочний", ginger: "рудий", darkGreen: "темно-зелений", melange: "меланж", plum: "сливовий"
       },
       en: {
         pageTitle: "GO'EL — Christian clothing brands", countries: "Countries", countriesTitle: "Countries", mobileMenu: "Menu", belarus: "Belarus", catalogMenu: "Catalog",
@@ -1475,7 +1475,7 @@
         summaryModel: "Style", summaryColor: "Color", summarySize: "Size", summaryPrice: "Price",
         darkBlue: "dark blue", pink: "pink", skyBlue: "sky blue", lightYellow: "light yellow", white: "white", mustard: "mustard",
         brown: "brown", grassGreen: "grass green", graphite: "graphite", burgundy: "burgundy", blue: "blue", black: "black",
-        beige: "beige", red: "red", coffee: "coffee", emerald: "emerald", milk: "milk", sand: "sand", ginger: "ginger", darkGreen: "dark green"
+        beige: "beige", red: "red", coffee: "coffee", emerald: "emerald", milk: "milk", sand: "sand", ginger: "ginger", darkGreen: "dark green", melange: "gray melange", plum: "plum"
       }
     };
 
@@ -1526,7 +1526,7 @@
     Object.assign(toneTranslationKeys, {
       "светлый": "light", "тёмный": "dark", "зелёный": "green", "голубой": "sky", "серый": "gray",
       "белый-бордо": "whiteBurgundy", "белый-голубой": "whiteSky", "белый-песок": "whiteSand", "молоко-коричневый": "milkBrown",
-      "серый-белый": "grayWhite", "серый-жёлтый": "grayYellow", "серый-розовый": "grayPink", "чёрный-белый": "blackWhite"
+      "серый-белый": "grayWhite", "серый-жёлтый": "grayYellow", "серый-розовый": "grayPink", "чёрный-белый": "blackWhite", "меланж": "melange", "сливовый": "plum"
     });
     function localizedTone(tone) { return toneTranslationKeys[tone] ? t(toneTranslationKeys[tone]) : tone; }
     const garmentTypeTranslation = { "футболка": "tshirtType", "свитшот": "sweatshirtType", "лонгслив": "longsleeveType", "полузип": "halfzipType", "кепка": "capType", "худи": "hoodieType", "лонг": "longsleeveType" };
@@ -1671,6 +1671,15 @@
         slug: "jesus-lovers-club-sweatshirt",
         variants: [
           { tone: "синий", color: "#1a2438", size: "", price: "", stockManaged: true, stockAvailable: false, photos: ["img/godderob/jlc-sweatshirt-blue-group-02.jpg", "img/godderob/jlc-sweatshirt-blue-group-01.jpg", "img/godderob/jlc-sweatshirt-blue-group-03.jpg"], photo: "img/godderob/jlc-sweatshirt-blue-group-02.jpg" }
+        ],
+        gender: "unisex"
+      },
+      {
+        name: "Свитшот 17:20",
+        slug: "sweatshirt-17-20",
+        variants: [
+          { tone: "меланж", color: "#c9c9c9", size: "XS, S, M, L, XL", price: "170 BYN", photos: ["img/godderob/sweatshirt-17-20-melange.jpg"], photo: "img/godderob/sweatshirt-17-20-melange.jpg" },
+          { tone: "сливовый", color: "#783f56", size: "XS, S, M, L, XL", price: "170 BYN", photos: ["img/godderob/sweatshirt-17-20-plum.jpg"], photo: "img/godderob/sweatshirt-17-20-plum.jpg" }
         ],
         gender: "unisex"
       },
