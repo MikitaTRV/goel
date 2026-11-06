@@ -1,3 +1,5 @@
+import { maxStockAgeMs, readFreshStock, syncGodderobStock } from "./stock-sync.js";
+
 const jsonHeaders = {
   "Content-Type": "application/json; charset=utf-8",
   "Cache-Control": "no-store"
@@ -10,10 +12,10 @@ function jsonResponse(body, status, corsHeaders) {
   });
 }
 
-function corsFor(origin, allowedOrigin) {
-  if (origin !== allowedOrigin) return {};
+function corsFor(origin, allowedOrigins) {
+  if (!allowedOrigins.includes(origin)) return {};
   return {
-    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Origin": origin,
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Max-Age": "86400",
@@ -96,7 +98,7 @@ async function verifyTurnstile(request, token, idempotencyKey, env) {
   const result = await response.json().catch(() => null);
   let expectedHostname = "";
   try {
-    expectedHostname = new URL(env.ALLOWED_ORIGIN).hostname;
+    expectedHostname = new URL(request.headers.get("Origin") || "").hostname;
   } catch {}
   return {
     ok: Boolean(result?.success && result.action === "order" && result.hostname === expectedHostname),
@@ -294,13 +296,7 @@ async function checkStock(items, env) {
   }
   if (!requestedItems.size) return "available";
 
-  const feedUrl = env.STOCK_FEED_URL || "https://mikitatrv.github.io/goel/data/godderob-availability.json";
-  const response = await fetch(feedUrl, {
-    headers: { "Cache-Control": "no-cache", "Pragma": "no-cache" }
-  });
-  if (!response.ok) throw new Error("Availability feed unavailable");
-
-  const feed = await response.json();
+  const { feed } = await readFreshStock(env);
   if (![1, 2].includes(feed.schemaVersion) || !Array.isArray(feed.managedVariants) || !feed.availableSizes) {
     throw new Error("Invalid availability feed");
   }
@@ -334,9 +330,17 @@ async function checkStock(items, env) {
 }
 
 export default {
+  async scheduled(_controller, env, context) {
+    context.waitUntil(syncGodderobStock(env));
+  },
+
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
-    const corsHeaders = corsFor(origin, env.ALLOWED_ORIGIN || "");
+    const allowedOrigins = String(env.ALLOWED_ORIGIN || "")
+      .split(",")
+      .map((value) => value.trim())
+      .filter(Boolean);
+    const corsHeaders = corsFor(origin, allowedOrigins);
     const url = new URL(request.url);
 
     if (request.method === "OPTIONS") {
@@ -348,6 +352,17 @@ export default {
 
     if (url.pathname === "/telegram-webhook") {
       return handleTelegramWebhook(request, env);
+    }
+    if (url.pathname === "/stock") {
+      if (request.method !== "GET") return jsonResponse({ error: "Method not allowed" }, 405, corsHeaders);
+      if (!corsHeaders["Access-Control-Allow-Origin"]) return jsonResponse({ error: "Origin not allowed" }, 403, {});
+      try {
+        const { feed, lastSuccessAt, recentlyRestocked } = await readFreshStock(env);
+        return jsonResponse({ ...feed, recentlyRestocked, lastSyncedAt: lastSuccessAt, staleAfterSeconds: maxStockAgeMs / 1000 }, 200, corsHeaders);
+      } catch (error) {
+        console.error("Could not read current stock feed", error);
+        return jsonResponse({ error: "stock_unavailable" }, 503, corsHeaders);
+      }
     }
     if (url.pathname === "/track") {
       if (request.method !== "GET") return jsonResponse({ error: "Method not allowed" }, 405, corsHeaders);

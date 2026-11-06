@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { afterEach, test } from "node:test";
 import worker from "./order-worker.js";
+import { stockStorageKeys } from "./stock-sync.js";
 
 const originalFetch = globalThis.fetch;
 const orderUrl = "https://goel-order-api.o-el.workers.dev/order";
@@ -12,15 +13,20 @@ afterEach(() => {
   globalThis.fetch = originalFetch;
 });
 
-function createFixture({ turnstileSuccess = true, rateLimitAllowed = true, stockFeed = null, telegramFailures = {} } = {}) {
+function createFixture({ turnstileSuccess = true, turnstileHostname = "mikitatrv.github.io", rateLimitAllowed = true, stockFeed = null, telegramFailures = {} } = {}) {
   const state = { turnstileRequests: 0, stockRequests: 0, telegramMessages: 0, telegramCalls: [], rateLimitRequests: 0, values: new Map() };
+  const stockKeys = stockStorageKeys();
+  if (stockFeed) {
+    state.values.set(stockKeys.feed, JSON.stringify(stockFeed));
+    state.values.set(stockKeys.status, JSON.stringify({ lastSuccessAt: new Date().toISOString() }));
+  }
   globalThis.fetch = async (input, options = {}) => {
     const url = String(input);
     if (url === turnstileUrl) {
       state.turnstileRequests += 1;
       return Response.json({
         success: turnstileSuccess,
-        hostname: "mikitatrv.github.io",
+        hostname: turnstileHostname,
         action: "order"
       });
     }
@@ -41,7 +47,7 @@ function createFixture({ turnstileSuccess = true, rateLimitAllowed = true, stock
   };
 
   const env = {
-    ALLOWED_ORIGIN: "https://mikitatrv.github.io",
+    ALLOWED_ORIGIN: "https://mikitatrv.github.io,https://goel-store.github.io",
     TELEGRAM_BOT_TOKEN: "test-bot-token",
     TELEGRAM_CHAT_ID: "12345",
     TELEGRAM_WEBHOOK_SECRET: "test-webhook-secret",
@@ -54,6 +60,7 @@ function createFixture({ turnstileSuccess = true, rateLimitAllowed = true, stock
     },
     ORDER_TRACKING: {
       get: async (key, type) => {
+        if (key === stockKeys.feed) state.stockRequests += 1;
         const value = state.values.get(key);
         return type === "json" && value ? JSON.parse(value) : value ?? null;
       },
@@ -64,11 +71,11 @@ function createFixture({ turnstileSuccess = true, rateLimitAllowed = true, stock
   return { env, state };
 }
 
-function orderRequest(overrides = {}) {
+function orderRequest(overrides = {}, origin = "https://mikitatrv.github.io") {
   return new Request(orderUrl, {
     method: "POST",
     headers: {
-      Origin: "https://mikitatrv.github.io",
+      Origin: origin,
       "Content-Type": "application/json",
       "CF-Connecting-IP": "203.0.113.10"
     },
@@ -80,13 +87,54 @@ function orderRequest(overrides = {}) {
       consent: true,
       website: "",
       startedAt: Date.now() - 2000,
-      page: "https://mikitatrv.github.io/",
+      page: `${origin}/`,
       idempotencyKey: "123e4567-e89b-42d3-a456-426614174000",
       turnstileToken: "turnstile-test-token",
       ...overrides
     })
   });
 }
+
+test("allows only the existing and branded Pages origins for CORS", async () => {
+  const { env } = createFixture();
+  const requestFor = (origin) => new Request("https://goel-order-api.o-el.workers.dev/stock", {
+    method: "OPTIONS",
+    headers: { Origin: origin }
+  });
+
+  for (const origin of ["https://mikitatrv.github.io", "https://goel-store.github.io"]) {
+    const response = await worker.fetch(requestFor(origin), env);
+    assert.equal(response.status, 204);
+    assert.equal(response.headers.get("Access-Control-Allow-Origin"), origin);
+  }
+
+  const rejected = await worker.fetch(requestFor("https://attacker.example"), env);
+  assert.equal(rejected.status, 403);
+  assert.equal(rejected.headers.get("Access-Control-Allow-Origin"), null);
+});
+
+test("returns recently restocked variants with the current availability feed", async () => {
+  const stockFeed = { schemaVersion: 2, managedVariants: [], availableSizes: {}, maxOrderable: {} };
+  const { env, state } = createFixture({ stockFeed });
+  const keys = stockStorageKeys();
+  const recentlyRestocked = { "jesus-lovers-club-men|бежевый": new Date().toISOString() };
+  state.values.set(keys.recentlyRestocked, JSON.stringify(recentlyRestocked));
+  const request = new Request("https://goel-order-api.o-el.workers.dev/stock", {
+    headers: { Origin: "https://goel-store.github.io" }
+  });
+
+  const response = await worker.fetch(request, env);
+  assert.equal(response.status, 200);
+  assert.deepEqual((await response.json()).recentlyRestocked, recentlyRestocked);
+});
+
+test("accepts a verified order from the branded Pages origin", async () => {
+  const { env, state } = createFixture({ turnstileHostname: "goel-store.github.io" });
+  const response = await worker.fetch(orderRequest({}, "https://goel-store.github.io"), env);
+
+  assert.equal(response.status, 200);
+  assert.equal(state.telegramMessages, 1);
+});
 
 function seedOrder(state, status = "received") {
   const createdAt = "2026-10-31T09:00:00.000Z";
@@ -177,6 +225,32 @@ test("fetches stock once and aggregates duplicate cart lines", async () => {
   assert.equal((await response.json()).error, "insufficient_stock");
   assert.equal(state.stockRequests, 1);
   assert.equal(state.telegramMessages, 0);
+});
+
+test("accepts a managed stock item within its per-size order limit", async () => {
+  const { env, state } = createFixture({
+    stockFeed: {
+      schemaVersion: 2,
+      managedVariants: ["test-shirt|black"],
+      availableSizes: { "test-shirt": { Black: ["M"] } },
+      maxOrderable: { "test-shirt": { Black: { M: 3 } } }
+    }
+  });
+  const response = await worker.fetch(orderRequest({
+    items: [{
+      brand: "Godderob",
+      inventoryBrandId: "godderob",
+      inventorySlug: "test-shirt",
+      inventoryTone: "Black",
+      product: "Test T-shirt",
+      size: "M",
+      quantity: 2
+    }]
+  }), env);
+
+  assert.equal(response.status, 200);
+  assert.equal(state.stockRequests, 1);
+  assert.equal(state.telegramMessages, 1);
 });
 
 test("rejects Telegram webhooks with an invalid secret", async () => {

@@ -301,6 +301,22 @@
     .catalog-group { margin-top: 8px; }
     .catalog-group h2 { margin: 28px 0 0; }
     .catalog-group .items { padding-top: 14px; padding-bottom: 8px; }
+    .home-collection[hidden] { display: none !important; }
+    .item-badge {
+      position: absolute;
+      z-index: 1;
+      top: 10px;
+      left: 10px;
+      display: inline-block !important;
+      max-width: calc(100% - 20px);
+      margin: 0 !important;
+      padding: 6px 9px;
+      background: rgba(255, 252, 248, .94);
+      color: var(--ink) !important;
+      font-size: 11px !important;
+      line-height: 1.2 !important;
+      letter-spacing: .02em;
+    }
     .item {
       background-color: var(--paper);
       border: 1px solid var(--line);
@@ -1229,6 +1245,14 @@
           <span class="go" data-i18n="view">Смотреть</span>
         </a>
       </div>
+      <section class="catalog-group home-collection" id="home-new-arrivals" hidden>
+        <h2 data-i18n="newArrivalsTitle">Новинки</h2>
+        <div class="items"></div>
+      </section>
+      <section class="catalog-group home-collection" id="home-restocked" hidden>
+        <h2 data-i18n="restockedTitle">Снова в наличии</h2>
+        <div class="items"></div>
+      </section>
     </section>
 
     <section id="brand" class="view">
@@ -1517,6 +1541,10 @@
       Object.entries(values).forEach(([name, value]) => { text = text.replaceAll(`{{${name}}}`, value); });
       return text;
     }
+    Object.assign(translations.ru, { newArrivalsTitle: "Новинки", newArrivalBadge: "Новинка", restockedTitle: "Снова в наличии", restockedBadge: "Снова в наличии" });
+    Object.assign(translations.be, { newArrivalsTitle: "Навінкі", newArrivalBadge: "Навінка", restockedTitle: "Зноў у наяўнасці", restockedBadge: "Зноў у наяўнасці" });
+    Object.assign(translations.uk, { newArrivalsTitle: "Новинки", newArrivalBadge: "Новинка", restockedTitle: "Знову в наявності", restockedBadge: "Знову в наявності" });
+    Object.assign(translations.en, { newArrivalsTitle: "New arrivals", newArrivalBadge: "New", restockedTitle: "Back in stock", restockedBadge: "Back in stock" });
     const toneTranslationKeys = {
       "тёмно-синий": "darkBlue", "розовый": "pink", "небесный": "skyBlue", "светло-жёлтый": "lightYellow", "белый": "white",
       "горчичный": "mustard", "коричневый": "brown", "травяной": "grassGreen", "графитовый": "graphite", "бордовый": "burgundy",
@@ -1572,6 +1600,7 @@
     }
     const countryName = { belarus: "Беларусь" };
     const countrySlug = { "Беларусь": "belarus" };
+    // Set newArrival: true on a catalog item to feature it in the homepage "New arrivals" shelf.
     const brands = {
   godderob: {
     country: "Беларусь",
@@ -2725,6 +2754,8 @@
       return `${variant.stockSlug || item.slug}|${stockToken(variant.tone)}`;
     }
 
+    let recentlyRestockedKeys = new Set();
+
     function variantInStock(variant) {
       return !variant.stockManaged || variant.stockAvailable;
     }
@@ -2744,6 +2775,7 @@
         if (feed.schemaVersion === 2 && (!feed.maxOrderable || typeof feed.maxOrderable !== "object")) {
           throw new Error("Availability feed has no order limits");
         }
+        recentlyRestockedKeys = new Set(Object.keys(feed.recentlyRestocked || {}));
         const managed = new Set(feed.managedVariants);
         Object.values(brands).forEach((data) => {
           data.items.forEach((item) => item.variants.forEach((variant) => {
@@ -3364,6 +3396,31 @@
       return `${t("from")} ${min} ${unit}`.trim();
     }
 
+    function renderHomeCollections(country = "all") {
+      const products = Object.entries(brands).flatMap(([id, data]) =>
+        country !== "all" && data.country !== country
+          ? []
+          : data.items.filter((item) => item && item.slug && Array.isArray(item.variants) && itemInStock(item)).map((item) => ({ id, item }))
+      );
+      const arrivals = products.filter(({ item }) => item.newArrival === true);
+      const restocked = products.map(({ id, item }) => ({
+        id,
+        item,
+        tones: item.variants.filter((variant) => variantInStock(variant) && recentlyRestockedKeys.has(stockKey(item, variant))).map((variant) => variant.tone)
+      })).filter(({ tones }) => tones.length);
+      const newSection = document.getElementById("home-new-arrivals");
+      const restockedSection = document.getElementById("home-restocked");
+      newSection.hidden = arrivals.length === 0;
+      newSection.querySelector(".items").innerHTML = arrivals
+        .map(({ id, item }) => itemCard(id, item, [], "newArrivalBadge"))
+        .join("");
+      restockedSection.hidden = restocked.length === 0;
+      restockedSection.querySelector(".items").innerHTML = restocked
+        .map(({ id, item, tones }) => itemCard(id, item, tones, "restockedBadge"))
+        .join("");
+      window.requestAnimationFrame(() => observeScrollBlocks(home));
+    }
+
     function paintCountry(country, animate) {
       const filtered = country !== "all";
       reveal(() => {
@@ -3373,11 +3430,12 @@
         home.classList.toggle("filtered", filtered);
         document.getElementById("home-crumbs").hidden = !filtered;
         if (filtered) document.getElementById("home-country").textContent = localizedCountry(country);
+        renderHomeCollections(filtered ? country : "all");
         showHome();
       }, animate);
     }
 
-    function itemCard(id, item, preferredColors = []) {
+    function itemCard(id, item, preferredColors = [], badgeKey = "") {
       const matchingVariant = preferredColors.length
         ? item.variants.find((variant) => variantInStock(variant) && preferredColors.includes(variant.tone))
         : null;
@@ -3401,8 +3459,9 @@
       const galleryDots = cardPhotos.length > 1
         ? `<div class="item-gallery-dots" aria-hidden="true">${cardPhotos.map((_, index) => `<span class="${index === 0 ? "on" : ""}"></span>`).join("")}</div>`
         : "";
+      const badge = badgeKey ? `<span class="item-badge">${t(badgeKey)}</span>` : "";
       const variantRoute = matchingVariant ? `&variant=${variantIndex}` : "";
-      return `<a class="item" href="?${id}/${item.slug}${variantRoute}" data-brand="${id}" data-slug="${item.slug}" data-variant="${variantIndex}" style="${cardStyle}"><div class="cloth${photoClass}${galleryClass}" style="${clothStyle}"${galleryData}>${photoTag}${galleryDots}<span class="ph">${t("photoPlaceholder")}</span></div><span class="body"><b>${localizedItemName(item.name)}</b>${price ? `<span class="price">${price}</span>` : ""}</span></a>`;
+      return `<a class="item" href="?${id}/${item.slug}${variantRoute}" data-brand="${id}" data-slug="${item.slug}" data-variant="${variantIndex}" style="${cardStyle}"><div class="cloth${photoClass}${galleryClass}" style="${clothStyle}"${galleryData}>${photoTag}${galleryDots}${badge}<span class="ph">${t("photoPlaceholder")}</span></div><span class="body"><b>${localizedItemName(item.name)}</b>${price ? `<span class="price">${price}</span>` : ""}</span></a>`;
     }
 
     function renderBrandFilters(data) {

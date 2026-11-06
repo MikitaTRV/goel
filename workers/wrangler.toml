@@ -4,7 +4,10 @@ compatibility_date = "2026-10-24"
 workers_dev = true
 
 [vars]
-ALLOWED_ORIGIN = "https://mikitatrv.github.io"
+ALLOWED_ORIGIN = "https://mikitatrv.github.io,https://goel-store.github.io"
+
+[triggers]
+crons = ["*/15 * * * *"]
 
 [[kv_namespaces]]
 binding = "ORDER_TRACKING"
