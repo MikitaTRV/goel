@@ -50,7 +50,11 @@ const sheetPrefixes = {
   "byjesusлонг": ["by-jesus", "тёмно-синий"],
   пластырь: ["jesus-healed", "белый"],
   saved: ["saved", "бордовый"],
-  "богестьлюбовьроз": ["bog-est-lubov-women", "розовый"]
+  "богестьлюбовьроз": ["bog-est-lubov-women", "розовый"],
+  "кепкапесочная": ["godderob-caps", "песочный"],
+  "кепкачерная": ["godderob-caps", "чёрный"],
+  "кепкабордовая": ["godderob-caps", "бордовый"],
+  "кепкарыжая": ["godderob-caps", "рыжий"]
 };
 
 const alwaysManagedVariants = [
@@ -160,6 +164,13 @@ export function parseGodderobStock(csvText) {
       if (movementTotal !== balance) {
         throw new Error("Stock ledger movements do not match the reported balances");
       }
+      const oneSizeTarget = sheetPrefixes[normalize(article)];
+      if (oneSizeTarget) {
+        const [slug, tone] = oneSizeTarget;
+        const key = JSON.stringify([slug, tone, "OS"]);
+        quantities.set(key, (quantities.get(key) || 0) + balance);
+        continue;
+      }
       const sizeMatch = /[_\s-]+([^_\s-]+)$/.exec(article);
       if (!sizeMatch) continue;
       const size = normalizeSize(sizeMatch[1]);
@@ -172,13 +183,14 @@ export function parseGodderobStock(csvText) {
   } else {
     for (const row of rows) {
       const article = String(row[columns["Артикул_размера"]] || "").trim();
-      const size = normalizeSize(row[columns["Размер"]]);
+      const oneSizeTarget = sheetPrefixes[normalize(article)];
+      const size = normalizeSize(row[columns["Размер"]]) || (oneSizeTarget ? "OS" : "");
       const rawQuantity = String(row[columns["Общий остаток"]] || "").trim();
       if (!article || !size || !rawQuantity) continue;
       const parsedQuantity = Number(rawQuantity.replace(",", "."));
       if (!Number.isFinite(parsedQuantity)) continue;
       const quantity = Math.trunc(parsedQuantity);
-      const target = sheetPrefixes[stockArticlePrefix(article, size)];
+      const target = oneSizeTarget || sheetPrefixes[stockArticlePrefix(article, size)];
       if (!target) continue;
       const [slug, tone] = target;
       const key = JSON.stringify([slug, tone, size]);

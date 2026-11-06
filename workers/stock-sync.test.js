@@ -43,6 +43,17 @@ test("parses the manager's movement ledger using merged article cells and signed
   assert.equal(feed.maxOrderable.name["графитовый"].M, 2);
 });
 
+test("maps one-size cap ledger articles to stock-controlled OS variants", () => {
+  const csv = ",статус,Артикул_размера,Тип,Кол-во,Остаток,Примечание\nПереучет,,Кепка_песочная,Приход,6,6,\n,,Кепка_черная,Приход,9,9,\n,,Кепка_бордовая,Приход,7,7,\n,,Кепка_рыжая,Приход,7,7,\n";
+  const feed = parseGodderobStock(csv);
+
+  assert.deepEqual(feed.availableSizes["godderob-caps"]["песочный"], ["OS"]);
+  assert.equal(feed.maxOrderable["godderob-caps"]["песочный"].OS, 3);
+  assert.deepEqual(feed.availableSizes["godderob-caps"]["чёрный"], ["OS"]);
+  assert.equal(feed.maxOrderable["godderob-caps"]["бордовый"].OS, 3);
+  assert.equal(feed.maxOrderable["godderob-caps"]["рыжий"].OS, 3);
+});
+
 test("rejects malformed, unmapped, and empty stock CSVs rather than publishing empty availability", () => {
   assert.throws(() => parseGodderobStock("Артикул_размера,Размер\n"), /missing columns/);
   assert.throws(() => parseGodderobStock("Артикул_размера,Размер,Общий остаток\n\"broken,S,1\n"), /unclosed quoted field/);

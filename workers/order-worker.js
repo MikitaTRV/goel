@@ -291,7 +291,8 @@ async function checkStock(items, env) {
       slug,
       tone: normalizedTone,
       size,
-      quantity: (current?.quantity || 0) + quantity
+      quantity: (current?.quantity || 0) + quantity,
+      isManagedGodderob: Boolean(current?.isManagedGodderob || isManagedGodderob)
     });
   }
   if (!requestedItems.size) return "available";
@@ -307,7 +308,7 @@ async function checkStock(items, env) {
   for (const item of requestedItems.values()) {
     const managedKey = `${item.slug}|${item.tone}`;
     if (!feed.managedVariants.includes(managedKey)) {
-      if (item.quantity > 1) return "unavailable";
+      if (item.isManagedGodderob || item.quantity > 1) return "unavailable";
       continue;
     }
 

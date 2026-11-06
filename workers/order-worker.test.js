@@ -253,6 +253,32 @@ test("accepts a managed stock item within its per-size order limit", async () =>
   assert.equal(state.telegramMessages, 1);
 });
 
+test("rejects even a single Godderob item when its variant is absent from the stock feed", async () => {
+  const { env, state } = createFixture({
+    stockFeed: {
+      schemaVersion: 2,
+      managedVariants: ["other-shirt|black"],
+      availableSizes: { "other-shirt": { Black: ["M"] } },
+      maxOrderable: { "other-shirt": { Black: { M: 1 } } }
+    }
+  });
+  const response = await worker.fetch(orderRequest({
+    items: [{
+      brand: "Godderob",
+      inventoryBrandId: "godderob",
+      inventorySlug: "unlisted-shirt",
+      inventoryTone: "Plum",
+      product: "New sweatshirt",
+      size: "M",
+      quantity: 1
+    }]
+  }), env);
+
+  assert.equal(response.status, 409);
+  assert.equal((await response.json()).error, "insufficient_stock");
+  assert.equal(state.telegramMessages, 0);
+});
+
 test("rejects Telegram webhooks with an invalid secret", async () => {
   const { env, state } = createFixture();
   seedOrder(state);
