@@ -3460,7 +3460,8 @@
       const galleryDots = cardPhotos.length > 1
         ? `<div class="item-gallery-dots" aria-hidden="true">${cardPhotos.map((_, index) => `<span class="${index === 0 ? "on" : ""}"></span>`).join("")}</div>`
         : "";
-      const badge = badgeKey ? `<span class="item-badge">${t(badgeKey)}</span>` : "";
+      const activeBadge = badgeKey || (item.newArrival ? "newArrivalBadge" : "");
+      const badge = activeBadge ? `<span class="item-badge">${t(activeBadge)}</span>` : "";
       const variantRoute = matchingVariant ? `&variant=${variantIndex}` : "";
       return `<a class="item" href="?${id}/${item.slug}${variantRoute}" data-brand="${id}" data-slug="${item.slug}" data-variant="${variantIndex}" style="${cardStyle}"><div class="cloth${photoClass}${galleryClass}" style="${clothStyle}"${galleryData}>${photoTag}${galleryDots}${badge}<span class="ph">${t("photoPlaceholder")}</span></div><span class="body"><b>${localizedItemName(item.name)}</b>${price ? `<span class="price">${price}</span>` : ""}</span></a>`;
     }
